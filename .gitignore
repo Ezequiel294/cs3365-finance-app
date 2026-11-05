@@ -41,3 +41,11 @@ yarn-error.log*
 next-env.d.ts
 
 /templates
+
+# one-shot agent build output (any depth)
+node_modules/
+.next/
+.open-next/
+cdk.out/
+coverage/
+dist/

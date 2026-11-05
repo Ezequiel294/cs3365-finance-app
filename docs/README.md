@@ -16,6 +16,7 @@ as `{{PRODUCT_NAME}}`, so a single substitution pass will name it everywhere at 
 | [`personas.md`](personas.md) | The five people the product is built for, the requirement each is uniquely responsible for, and the user types deliberately excluded |
 | [`sizing.md`](sizing.md) | The effort metric, the baseline anchor, the estimation dimensions, and the roll-up of every story |
 | [`one-pagers/`](one-pagers/) | One document per initiative: the situation it addresses, the assumptions behind it, its stories, its non-functional requirements, and its sizing |
+| [`requirements-changes.md`](requirements-changes.md) | Where the design departs from the 1-pagers, and which stories were removed from scope |
 | [`drafts/`](drafts/) | Superseded versions of documents, retained with a note of what changed and why |
 
 ### 1-Pagers

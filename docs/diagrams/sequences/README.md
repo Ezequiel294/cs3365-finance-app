@@ -59,7 +59,7 @@ Rules that apply to every diagram, so they are not repeated in each one:
 | `Transactions` | `TXN#<date>#<id>`. GSI **review** (`reviewPK`, sparse: set only while a transaction needs a decision) |
 | `InvestmentTx` | `INV#<date>#<id>`. GSI **ticker** (`USER#id#<ticker>`) |
 | `Aggregates` | `DAY#<date>#TOTAL`, `MONTH#<yyyy-mm>#TOTAL`, `#CAT#<id>`, `#TAG#<id>`, `#INV`, `BUDGET#<id>#P#<periodStart>`, `BUDGET#<id>#D#<date>`, `HOLDING#<broker>#<ticker>`, `CASH#<broker>`. Global: `PK = FX#USD-CRC#<date>`, `PK = PRICE#<ticker>` (TTL) |
-| `Reference` | `ACCOUNT#`, `CAT#`, `TAG#`, `RULE#<merchantKey>`, `BUDGET#`, `BROKER#`. Global (`PK = GLOBAL`): `CAT#`, `TAG#`, `RULE#` |
+| `Reference` | `PROFILE` (time zone, week start), `ACCOUNT#`, `CAT#`, `TAG#`, `RULE#<merchantKey>`, `BUDGET#`, `BROKER#`. Global (`PK = GLOBAL`): `CAT#`, `TAG#`, `RULE#` |
 | `Ingestion` | `CONN#gmail#<id>`, `MSG#<Message-ID>`, `IMPORT#<id>`, `FILE#<sha256>`, `ROWFP#<hash>`. Lookup: `PK = TOKEN#<sha256>` |
 
 ## Index (in scope)

@@ -1135,7 +1135,11 @@ classDiagram
 - `BccrRateProvider` reads `endpoint`, `indicator`, and `token` from Parameter Store once per
   Lambda container. `buildUrl` produces
   `{endpoint}/{indicator}/series?fechaInicio=yyyy/mm/dd&fechaFin=yyyy/mm/dd&idioma=ES`,
-  with the query built by `URLSearchParams`.
+  with the query built by `URLSearchParams`. Every request sends the header
+  `Authorization: Bearer <token>`.
+- `parseSeries` reads `datos[0].series`, an array of `{ fecha, valorDatoPorPeriodo }` where
+  `fecha` is the date and `valorDatoPorPeriodo` is the colones-per-dollar rate. A non-`200`
+  status or an empty `series` array means no rate.
 - When a date has no rate (weekend or holiday), the provider asks for the 7 days before and
   returns the latest earlier rate with its own `rateDate`.
 - If BCCR cannot be reached and nothing is cached, `FxUnavailableError` (503) is thrown and

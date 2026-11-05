@@ -68,9 +68,9 @@ sequenceDiagram
                 Fx->>SSM: GetParameters /FinanceApp/bccr/* (token decrypted)
             end
             Fx->>RP: rateFor(2026-10-14)
-            RP->>BCCR: GET endpoint, indicator, date, token
+            RP->>BCCR: GET {endpoint}/{indicator}/series?fechaInicio&fechaFin&idioma=ES<br/>Authorization: Bearer token
             alt BCCR has a rate for that date
-                BCCR-->>RP: 510.95
+                BCCR-->>RP: 200 datos[0].series[] with fecha and valorDatoPorPeriodo 510.95
             else No rate that day (weekend or holiday)
                 RP->>BCCR: Request the 7 days before
                 BCCR-->>RP: Latest earlier rate and its date

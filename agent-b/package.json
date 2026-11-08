@@ -1,0 +1,13 @@
+{
+  "name": "finance-app-b1",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": ["shared", "api", "web", "infra"],
+  "scripts": {
+    "typecheck": "tsc --noEmit && npm run typecheck -w web && npm run typecheck -w api && npm run typecheck -w infra",
+    "test": "vitest run",
+    "build": "npm run build -w web && npm run build -w api && npm run build -w infra",
+    "cdk": "cdk --app 'npx tsx infra/bin/app.ts'"
+  },
+  "devDependencies": {"typescript": "^5.7.3", "tsx": "^4.19.2", "vitest": "^3.0.5", "@types/node": "^22.10.5"}
+}

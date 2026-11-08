@@ -1,0 +1,1 @@
+{"name":"@finance/infra","version":"1.0.0","private":true,"type":"module","dependencies":{"aws-cdk-lib":"^2.178.0","constructs":"^10.4.2","cdk-nextjs":"^0.7.0"},"devDependencies":{"esbuild":"^0.24.2"},"scripts":{"typecheck":"tsc --noEmit -p tsconfig.json","build":"tsc -p tsconfig.json"}}

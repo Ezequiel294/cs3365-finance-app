@@ -1,0 +1,1 @@
+import Link from 'next/link';export default function Home(){return <section><h1>Personal finance, on your terms</h1><p>Track transactions, budgets, imports, Gmail alerts, and investments in USD and CRC.</p><p><Link className="button" href="/signin">Sign in or create an account</Link></p></section>}

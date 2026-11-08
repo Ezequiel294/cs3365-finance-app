@@ -1,0 +1,1 @@
+{"compilerOptions":{"target":"ES2022","module":"NodeNext","moduleResolution":"NodeNext","strict":true,"esModuleInterop":true,"skipLibCheck":true,"resolveJsonModule":true,"baseUrl":".","paths":{"@finance/shared":["shared/src/index.ts"]}},"include":["shared/**/*.ts","api/**/*.ts","infra/**/*.ts","tests/**/*.ts"],"exclude":["node_modules","web"]}

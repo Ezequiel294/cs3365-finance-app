@@ -1,0 +1,1 @@
+export default function Page(){return <section><h1>Cash flow</h1><p>Monthly income and spending are available from the analytics API. Transfers and card payments are excluded from spending.</p></section>}

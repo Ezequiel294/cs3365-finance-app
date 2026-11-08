@@ -1,0 +1,2 @@
+import * as cdk from 'aws-cdk-lib'; import {DataStack} from '../lib/data-stack.js'; import {ApiStack} from '../lib/api-stack.js'; import {WebStack} from '../lib/web-stack.js';
+const app=new cdk.App();const env={account:process.env.CDK_DEFAULT_ACCOUNT,region:'us-east-2'};const data=new DataStack(app,'FinanceAppB1Data',{env});const api=new ApiStack(app,'FinanceAppB1Api',{env,data});new WebStack(app,'FinanceAppB1Web',{env,api});

@@ -1,0 +1,8 @@
+node_modules/
+.next/
+cdk.out/
+.scratch/
+*.tsbuildinfo
+.env*.local
+build.log
+.DS_Store

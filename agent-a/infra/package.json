@@ -1,0 +1,22 @@
+{
+  "name": "@finance/infra",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "synth": "cdk synth",
+    "deploy": "cdk deploy --all --require-approval never"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.275.0",
+    "cdk-nextjs": "0.7.20",
+    "constructs": "^10.8.1",
+    "debug": "^4.4.3"
+  },
+  "devDependencies": {
+    "aws-cdk": "^2.1148.0",
+    "tsx": "^4.20.0"
+  }
+}

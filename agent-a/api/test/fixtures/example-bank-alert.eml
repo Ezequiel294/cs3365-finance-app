@@ -1,0 +1,25 @@
+From: Example Bank Alertas <alertas@example-bank.test>
+To: holder@example.test
+Subject: =?UTF-8?Q?Notificaci=C3=B3n_de_transacci=C3=B3n?=
+Date: Wed, 14 Oct 2026 13:45:10 -0600
+Message-ID: <synthetic-0001@example-bank.test>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="b1"
+
+--b1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+SYNTHETIC FIXTURE, not a real bank email.
+Estimado cliente:
+Se realiz=C3=B3 una compra con su tarjeta terminada en 1234.
+Comercio: AUTOMERCADO ESCAZU 042
+Fecha: 14/10/2026 13:45
+Monto: CRC 14,000.00
+Autorizaci=C3=B3n: 123456
+
+--b1
+Content-Type: text/html; charset=UTF-8
+
+<html><body><p>Comercio: AUTOMERCADO ESCAZU 042</p></body></html>
+--b1--

@@ -9,6 +9,7 @@ flowchart LR
     browser["User browser<br/>(Next.js UI / PWA)"]
     gmail["Gmail inbox + Apps Script<br/>(runs every 5 min)"]
     bccr["BCCR exchange-rate API<br/>(external)"]
+    prices["Market price APIs (external)<br/>Yahoo Finance chart API, no key<br/>Twelve Data, optional fallback"]
 
     subgraph aws["AWS Cloud"]
         subgraph global["Global edge"]
@@ -27,9 +28,9 @@ flowchart LR
             subgraph api["FinanceAppApi stack"]
                 apigw["API Gateway (HTTP API)<br/>Cognito JWT authorizer<br/>/api/* · /ingest/gmail"]
                 apifn["Lambda: ApiFn<br/>router → services → repositories<br/>+ IngestPipeline (email)"]
-                s3raw[("S3: raw-ingest<br/>emails + CSVs<br/>private, lifecycle expiry")]
+                s3raw[("S3: raw-ingest<br/>emails + CSVs<br/>private, lifecycle expiry<br/>CORS: POST from app origin")]
                 worker["Lambda: ImportWorkerFn<br/>CSV statements<br/>(same code bundle)"]
-                ssm["SSM Parameter Store<br/>BCCR token (SecureString)"]
+                ssm["SSM Parameter Store<br/>BCCR token, optional<br/>Twelve Data key (SecureString)"]
             end
 
             subgraph data["FinanceAppData stack (DynamoDB on-demand, PITR, RETAIN)"]
@@ -57,8 +58,8 @@ flowchart LR
 
     %% Ingestion paths
     gmail -->|"POST /ingest/gmail<br/>(ingest token, raw MIME)"| apigw
-    browser -.->|"CSV statement upload<br/>(presigned POST)"| s3raw
-    s3raw -->|S3 event| worker
+    browser -.->|"CSV statement upload<br/>(presigned POST, max 1 MiB)"| s3raw
+    s3raw -->|"S3 event<br/>imports/*.csv"| worker
 
     %% API internals
     apigw --> apifn
@@ -69,6 +70,7 @@ flowchart LR
     apifn -.->|reads token| ssm
     worker -.->|reads token| ssm
     apifn -->|"CRC → USD rates<br/>(FxService, cached)"| bccr
+    apifn -->|"quotes + FX pairs<br/>(PriceClient, cached 15 min)"| prices
     worker -->|"CRC → USD rates"| bccr
     apifn -.-> cw
     worker -.-> cw
@@ -77,3 +79,18 @@ flowchart LR
 
 **Legend:** solid arrow = request or data flow; dashed arrow = auth check, direct upload, config read, or logging.
 All stack, table, function, and role names start with `FinanceApp`.
+
+**Notes for the runtime elements added or tightened in this iteration**
+
+- **Market price APIs.** `ApiFn` calls the Yahoo Finance chart API
+  (`query1.finance.yahoo.com/v8/finance/chart/{symbol}`) with a browser `User-Agent`, and
+  Twelve Data only when its key exists in SSM. Lambdas run outside a VPC, so both are reached
+  over the internet like BCCR. Quotes are cached in `Aggregates` as `PRICE#<ticker>`.
+- **Statement uploads.** The presigned POST limits the object key to
+  `imports/<userId>/<importId>.csv` and the size to 1 byte to 1 MiB, and expires after 5
+  minutes. The `raw-ingest` bucket has a CORS rule that allows `POST` from the CloudFront
+  domain and from `http://localhost:3000`, and an event notification for `ObjectCreated` with
+  prefix `imports/` and suffix `.csv` that invokes `ImportWorkerFn`. Raw emails are stored
+  under `raw/` and never start the worker.
+- **Supported banks.** The ingestion paths read BAC Credomatic and Banco Nacional statements
+  and alert emails only; their formats are in [Bank Formats](bank-formats.md).

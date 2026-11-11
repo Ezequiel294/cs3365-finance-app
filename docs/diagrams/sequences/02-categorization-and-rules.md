@@ -82,7 +82,7 @@ sequenceDiagram
     P->>C: categorize(userId, merchantKey)
     C->>Ref: Get USER#id / RULE#automercado
     alt User rule exists
-        C-->>P: category, tags, categorizedBy rule, status confirmed
+        C-->>P: category, tags, kind if the rule sets one, categorizedBy rule, status confirmed
     else No user rule
         C->>Ref: Get GLOBAL / RULE#automercado
         alt Global rule exists
@@ -103,7 +103,11 @@ sequenceDiagram
 remembered so that I can fix a mistake once rather than every month.
 
 A correction can save a user rule for the merchant. The rule applies to transactions that
-arrive from then on; past transactions keep their category.
+arrive from then on; past transactions keep their category. A rule can also remember the
+**kind**: when the user changes a transaction's kind, for example the BAC statement row
+`DTR:inversiones_hapi_VT` from `payment_sent` to `transfer` because it is money sent to their
+own broker account, the same prompt offers to remember it, and later rows from that merchant
+arrive as transfers that stay out of spending.
 
 ```mermaid
 sequenceDiagram
@@ -124,9 +128,9 @@ sequenceDiagram
     UI-->>U: "Always file Spotify as Subscriptions?"
     alt Yes
         U->>UI: Yes
-        UI->>Web: PUT /api/rules/spotify {categoryId, tagIds}
+        UI->>Web: PUT /api/rules/spotify {categoryId, tagIds, kind if it was changed}
         Web->>API: PUT /api/rules/spotify
-        API->>RlS: upsert(userId, "spotify", categoryId, tagIds)
+        API->>RlS: upsert(userId, "spotify", categoryId, tagIds, kind)
         RlS->>Ref: Put USER#id / RULE#spotify
         RlS-->>UI: 200 rule
         Note over UI,Ref: The next Spotify charge is filed by 02-S03<br/>without entering the review inbox

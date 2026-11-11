@@ -1,0 +1,70 @@
+Unknown option(s): --all. These will be ignored. Run 'cdk --help' to see available options.
+[WARNING] aws-cdk-lib.aws_dynamodb.TableOptions#pointInTimeRecovery is deprecated, and will be removed in the next major release.
+  use `pointInTimeRecoverySpecification` instead
+Bundling asset FinanceAppB2Api/ApiFn/Code/Stage...
+
+  ...20fc833eef593fc322c15aa25f86b584baa743441cf7e3-building/index.js  2.0mb ⚠️
+
+⚡ Done in 45ms
+[cdk-nextjs] Running: "npm run build" in directory: /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b
+
+> finance-app-b2@1.0.0 build
+> next build
+
+[1m[38;2;173;127;168m▲ Next.js 16.4.6[39m[22m (Turbopack)
+[33m[1m⚠[22m[39m Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/package-lock.json
+
+[37m[1m [22m[39m Applying modifyConfig from cdk-nextjs-adapter
+[32m[1m✓[22m[39m Running next.config.ts took 21ms
+
+[37m[1m [22m[39m Creating an optimized production build ...
+[32m[1m✓[22m[39m Compiled successfully in 110ms
+[37m[1m [22m[39m Running TypeScript ...
+[37m[1m [22m[39m Finished TypeScript in 2.6s ...
+[37m[1m [22m[39m Collecting page data using 10 workers ...
+[37m[1m [22m[39m Generating static pages using 10 workers (0/9) ...
+[37m[1m [22m[39m Generating static pages using 10 workers (2/9) 
+[37m[1m [22m[39m Generating static pages using 10 workers (4/9) 
+[37m[1m [22m[39m Generating static pages using 10 workers (6/9) 
+[32m[1m✓[22m[39m Generating static pages using 10 workers (9/9) in 445ms
+[37m[1m [22m[39m Finalizing page optimization ...
+[37m[1m [22m[39m Running onBuildComplete from cdk-nextjs-adapter
+[cdk-nextjs] Staged 384 files for 18 entrypoints in /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/.next/cdk-nextjs-adapter/app
+
+[4mRoute (app)[24m
+┌ ○ /
+├ ○ /_not-found
+├ ○ /accounts
+├ ƒ /auth
+├ ○ /dashboard
+├ ○ /portfolio
+├ ○ /sign-in
+└ ○ /transactions
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+[cdk-nextjs] Deploying init cache from /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/.next/cdk-nextjs-init-cache
+WARNING No cross-stack-reference strength configured, defaulting to "strong". We recommend you set feature flag "@aws-cdk/core:defaultCrossStackReferences" to "both", then deploy everywhere, then set it to "weak". Alternatively, set it to "strong" explicitly to lock in the current producer-protecting behavior. (See: https://github.com/aws/aws-cdk/blob/main/packages/aws-cdk-lib/README.md#reference-strength) (Construct Annotations)
+   FinanceAppB2Api
+   Acknowledge with 'Annotation::@aws-cdk/core:crossStackReferencesDefaultStrong'
+
+infra/app.ts:6:123
+WARNING Ignoring 'minimumProtocolVersion': it has no effect without a custom 'certificate'. The distribution uses the CloudFront default certificate, whose security policy is fixed at TLSv1. (Construct Annotations)
+   FinanceAppB2Web/Nextjs/NextjsDistribution/Distribution
+   Acknowledge with 'Annotation::@aws-cdk/aws-cloudfront:minimumProtocolVersionWithoutCertificate'
+
+infra/app.ts:6:123
+WARNING When the origin with AccessLevel.LIST is associated to the default behavior, it is strongly recommended to ensure the distribution's defaultRootObject is specified,
+See the "Setting up OAC with LIST permission" section of module's README for more info. (Construct Annotations)
+   FinanceAppB2Web/Nextjs/NextjsDistribution/Distribution/Origin2
+   Acknowledge with 'Annotation::@aws-cdk/aws-cloudfront-origins:listBucketSecurityRisk'
+Successfully synthesized to /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/cdk.out
+Supply a stack id (FinanceAppB2Data, FinanceAppB2Api, FinanceAppB2Web) to display its template.
+85 feature flags are not configured. Run 'cdk flags --unstable=flags' to learn more.

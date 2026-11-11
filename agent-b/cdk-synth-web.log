@@ -1,0 +1,1358 @@
+[WARNING] aws-cdk-lib.aws_dynamodb.TableOptions#pointInTimeRecovery is deprecated, and will be removed in the next major release.
+  use `pointInTimeRecoverySpecification` instead
+Bundling asset FinanceAppB2Api/ApiFn/Code/Stage...
+
+  ...20fc833eef593fc322c15aa25f86b584baa743441cf7e3-building/index.js  2.0mb ⚠️
+
+⚡ Done in 53ms
+[cdk-nextjs] Running: "npm run build" in directory: /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b
+
+> finance-app-b2@1.0.0 build
+> next build
+
+[1m[38;2;173;127;168m▲ Next.js 16.4.6[39m[22m (Turbopack)
+[33m[1m⚠[22m[39m Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/package-lock.json
+
+[37m[1m [22m[39m Applying modifyConfig from cdk-nextjs-adapter
+[32m[1m✓[22m[39m Running next.config.ts took 18ms
+
+[37m[1m [22m[39m Creating an optimized production build ...
+[32m[1m✓[22m[39m Compiled successfully in 233ms
+[37m[1m [22m[39m Running TypeScript ...
+[37m[1m [22m[39m Finished TypeScript in 2.8s ...
+[37m[1m [22m[39m Collecting page data using 10 workers ...
+[37m[1m [22m[39m Generating static pages using 10 workers (0/9) ...
+[37m[1m [22m[39m Generating static pages using 10 workers (2/9) 
+[37m[1m [22m[39m Generating static pages using 10 workers (4/9) 
+[37m[1m [22m[39m Generating static pages using 10 workers (6/9) 
+[32m[1m✓[22m[39m Generating static pages using 10 workers (9/9) in 437ms
+[37m[1m [22m[39m Finalizing page optimization ...
+[37m[1m [22m[39m Running onBuildComplete from cdk-nextjs-adapter
+[cdk-nextjs] Staged 384 files for 18 entrypoints in /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/.next/cdk-nextjs-adapter/app
+
+[4mRoute (app)[24m
+┌ ○ /
+├ ○ /_not-found
+├ ○ /accounts
+├ ƒ /auth
+├ ○ /dashboard
+├ ○ /portfolio
+├ ○ /sign-in
+└ ○ /transactions
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+[cdk-nextjs] Deploying init cache from /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/.next/cdk-nextjs-init-cache
+infra/app.ts:6:123
+WARNING Ignoring 'minimumProtocolVersion': it has no effect without a custom 'certificate'. The distribution uses the CloudFront default certificate, whose security policy is fixed at TLSv1. (Construct Annotations)
+   FinanceAppB2Web/Nextjs/NextjsDistribution/Distribution
+   Acknowledge with 'Annotation::@aws-cdk/aws-cloudfront:minimumProtocolVersionWithoutCertificate'
+
+infra/app.ts:6:123
+WARNING When the origin with AccessLevel.LIST is associated to the default behavior, it is strongly recommended to ensure the distribution's defaultRootObject is specified,
+See the "Setting up OAC with LIST permission" section of module's README for more info. (Construct Annotations)
+   FinanceAppB2Web/Nextjs/NextjsDistribution/Distribution/Origin2
+   Acknowledge with 'Annotation::@aws-cdk/aws-cloudfront-origins:listBucketSecurityRisk'
+Resources:
+  NextjsNextjsCacheBucket9BF8C787:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: aws-cdk:auto-delete-objects
+          Value: "true"
+        - Key: aws-cdk:cr-owned:4cf2320f
+          Value: "true"
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsCache/Bucket/Resource
+  NextjsNextjsCacheBucketPolicyA2EE5400:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: NextjsNextjsCacheBucket9BF8C787
+      PolicyDocument:
+        Statement:
+          - Action: s3:*
+            Condition:
+              Bool:
+                aws:SecureTransport: "false"
+            Effect: Deny
+            Principal:
+              AWS: "*"
+            Resource:
+              - Fn::GetAtt:
+                  - NextjsNextjsCacheBucket9BF8C787
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - NextjsNextjsCacheBucket9BF8C787
+                        - Arn
+                    - /*
+          - Action: s3:*
+            Condition:
+              NumericLessThan:
+                s3:TlsVersion: 1.2
+            Effect: Deny
+            Principal:
+              AWS: "*"
+            Resource:
+              - Fn::GetAtt:
+                  - NextjsNextjsCacheBucket9BF8C787
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - NextjsNextjsCacheBucket9BF8C787
+                        - Arn
+                    - /*
+          - Action:
+              - s3:PutBucketPolicy
+              - s3:GetBucket*
+              - s3:List*
+              - s3:DeleteObject*
+            Effect: Allow
+            Principal:
+              AWS:
+                Fn::GetAtt:
+                  - CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092
+                  - Arn
+            Resource:
+              - Fn::GetAtt:
+                  - NextjsNextjsCacheBucket9BF8C787
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - NextjsNextjsCacheBucket9BF8C787
+                        - Arn
+                    - /*
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsCache/Bucket/Policy/Resource
+  NextjsNextjsCacheBucketAutoDeleteObjectsCustomResource3159BF45:
+    Type: Custom::S3AutoDeleteObjects
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F
+          - Arn
+      BucketName:
+        Ref: NextjsNextjsCacheBucket9BF8C787
+    DependsOn:
+      - NextjsNextjsCacheBucketPolicyA2EE5400
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsCache/Bucket/AutoDeleteObjectsCustomResource/Default
+  NextjsNextjsCacheRevalidationTable94FA6CD2:
+    Type: AWS::DynamoDB::GlobalTable
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+        - AttributeName: sk
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+        - AttributeName: sk
+          KeyType: RANGE
+      Replicas:
+        - Region: us-east-2
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsCache/RevalidationTable/Resource
+  NextjsNextjsCacheInitCacheDeploymentAwsCliLayer1B96D0AA:
+    Type: AWS::Lambda::LayerVersion
+    Properties:
+      Content:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-us-east-2
+        S3Key: 98f62bef9320f8c0a0a7be21d7c746f069131f196f51ffe3008a6bb730b368ec.zip
+      Description: /opt/awscli/aws
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsCache/InitCacheDeployment/AwsCliLayer/Resource
+      aws:asset:path: asset.98f62bef9320f8c0a0a7be21d7c746f069131f196f51ffe3008a6bb730b368ec.zip
+      aws:asset:is-bundled: false
+      aws:asset:property: Content
+  NextjsNextjsCacheInitCacheDeploymentCustomResource512MiBDBB641F3:
+    Type: Custom::CDKBucketDeployment
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB6723FB92
+          - Arn
+      SourceBucketNames:
+        - Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-us-east-2
+      SourceObjectKeys:
+        - dbbf751d18ea0129fabddfebf3a457d231f88b71432e6d583110e45799b25136.zip
+      DestinationBucketName:
+        Ref: NextjsNextjsCacheBucket9BF8C787
+      WaitForDistributionInvalidation: true
+      Prune: false
+      OutputObjectKeys: true
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsCache/InitCacheDeployment/CustomResource-512MiB/Default
+  NextjsNextjsStaticAssetsBucketB30C63EE:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: aws-cdk:auto-delete-objects
+          Value: "true"
+        - Key: aws-cdk:cr-owned:9e95f49d
+          Value: "true"
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsStaticAssets/Bucket/Resource
+  NextjsNextjsStaticAssetsBucketPolicy312CE381:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: NextjsNextjsStaticAssetsBucketB30C63EE
+      PolicyDocument:
+        Statement:
+          - Action: s3:*
+            Condition:
+              Bool:
+                aws:SecureTransport: "false"
+            Effect: Deny
+            Principal:
+              AWS: "*"
+            Resource:
+              - Fn::GetAtt:
+                  - NextjsNextjsStaticAssetsBucketB30C63EE
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - NextjsNextjsStaticAssetsBucketB30C63EE
+                        - Arn
+                    - /*
+          - Action: s3:*
+            Condition:
+              NumericLessThan:
+                s3:TlsVersion: 1.2
+            Effect: Deny
+            Principal:
+              AWS: "*"
+            Resource:
+              - Fn::GetAtt:
+                  - NextjsNextjsStaticAssetsBucketB30C63EE
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - NextjsNextjsStaticAssetsBucketB30C63EE
+                        - Arn
+                    - /*
+          - Action:
+              - s3:PutBucketPolicy
+              - s3:GetBucket*
+              - s3:List*
+              - s3:DeleteObject*
+            Effect: Allow
+            Principal:
+              AWS:
+                Fn::GetAtt:
+                  - CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092
+                  - Arn
+            Resource:
+              - Fn::GetAtt:
+                  - NextjsNextjsStaticAssetsBucketB30C63EE
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - NextjsNextjsStaticAssetsBucketB30C63EE
+                        - Arn
+                    - /*
+          - Action:
+              - s3:GetObject
+              - s3:ListBucket
+            Condition:
+              StringEquals:
+                AWS:SourceArn:
+                  Fn::Join:
+                    - ""
+                    - - "arn:"
+                      - Ref: AWS::Partition
+                      - ":cloudfront::"
+                      - Ref: AWS::AccountId
+                      - :distribution/
+                      - Ref: NextjsNextjsDistributionD6DC51E9
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Resource:
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - NextjsNextjsStaticAssetsBucketB30C63EE
+                        - Arn
+                    - /*
+              - Fn::GetAtt:
+                  - NextjsNextjsStaticAssetsBucketB30C63EE
+                  - Arn
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsStaticAssets/Bucket/Policy/Resource
+  NextjsNextjsStaticAssetsBucketAutoDeleteObjectsCustomResource18C32E02:
+    Type: Custom::S3AutoDeleteObjects
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F
+          - Arn
+      BucketName:
+        Ref: NextjsNextjsStaticAssetsBucketB30C63EE
+    DependsOn:
+      - NextjsNextjsStaticAssetsBucketPolicy312CE381
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsStaticAssets/Bucket/AutoDeleteObjectsCustomResource/Default
+  NextjsNextjsStaticAssetsDeploymentAwsCliLayerDF7DA6AC:
+    Type: AWS::Lambda::LayerVersion
+    Properties:
+      Content:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-us-east-2
+        S3Key: 98f62bef9320f8c0a0a7be21d7c746f069131f196f51ffe3008a6bb730b368ec.zip
+      Description: /opt/awscli/aws
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsStaticAssets/Deployment/AwsCliLayer/Resource
+      aws:asset:path: asset.98f62bef9320f8c0a0a7be21d7c746f069131f196f51ffe3008a6bb730b368ec.zip
+      aws:asset:is-bundled: false
+      aws:asset:property: Content
+  NextjsNextjsStaticAssetsDeploymentCustomResource66994B39:
+    Type: Custom::CDKBucketDeployment
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536
+          - Arn
+      SourceBucketNames:
+        - Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-us-east-2
+      SourceObjectKeys:
+        - ab758f96a29e995801a8d93c67b254abb2adf334c4ecbc7e012890e6d626361f.zip
+      DestinationBucketName:
+        Ref: NextjsNextjsStaticAssetsBucketB30C63EE
+      WaitForDistributionInvalidation: true
+      Prune: false
+      UserMetadata:
+        build_id: QKeNiJ_a7DTzmref8o5Lp
+      SystemMetadata:
+        cache-control: public, max-age=31536000, immutable
+      OutputObjectKeys: true
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsStaticAssets/Deployment/CustomResource/Default
+  NextjsNextjsFunctionsServiceRoleA3B22166:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsFunctions/Functions/ServiceRole/Resource
+  NextjsNextjsFunctionsServiceRoleDefaultPolicy8DBFF6DF:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:GetObject*
+              - s3:GetBucket*
+              - s3:List*
+              - s3:DeleteObject*
+              - s3:PutObject
+              - s3:PutObjectLegalHold
+              - s3:PutObjectRetention
+              - s3:PutObjectTagging
+              - s3:PutObjectVersionTagging
+              - s3:Abort*
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - NextjsNextjsCacheBucket9BF8C787
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - NextjsNextjsCacheBucket9BF8C787
+                        - Arn
+                    - /*
+          - Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:ConditionCheckItem
+              - dynamodb:BatchWriteItem
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
+              - dynamodb:DeleteItem
+              - dynamodb:DescribeTable
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - NextjsNextjsCacheRevalidationTable94FA6CD2
+                - Arn
+          - Action:
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - NextjsNextjsCacheRevalidationTable94FA6CD2
+                - Arn
+          - Action:
+              - s3:GetObject*
+              - s3:GetBucket*
+              - s3:List*
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - NextjsNextjsStaticAssetsBucketB30C63EE
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - NextjsNextjsStaticAssetsBucketB30C63EE
+                        - Arn
+                    - /*
+        Version: "2012-10-17"
+      PolicyName: NextjsNextjsFunctionsServiceRoleDefaultPolicy8DBFF6DF
+      Roles:
+        - Ref: NextjsNextjsFunctionsServiceRoleA3B22166
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsFunctions/Functions/ServiceRole/DefaultPolicy/Resource
+  NextjsNextjsFunctions9D230BB2:
+    Type: AWS::Lambda::Function
+    Properties:
+      Architectures:
+        - arm64
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-us-east-2
+        S3Key: 0f3d03843ade343bb012c208f2002dacdb11d55944dc8875b7a4acd0150ff354.zip
+      Environment:
+        Variables:
+          NODE_ENV: production
+          CDK_NEXTJS_CACHE_BUCKET_NAME:
+            Ref: NextjsNextjsCacheBucket9BF8C787
+          CDK_NEXTJS_REVALIDATION_TABLE_NAME:
+            Ref: NextjsNextjsCacheRevalidationTable94FA6CD2
+          CDK_NEXTJS_BUILD_ID: QKeNiJ_a7DTzmref8o5Lp
+          CDK_NEXTJS_STATIC_ASSETS_BUCKET_NAME:
+            Ref: NextjsNextjsStaticAssetsBucketB30C63EE
+          CDK_NEXTJS_STATIC_ASSETS_KEY_PREFIX: ""
+          CDK_NEXTJS_FUNCTION_GROUP: default
+          NEXT_PUBLIC_API_URL:
+            Fn::ImportValue: FinanceAppB2Api:ExportsOutputFnGetAttHttpApiF5A9A8A7ApiEndpoint082134F8
+          COGNITO_CLIENT_ID:
+            Fn::ImportValue: FinanceAppB2Api:ExportsOutputRefUsersWebClient8EE36D427F5C395C
+          COGNITO_ENDPOINT: https://cognito-idp.us-east-2.amazonaws.com/
+          CDK_NEXTJS_DISTRIBUTION_ID_PARAM_NAME: cdk-nextjs-distribution-id-c8467e06fad4a59fef65c8cc00f4f4575bce7c5566
+      Handler: cdk-nextjs-runtime/lambda.handler
+      MemorySize: 2048
+      Role:
+        Fn::GetAtt:
+          - NextjsNextjsFunctionsServiceRoleA3B22166
+          - Arn
+      Runtime: nodejs24.x
+      Timeout: 30
+    DependsOn:
+      - NextjsNextjsFunctionsServiceRoleDefaultPolicy8DBFF6DF
+      - NextjsNextjsFunctionsServiceRoleA3B22166
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsFunctions/Functions/Resource
+      aws:asset:path: asset.0f3d03843ade343bb012c208f2002dacdb11d55944dc8875b7a4acd0150ff354.zip
+      aws:asset:is-bundled: false
+      aws:asset:property: Code
+  NextjsNextjsFunctionsFunctionUrl70379F86:
+    Type: AWS::Lambda::Url
+    Properties:
+      AuthType: AWS_IAM
+      InvokeMode: RESPONSE_STREAM
+      TargetFunctionArn:
+        Fn::GetAtt:
+          - NextjsNextjsFunctions9D230BB2
+          - Arn
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsFunctions/Functions/FunctionUrl/Resource
+  NextjsNextjsDistributionCloudFrontFnFBDAA703:
+    Type: AWS::CloudFront::Function
+    Properties:
+      AutoPublish: true
+      FunctionCode: |
+        
+        async function handler(event) {
+        const request = event.request;
+        const uri = request.uri;
+
+        if (/\\|\/\//.test(uri)) {
+        let location = uri.replace(/\\/g, "/").replace(/\/\/+/g, "/");
+        const qs = [];
+        Object.keys(request.querystring).forEach((name) => {
+        const q = request.querystring[name];
+        (q.multiValue || [q]).forEach((entry) => {
+        qs.push(entry.value === "" ? name : name + "=" + entry.value);
+        });
+        });
+        if (qs.length) {
+        location += "?" + qs.join("&");
+        }
+        return {
+        statusCode: 308,
+        statusDescription: "Permanent Redirect",
+        headers: { location: { value: location } },
+        };
+        }
+
+        request.headers["x-forwarded-host"] = request.headers.host;
+        return request;
+        }
+      FunctionConfig:
+        Comment: us-east-2FinanceAppB2WebNtionCloudFrontFn3A7EB913
+        Runtime: cloudfront-js-2.0
+      Name: us-east-2FinanceAppB2WebNtionCloudFrontFn3A7EB913
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsDistribution/CloudFrontFn/Resource
+  NextjsNextjsDistributionStaticResponseHeadersPolicyC51F07E3:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Comment: NextJS Static Response Headers Policy for FinanceAppB2Web
+        Name: FinanceAppB2WebNextjsNextjsDistributionStaticResponseHeadersPolicy757A39D7
+        SecurityHeadersConfig:
+          ContentTypeOptions:
+            Override: false
+          FrameOptions:
+            FrameOption: SAMEORIGIN
+            Override: false
+          ReferrerPolicy:
+            Override: false
+            ReferrerPolicy: strict-origin-when-cross-origin
+          StrictTransportSecurity:
+            AccessControlMaxAgeSec: 31536000
+            IncludeSubdomains: true
+            Override: false
+            Preload: true
+          XSSProtection:
+            ModeBlock: true
+            Override: false
+            Protection: true
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsDistribution/StaticResponseHeadersPolicy/Resource
+  NextjsNextjsDistributionDynamicCachePolicy9F681160:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        Comment: NextJS Dynamic Cache Policy for FinanceAppB2Web
+        DefaultTTL: 0
+        MaxTTL: 31536000
+        MinTTL: 0
+        Name: FinanceAppB2WebNextjsNextjsDistributionDynamicCachePolicyA3FAB9B4-us-east-2
+        ParametersInCacheKeyAndForwardedToOrigin:
+          CookiesConfig:
+            CookieBehavior: all
+          EnableAcceptEncodingBrotli: true
+          EnableAcceptEncodingGzip: true
+          HeadersConfig:
+            HeaderBehavior: whitelist
+            Headers:
+              - accept
+              - rsc
+              - next-url
+              - next-router-state-tree
+              - next-router-prefetch
+              - next-router-segment-prefetch
+              - x-prerender-revalidate
+          QueryStringsConfig:
+            QueryStringBehavior: all
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsDistribution/DynamicCachePolicy/Resource
+  NextjsNextjsDistributionDynamicResponseHeadersPolicy7B9494AD:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Comment: NextJS Dynamic Response Headers Policy for FinanceAppB2Web
+        Name: FinanceAppB2WebNextjsNextjsDistributionDynamicResponseHeadersPolicy45DF8AD5
+        SecurityHeadersConfig:
+          ContentTypeOptions:
+            Override: false
+          FrameOptions:
+            FrameOption: SAMEORIGIN
+            Override: false
+          ReferrerPolicy:
+            Override: false
+            ReferrerPolicy: strict-origin-when-cross-origin
+          StrictTransportSecurity:
+            AccessControlMaxAgeSec: 31536000
+            IncludeSubdomains: true
+            Override: false
+            Preload: true
+          XSSProtection:
+            ModeBlock: true
+            Override: false
+            Protection: true
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsDistribution/DynamicResponseHeadersPolicy/Resource
+  NextjsNextjsDistributionImageCachePolicy7FA62DDD:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        Comment: NextJS Image Cache Policy for FinanceAppB2Web
+        DefaultTTL: 86400
+        MaxTTL: 31536000
+        MinTTL: 0
+        Name: FinanceAppB2WebNextjsNextjsDistributionImageCachePolicyFBFAC900-us-east-2
+        ParametersInCacheKeyAndForwardedToOrigin:
+          CookiesConfig:
+            CookieBehavior: none
+          EnableAcceptEncodingBrotli: true
+          EnableAcceptEncodingGzip: true
+          HeadersConfig:
+            HeaderBehavior: whitelist
+            Headers:
+              - accept
+          QueryStringsConfig:
+            QueryStringBehavior: all
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsDistribution/ImageCachePolicy/Resource
+  NextjsNextjsDistributionImageResponseHeadersPolicyC62CA1AD:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Comment: NextJS Image Response Headers Policy for FinanceAppB2Web
+        Name: FinanceAppB2WebNextjsNextjsDistributionImageResponseHeadersPolicy19945B9C
+        SecurityHeadersConfig:
+          ContentTypeOptions:
+            Override: false
+          FrameOptions:
+            FrameOption: SAMEORIGIN
+            Override: false
+          ReferrerPolicy:
+            Override: false
+            ReferrerPolicy: strict-origin-when-cross-origin
+          StrictTransportSecurity:
+            AccessControlMaxAgeSec: 31536000
+            IncludeSubdomains: true
+            Override: false
+            Preload: true
+          XSSProtection:
+            ModeBlock: true
+            Override: false
+            Protection: true
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsDistribution/ImageResponseHeadersPolicy/Resource
+  NextjsNextjsDistributionOrigin1FunctionUrlOriginAccessControl3C1C2E6F:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: FinanceAppB2WebNextjsNextjsDnctionUrlOriginAccessControl695C6392
+        OriginAccessControlOriginType: lambda
+        SigningBehavior: always
+        SigningProtocol: sigv4
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsDistribution/Distribution/Origin1/FunctionUrlOriginAccessControl/Resource
+  NextjsNextjsDistributionOrigin1InvokeFromApiForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3757FDF5C:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunctionUrl
+      FunctionName:
+        Fn::GetAtt:
+          - NextjsNextjsFunctionsFunctionUrl70379F86
+          - FunctionArn
+      Principal: cloudfront.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":cloudfront::"
+            - Ref: AWS::AccountId
+            - :distribution/
+            - Ref: NextjsNextjsDistributionD6DC51E9
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsDistribution/Distribution/Origin1/InvokeFromApiForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3
+  NextjsNextjsDistributionOrigin1InvokeFunctionFromCloudFrontForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB313927163:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - NextjsNextjsFunctionsFunctionUrl70379F86
+          - FunctionArn
+      InvokedViaFunctionUrl: true
+      Principal: cloudfront.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":cloudfront::"
+            - Ref: AWS::AccountId
+            - :distribution/
+            - Ref: NextjsNextjsDistributionD6DC51E9
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsDistribution/Distribution/Origin1/InvokeFunctionFromCloudFrontForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3
+  NextjsNextjsDistributionD6DC51E9:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        CacheBehaviors:
+          - AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+            CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+            CachedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+            Compress: true
+            PathPattern: _next/static*
+            ResponseHeadersPolicyId:
+              Ref: NextjsNextjsDistributionStaticResponseHeadersPolicyC51F07E3
+            TargetOriginId: FinanceAppB2WebNextjsNextjsDistributionOrigin2CC8AFFEF
+            ViewerProtocolPolicy: redirect-to-https
+          - AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+            CachePolicyId:
+              Ref: NextjsNextjsDistributionImageCachePolicy7FA62DDD
+            CachedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+            Compress: true
+            FunctionAssociations:
+              - EventType: viewer-request
+                FunctionARN:
+                  Fn::GetAtt:
+                    - NextjsNextjsDistributionCloudFrontFnFBDAA703
+                    - FunctionARN
+            OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac
+            PathPattern: _next/image*
+            ResponseHeadersPolicyId:
+              Ref: NextjsNextjsDistributionImageResponseHeadersPolicyC62CA1AD
+            TargetOriginId: FinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3
+            ViewerProtocolPolicy: redirect-to-https
+        Comment: NextJS Distribution for FinanceAppB2Web
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+            - PUT
+            - PATCH
+            - POST
+            - DELETE
+          CachePolicyId:
+            Ref: NextjsNextjsDistributionDynamicCachePolicy9F681160
+          Compress: true
+          FunctionAssociations:
+            - EventType: viewer-request
+              FunctionARN:
+                Fn::GetAtt:
+                  - NextjsNextjsDistributionCloudFrontFnFBDAA703
+                  - FunctionARN
+          OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac
+          ResponseHeadersPolicyId:
+            Ref: NextjsNextjsDistributionDynamicResponseHeadersPolicy7B9494AD
+          TargetOriginId: FinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3
+          ViewerProtocolPolicy: redirect-to-https
+        Enabled: true
+        HttpVersion: http2and3
+        IPV6Enabled: true
+        Origins:
+          - CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+              OriginSSLProtocols:
+                - TLSv1.2
+            DomainName:
+              Fn::Select:
+                - 2
+                - Fn::Split:
+                    - /
+                    - Fn::GetAtt:
+                        - NextjsNextjsFunctionsFunctionUrl70379F86
+                        - FunctionUrl
+            Id: FinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3
+            OriginAccessControlId:
+              Fn::GetAtt:
+                - NextjsNextjsDistributionOrigin1FunctionUrlOriginAccessControl3C1C2E6F
+                - Id
+          - DomainName:
+              Fn::GetAtt:
+                - NextjsNextjsStaticAssetsBucketB30C63EE
+                - RegionalDomainName
+            Id: FinanceAppB2WebNextjsNextjsDistributionOrigin2CC8AFFEF
+            OriginAccessControlId:
+              Fn::GetAtt:
+                - NextjsNextjsDistributionOrigin2S3OriginAccessControl8BC97BF9
+                - Id
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsDistribution/Distribution/Resource
+  NextjsNextjsDistributionOrigin2S3OriginAccessControl8BC97BF9:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: FinanceAppB2WebNextjsNextjsDOrigin2S3OriginAccessControl8F415F1F
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsDistribution/Distribution/Origin2/S3OriginAccessControl/Resource
+  NextjsNextjsDistributionInvokeFunctiondefault54C6C2BD:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - NextjsNextjsFunctionsFunctionUrl70379F86
+          - FunctionArn
+      InvokedViaFunctionUrl: true
+      Principal: cloudfront.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":cloudfront::"
+            - Ref: AWS::AccountId
+            - :distribution/
+            - Ref: NextjsNextjsDistributionD6DC51E9
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsDistribution/InvokeFunction-default
+  NextjsInvalidationPolicy154AA645:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: ssm:GetParameter
+            Effect: Allow
+            Resource:
+              Fn::Join:
+                - ""
+                - - "arn:"
+                  - Ref: AWS::Partition
+                  - ":ssm:us-east-2:"
+                  - Ref: AWS::AccountId
+                  - :parameter/cdk-nextjs-distribution-id-c8467e06fad4a59fef65c8cc00f4f4575bce7c5566
+          - Action: cloudfront:CreateInvalidation
+            Effect: Allow
+            Resource:
+              Fn::Join:
+                - ""
+                - - "arn:"
+                  - Ref: AWS::Partition
+                  - ":cloudfront::"
+                  - Ref: AWS::AccountId
+                  - :distribution/
+                  - Ref: NextjsNextjsDistributionD6DC51E9
+        Version: "2012-10-17"
+      PolicyName: NextjsInvalidationPolicy154AA645
+      Roles:
+        - Ref: NextjsNextjsFunctionsServiceRoleA3B22166
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/InvalidationPolicy/Resource
+  NextjsNextjsPostDeployFnServiceRoleB1777588:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    DependsOn:
+      - NextjsNextjsCacheInitCacheDeploymentAwsCliLayer1B96D0AA
+      - NextjsNextjsCacheInitCacheDeploymentCustomResource512MiBDBB641F3
+      - NextjsNextjsStaticAssetsDeploymentAwsCliLayerDF7DA6AC
+      - NextjsNextjsStaticAssetsDeploymentCustomResource66994B39
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsPostDeploy/Fn/ServiceRole/Resource
+  NextjsNextjsPostDeployFnServiceRoleDefaultPolicyE3329507:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: cloudfront:CreateInvalidation
+            Effect: Allow
+            Resource:
+              Fn::Join:
+                - ""
+                - - "arn:"
+                  - Ref: AWS::Partition
+                  - ":cloudfront::"
+                  - Ref: AWS::AccountId
+                  - :distribution/
+                  - Ref: NextjsNextjsDistributionD6DC51E9
+          - Action:
+              - s3:GetObject*
+              - s3:GetBucket*
+              - s3:List*
+              - s3:DeleteObject*
+              - s3:PutObject
+              - s3:PutObjectLegalHold
+              - s3:PutObjectRetention
+              - s3:PutObjectTagging
+              - s3:PutObjectVersionTagging
+              - s3:Abort*
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - NextjsNextjsStaticAssetsBucketB30C63EE
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - NextjsNextjsStaticAssetsBucketB30C63EE
+                        - Arn
+                    - /*
+          - Action:
+              - s3:GetObject*
+              - s3:GetBucket*
+              - s3:List*
+              - s3:DeleteObject*
+              - s3:PutObject
+              - s3:PutObjectLegalHold
+              - s3:PutObjectRetention
+              - s3:PutObjectTagging
+              - s3:PutObjectVersionTagging
+              - s3:Abort*
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - NextjsNextjsCacheBucket9BF8C787
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - NextjsNextjsCacheBucket9BF8C787
+                        - Arn
+                    - /*
+          - Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:ConditionCheckItem
+              - dynamodb:BatchWriteItem
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
+              - dynamodb:DeleteItem
+              - dynamodb:DescribeTable
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - NextjsNextjsCacheRevalidationTable94FA6CD2
+                - Arn
+          - Action:
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - NextjsNextjsCacheRevalidationTable94FA6CD2
+                - Arn
+        Version: "2012-10-17"
+      PolicyName: NextjsNextjsPostDeployFnServiceRoleDefaultPolicyE3329507
+      Roles:
+        - Ref: NextjsNextjsPostDeployFnServiceRoleB1777588
+    DependsOn:
+      - NextjsNextjsCacheInitCacheDeploymentAwsCliLayer1B96D0AA
+      - NextjsNextjsCacheInitCacheDeploymentCustomResource512MiBDBB641F3
+      - NextjsNextjsStaticAssetsDeploymentAwsCliLayerDF7DA6AC
+      - NextjsNextjsStaticAssetsDeploymentCustomResource66994B39
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsPostDeploy/Fn/ServiceRole/DefaultPolicy/Resource
+  NextjsNextjsPostDeployFnBF6BFE97:
+    Type: AWS::Lambda::Function
+    Properties:
+      Architectures:
+        - arm64
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-us-east-2
+        S3Key: 6d362d0feb04270cd9c67f74cb4c473ad0110a78a3ae49ae8b113ef89e96845e.zip
+      Environment:
+        Variables:
+          DEBUG: "1"
+      Handler: index.handler
+      MemorySize: 2048
+      Role:
+        Fn::GetAtt:
+          - NextjsNextjsPostDeployFnServiceRoleB1777588
+          - Arn
+      Runtime: nodejs24.x
+      Timeout: 300
+    DependsOn:
+      - NextjsNextjsCacheInitCacheDeploymentAwsCliLayer1B96D0AA
+      - NextjsNextjsCacheInitCacheDeploymentCustomResource512MiBDBB641F3
+      - NextjsNextjsPostDeployFnServiceRoleDefaultPolicyE3329507
+      - NextjsNextjsPostDeployFnServiceRoleB1777588
+      - NextjsNextjsStaticAssetsDeploymentAwsCliLayerDF7DA6AC
+      - NextjsNextjsStaticAssetsDeploymentCustomResource66994B39
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsPostDeploy/Fn/Resource
+      aws:asset:path: asset.6d362d0feb04270cd9c67f74cb4c473ad0110a78a3ae49ae8b113ef89e96845e.lambda
+      aws:asset:is-bundled: false
+      aws:asset:property: Code
+  NextjsNextjsPostDeployCustomResource9D40EDF7:
+    Type: Custom::NextjsPostDeploy
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - NextjsNextjsPostDeployFnBF6BFE97
+          - Arn
+      buildId: QKeNiJ_a7DTzmref8o5Lp
+      cacheBucketName:
+        Ref: NextjsNextjsCacheBucket9BF8C787
+      revalidationTableName:
+        Ref: NextjsNextjsCacheRevalidationTable94FA6CD2
+      msTtl: "2592000000"
+      staticAssetsBucketName:
+        Ref: NextjsNextjsStaticAssetsBucketB30C63EE
+      createInvalidationCommandInput:
+        distributionId:
+          Ref: NextjsNextjsDistributionD6DC51E9
+        invalidationBatch:
+          callerReference: "2026-11-11T04:57:25.111Z"
+          paths:
+            quantity: 1
+            items:
+              - /*
+    DependsOn:
+      - NextjsNextjsCacheInitCacheDeploymentAwsCliLayer1B96D0AA
+      - NextjsNextjsCacheInitCacheDeploymentCustomResource512MiBDBB641F3
+      - NextjsNextjsStaticAssetsDeploymentAwsCliLayerDF7DA6AC
+      - NextjsNextjsStaticAssetsDeploymentCustomResource66994B39
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Nextjs/NextjsPostDeploy/CustomResource/Default
+  CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+      ManagedPolicyArns:
+        - Fn::Sub: arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role
+  CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-us-east-2
+        S3Key: 6dba3da2af96b69a187d689b326e5272b9abc8671c0427845a8bed243e02877d.zip
+      Timeout: 900
+      MemorySize: 128
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092
+          - Arn
+      Runtime: nodejs24.x
+      Description:
+        Fn::Join:
+          - ""
+          - - "Lambda function for auto-deleting objects in "
+            - Ref: NextjsNextjsCacheBucket9BF8C787
+            - " S3 bucket."
+    DependsOn:
+      - CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler
+      aws:asset:path: asset.6dba3da2af96b69a187d689b326e5272b9abc8671c0427845a8bed243e02877d
+      aws:asset:property: Code
+  CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleBA21DBC1:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/Resource
+  CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleDefaultPolicy96C3E726:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:GetObject*
+              - s3:GetBucket*
+              - s3:List*
+            Effect: Allow
+            Resource:
+              - Fn::Join:
+                  - ""
+                  - - "arn:"
+                    - Ref: AWS::Partition
+                    - ":s3:::"
+                    - Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-us-east-2
+              - Fn::Join:
+                  - ""
+                  - - "arn:"
+                    - Ref: AWS::Partition
+                    - ":s3:::"
+                    - Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-us-east-2
+                    - /*
+          - Action:
+              - s3:GetObject*
+              - s3:GetBucket*
+              - s3:List*
+              - s3:DeleteObject*
+              - s3:PutObject
+              - s3:PutObjectLegalHold
+              - s3:PutObjectRetention
+              - s3:PutObjectTagging
+              - s3:PutObjectVersionTagging
+              - s3:Abort*
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - NextjsNextjsCacheBucket9BF8C787
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - NextjsNextjsCacheBucket9BF8C787
+                        - Arn
+                    - /*
+        Version: "2012-10-17"
+      PolicyName: CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleDefaultPolicy96C3E726
+      Roles:
+        - Ref: CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleBA21DBC1
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/DefaultPolicy/Resource
+  CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB6723FB92:
+    Type: AWS::Lambda::Function
+    Properties:
+      Architectures:
+        - arm64
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-us-east-2
+        S3Key: a12efc822af4855efaddc35cac5d42dfa7a132ded579c17dbca95a4a89d0db43.zip
+      Environment:
+        Variables:
+          AWS_CA_BUNDLE: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+      EphemeralStorage:
+        Size: 512
+      Handler: index.handler
+      Layers:
+        - Ref: NextjsNextjsCacheInitCacheDeploymentAwsCliLayer1B96D0AA
+      MemorySize: 1024
+      Role:
+        Fn::GetAtt:
+          - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleBA21DBC1
+          - Arn
+      Runtime: python3.13
+      Timeout: 900
+    DependsOn:
+      - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleDefaultPolicy96C3E726
+      - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleBA21DBC1
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/Resource
+      aws:asset:path: asset.a12efc822af4855efaddc35cac5d42dfa7a132ded579c17dbca95a4a89d0db43
+      aws:asset:is-bundled: false
+      aws:asset:property: Code
+  CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource
+  CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:GetObject*
+              - s3:GetBucket*
+              - s3:List*
+            Effect: Allow
+            Resource:
+              - Fn::Join:
+                  - ""
+                  - - "arn:"
+                    - Ref: AWS::Partition
+                    - ":s3:::"
+                    - Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-us-east-2
+              - Fn::Join:
+                  - ""
+                  - - "arn:"
+                    - Ref: AWS::Partition
+                    - ":s3:::"
+                    - Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-us-east-2
+                    - /*
+          - Action:
+              - s3:GetObject*
+              - s3:GetBucket*
+              - s3:List*
+              - s3:DeleteObject*
+              - s3:PutObject
+              - s3:PutObjectLegalHold
+              - s3:PutObjectRetention
+              - s3:PutObjectTagging
+              - s3:PutObjectVersionTagging
+              - s3:Abort*
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - NextjsNextjsStaticAssetsBucketB30C63EE
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - NextjsNextjsStaticAssetsBucketB30C63EE
+                        - Arn
+                    - /*
+        Version: "2012-10-17"
+      PolicyName: CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF
+      Roles:
+        - Ref: CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource
+  CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536:
+    Type: AWS::Lambda::Function
+    Properties:
+      Architectures:
+        - arm64
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-us-east-2
+        S3Key: a12efc822af4855efaddc35cac5d42dfa7a132ded579c17dbca95a4a89d0db43.zip
+      Environment:
+        Variables:
+          AWS_CA_BUNDLE: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+      Handler: index.handler
+      Layers:
+        - Ref: NextjsNextjsStaticAssetsDeploymentAwsCliLayerDF7DA6AC
+      MemorySize: 1024
+      Role:
+        Fn::GetAtt:
+          - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265
+          - Arn
+      Runtime: python3.13
+      Timeout: 900
+    DependsOn:
+      - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF
+      - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource
+      aws:asset:path: asset.a12efc822af4855efaddc35cac5d42dfa7a132ded579c17dbca95a4a89d0db43
+      aws:asset:is-bundled: false
+      aws:asset:property: Code
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Analytics: v2:deflate64:H4sIAAAAAAAA/6VSTW/bMAz9Lc1Z0bqk2IbdUgdrDwUaxFsvwxDQMuMx0UcgUs0Cw/99kJ02XT8OxU58eiSfHkVN9OTzJ31+Bnsem3o7tlTpthQwWwV7XrU81e1lMlsUVaz9gH62I0d/yI++jp625Xqe6j7FeiidJQlztCh4W23QCI869V/dv9SQWgRL5nDyNJzf4WxoKAUEHfp3GnvZ/ODrEhg7VR88uFBXuv0OlcW7STZ6ZUMFtic6xdNVW+POhkMWOMrOHwkFzCisZzl0yoKratBtsfY3cMB4h5EpeFWSbyxK8N+SN5KZR1CsX5I/os38MSwwOuKs0ykCp9tlsJgTfTw98IA6ZWxI9ToGL7p99Zol8i54xmuEGiOfFN5IgPmNp6KnxzmxRKrSc/e3kRryM2OQuQheYugneYP+R6WcvlLVKWanS4nkmwVEcCgYO1UkluCWyCFFg8cJBjxsYmXzFlawZ2NJz/ZcWOoXo/qFlQIN+eaZziKGe6ox5i/Su06yS9IpH2rUG/5wP7nQH7/o87MNE41j8kIO9XKIfwFqHjdoqAMAAA==
+    Metadata:
+      aws:cdk:path: FinanceAppB2Web/CDKMetadata/Default
+Outputs:
+  WebUrl:
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Fn::GetAtt:
+              - NextjsNextjsDistributionD6DC51E9
+              - DomainName
+Parameters:
+  BootstrapVersion:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cdk-bootstrap/hnb659fds/version
+    Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
+
+85 feature flags are not configured. Run 'cdk flags --unstable=flags' to learn more.

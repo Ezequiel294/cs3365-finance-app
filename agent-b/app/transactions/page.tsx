@@ -1,0 +1,1 @@
+export default function Transactions(){return <section><h1>Transactions</h1><p>Transactions keep their original amount and currency, USD conversion rate, category, tags, and review state.</p></section>}

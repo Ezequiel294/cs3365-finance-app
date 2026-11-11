@@ -1,0 +1,185 @@
+[WARNING] aws-cdk-lib.aws_dynamodb.TableOptions#pointInTimeRecovery is deprecated, and will be removed in the next major release.
+  use `pointInTimeRecoverySpecification` instead
+Bundling asset FinanceAppB2Api/ApiFn/Code/Stage...
+
+  ...20fc833eef593fc322c15aa25f86b584baa743441cf7e3-building/index.js  2.0mb ⚠️
+
+⚡ Done in 57ms
+[cdk-nextjs] Running: "npm run build" in directory: /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b
+
+> finance-app-b2@1.0.0 build
+> next build
+
+[1m[38;2;173;127;168m▲ Next.js 16.4.6[39m[22m (Turbopack)
+[33m[1m⚠[22m[39m Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/package-lock.json
+
+[37m[1m [22m[39m Applying modifyConfig from cdk-nextjs-adapter
+[32m[1m✓[22m[39m Running next.config.ts took 17ms
+
+[37m[1m [22m[39m Creating an optimized production build ...
+[32m[1m✓[22m[39m Compiled successfully in 130ms
+[37m[1m [22m[39m Running TypeScript ...
+[37m[1m [22m[39m Finished TypeScript in 2.1s ...
+[37m[1m [22m[39m Collecting page data using 10 workers ...
+[37m[1m [22m[39m Generating static pages using 10 workers (0/9) ...
+[37m[1m [22m[39m Generating static pages using 10 workers (2/9) 
+[37m[1m [22m[39m Generating static pages using 10 workers (4/9) 
+[37m[1m [22m[39m Generating static pages using 10 workers (6/9) 
+[32m[1m✓[22m[39m Generating static pages using 10 workers (9/9) in 392ms
+[37m[1m [22m[39m Finalizing page optimization ...
+[37m[1m [22m[39m Running onBuildComplete from cdk-nextjs-adapter
+[cdk-nextjs] Staged 384 files for 18 entrypoints in /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/.next/cdk-nextjs-adapter/app
+
+[4mRoute (app)[24m
+┌ ○ /
+├ ○ /_not-found
+├ ○ /accounts
+├ ƒ /auth
+├ ○ /dashboard
+├ ○ /portfolio
+├ ○ /sign-in
+└ ○ /transactions
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+[cdk-nextjs] Deploying init cache from /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/.next/cdk-nextjs-init-cache
+WARNING No cross-stack-reference strength configured, defaulting to "strong". We recommend you set feature flag "@aws-cdk/core:defaultCrossStackReferences" to "both", then deploy everywhere, then set it to "weak". Alternatively, set it to "strong" explicitly to lock in the current producer-protecting behavior. (See: https://github.com/aws/aws-cdk/blob/main/packages/aws-cdk-lib/README.md#reference-strength) (Construct Annotations)
+   FinanceAppB2Api
+   Acknowledge with 'Annotation::@aws-cdk/core:crossStackReferencesDefaultStrong'
+
+infra/app.ts:6:123
+WARNING Ignoring 'minimumProtocolVersion': it has no effect without a custom 'certificate'. The distribution uses the CloudFront default certificate, whose security policy is fixed at TLSv1. (Construct Annotations)
+   FinanceAppB2Web/Nextjs/NextjsDistribution/Distribution
+   Acknowledge with 'Annotation::@aws-cdk/aws-cloudfront:minimumProtocolVersionWithoutCertificate'
+
+infra/app.ts:6:123
+WARNING When the origin with AccessLevel.LIST is associated to the default behavior, it is strongly recommended to ensure the distribution's defaultRootObject is specified,
+See the "Setting up OAC with LIST permission" section of module's README for more info. (Construct Annotations)
+   FinanceAppB2Web/Nextjs/NextjsDistribution/Distribution/Origin2
+   Acknowledge with 'Annotation::@aws-cdk/aws-cloudfront-origins:listBucketSecurityRisk'
+
+✨  Synthesis time: 8.15s
+
+FinanceAppB2Data: start: Building FinanceAppB2Data Template
+FinanceAppB2Data: success: Built FinanceAppB2Data Template
+FinanceAppB2Api: start: Building ApiFn/Code
+FinanceAppB2Api: success: Built ApiFn/Code
+FinanceAppB2Api: start: Building FinanceAppB2Api Template
+FinanceAppB2Api: success: Built FinanceAppB2Api Template
+FinanceAppB2Web: start: Building FinanceAppB2Web/Custom::S3AutoDeleteObjectsCustomResourceProvider Code
+FinanceAppB2Web: success: Built FinanceAppB2Web/Custom::S3AutoDeleteObjectsCustomResourceProvider Code
+FinanceAppB2Web: start: Building Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/Code
+FinanceAppB2Web: success: Built Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/Code
+FinanceAppB2Web: start: Building Nextjs/NextjsCache/InitCacheDeployment/Asset1
+FinanceAppB2Web: success: Built Nextjs/NextjsCache/InitCacheDeployment/Asset1
+FinanceAppB2Web: start: Building Nextjs/NextjsStaticAssets/Deployment/Asset1
+FinanceAppB2Web: success: Built Nextjs/NextjsStaticAssets/Deployment/Asset1
+FinanceAppB2Web: start: Building Nextjs/NextjsFunctions/Functions/Code
+FinanceAppB2Web: success: Built Nextjs/NextjsFunctions/Functions/Code
+FinanceAppB2Web: start: Building FinanceAppB2Web Template
+FinanceAppB2Web: success: Built FinanceAppB2Web Template
+FinanceAppB2Data: start: Publishing FinanceAppB2Data Template (935824161416-us-east-2-bc297d8f)
+FinanceAppB2Data: success: Published FinanceAppB2Data Template (935824161416-us-east-2-bc297d8f)
+FinanceAppB2Data
+FinanceAppB2Data: creating CloudFormation changeset...
+FinanceAppB2Data: deploying... [1/3]
+FinanceAppB2Data | 0/7 | 10:48:12 p. m. | REVIEW_IN_PROGRESS      | AWS::CloudFormation::Stack | FinanceAppB2Data User Initiated
+FinanceAppB2Data | 0/7 | 10:48:20 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFormation::Stack | FinanceAppB2Data User Initiated
+FinanceAppB2Data | 0/7 | 10:48:22 p. m. | CREATE_IN_PROGRESS      | AWS::DynamoDB::Table       | Transactions (Transactions098C5767) 
+FinanceAppB2Data | 0/7 | 10:48:22 p. m. | CREATE_IN_PROGRESS      | AWS::DynamoDB::Table       | Reference (Reference0C8B785E) 
+FinanceAppB2Data | 0/7 | 10:48:22 p. m. | CREATE_IN_PROGRESS      | AWS::DynamoDB::Table       | Aggregates (AggregatesDCEBC1D6) 
+FinanceAppB2Data | 0/7 | 10:48:22 p. m. | CREATE_IN_PROGRESS      | AWS::CDK::Metadata         | CDKMetadata/Default (CDKMetadata) 
+FinanceAppB2Data | 0/7 | 10:48:22 p. m. | CREATE_IN_PROGRESS      | AWS::DynamoDB::Table       | Ingestion (Ingestion47A52C70) 
+FinanceAppB2Data | 0/7 | 10:48:22 p. m. | CREATE_IN_PROGRESS      | AWS::DynamoDB::Table       | InvestmentTransactions (InvestmentTransactions47AA9B69) 
+FinanceAppB2Data | 0/7 | 10:48:23 p. m. | CREATE_IN_PROGRESS      | AWS::DynamoDB::Table       | Aggregates (AggregatesDCEBC1D6) Resource creation Initiated
+FinanceAppB2Data | 0/7 | 10:48:23 p. m. | CREATE_IN_PROGRESS      | AWS::DynamoDB::Table       | Reference (Reference0C8B785E) Resource creation Initiated
+FinanceAppB2Data | 0/7 | 10:48:23 p. m. | CREATE_IN_PROGRESS      | AWS::CDK::Metadata         | CDKMetadata/Default (CDKMetadata) Resource creation Initiated
+FinanceAppB2Data | 0/7 | 10:48:23 p. m. | CREATE_IN_PROGRESS      | AWS::DynamoDB::Table       | Transactions (Transactions098C5767) Resource creation Initiated
+FinanceAppB2Data | 1/7 | 10:48:23 p. m. | CREATE_COMPLETE         | AWS::CDK::Metadata         | CDKMetadata/Default (CDKMetadata) 
+FinanceAppB2Data | 1/7 | 10:48:23 p. m. | CREATE_IN_PROGRESS      | AWS::DynamoDB::Table       | Ingestion (Ingestion47A52C70) Resource creation Initiated
+FinanceAppB2Data | 1/7 | 10:48:23 p. m. | CREATE_IN_PROGRESS      | AWS::DynamoDB::Table       | InvestmentTransactions (InvestmentTransactions47AA9B69) Resource creation Initiated
+FinanceAppB2Data | 2/7 | 10:48:35 p. m. | CREATE_COMPLETE         | AWS::DynamoDB::Table       | Aggregates (AggregatesDCEBC1D6) 
+FinanceAppB2Data | 3/7 | 10:48:35 p. m. | CREATE_COMPLETE         | AWS::DynamoDB::Table       | Reference (Reference0C8B785E) 
+FinanceAppB2Data | 4/7 | 10:48:35 p. m. | CREATE_COMPLETE         | AWS::DynamoDB::Table       | Ingestion (Ingestion47A52C70) 
+FinanceAppB2Data | 5/7 | 10:48:46 p. m. | CREATE_COMPLETE         | AWS::DynamoDB::Table       | Transactions (Transactions098C5767) 
+FinanceAppB2Data | 6/7 | 10:48:46 p. m. | CREATE_COMPLETE         | AWS::DynamoDB::Table       | InvestmentTransactions (InvestmentTransactions47AA9B69) 
+FinanceAppB2Data | 7/7 | 10:48:49 p. m. | CREATE_COMPLETE         | AWS::CloudFormation::Stack | FinanceAppB2Data 
+
+✅  FinanceAppB2Data
+
+✨  Deployment time: 36.01s
+
+Outputs:
+FinanceAppB2Data.ExportsOutputFnGetAttAggregatesDCEBC1D6ArnCAD2A494 = arn:aws:dynamodb:us-east-2:935824161416:table/FinanceAppB2Data-AggregatesDCEBC1D6-1MY5G21JTDS8Q
+FinanceAppB2Data.ExportsOutputFnGetAttIngestion47A52C70Arn390BBE6A = arn:aws:dynamodb:us-east-2:935824161416:table/FinanceAppB2Data-Ingestion47A52C70-7HUXVZ8MVTU2
+FinanceAppB2Data.ExportsOutputFnGetAttInvestmentTransactions47AA9B69Arn650D331A = arn:aws:dynamodb:us-east-2:935824161416:table/FinanceAppB2Data-InvestmentTransactions47AA9B69-11LU0S82EICZW
+FinanceAppB2Data.ExportsOutputFnGetAttReference0C8B785EArn83DBD852 = arn:aws:dynamodb:us-east-2:935824161416:table/FinanceAppB2Data-Reference0C8B785E-1RLKE0FN3B6YT
+FinanceAppB2Data.ExportsOutputFnGetAttTransactions098C5767Arn676F935D = arn:aws:dynamodb:us-east-2:935824161416:table/FinanceAppB2Data-Transactions098C5767-MI3NW841JVD8
+FinanceAppB2Data.ExportsOutputRefAggregatesDCEBC1D610A6721B = FinanceAppB2Data-AggregatesDCEBC1D6-1MY5G21JTDS8Q
+FinanceAppB2Data.ExportsOutputRefIngestion47A52C70B519B76F = FinanceAppB2Data-Ingestion47A52C70-7HUXVZ8MVTU2
+FinanceAppB2Data.ExportsOutputRefInvestmentTransactions47AA9B6996ADE760 = FinanceAppB2Data-InvestmentTransactions47AA9B69-11LU0S82EICZW
+FinanceAppB2Data.ExportsOutputRefReference0C8B785E9390FAA2 = FinanceAppB2Data-Reference0C8B785E-1RLKE0FN3B6YT
+FinanceAppB2Data.ExportsOutputRefTransactions098C5767FC1DE80D = FinanceAppB2Data-Transactions098C5767-MI3NW841JVD8
+Stack ARN:
+arn:aws:cloudformation:us-east-2:935824161416:stack/FinanceAppB2Data/19be2380-dd8b-11f1-9165-06bd7261febb
+FinanceAppB2Api: start: Publishing ApiFn/Code (935824161416-us-east-2-9f34ff02)
+FinanceAppB2Api: start: Publishing FinanceAppB2Api Template (935824161416-us-east-2-ab0606a8)
+FinanceAppB2Api: success: Published FinanceAppB2Api Template (935824161416-us-east-2-ab0606a8)
+FinanceAppB2Api: success: Published ApiFn/Code (935824161416-us-east-2-9f34ff02)
+FinanceAppB2Api
+FinanceAppB2Api: creating CloudFormation changeset...
+FinanceAppB2Api: deploying... [2/3]
+FinanceAppB2Api |  0/24 | 10:48:59 p. m. | REVIEW_IN_PROGRESS      | AWS::CloudFormation::Stack     | FinanceAppB2Api User Initiated
+FinanceAppB2Api |  0/24 | 10:49:06 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFormation::Stack     | FinanceAppB2Api User Initiated
+FinanceAppB2Api |  0/24 | 10:49:09 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Role                 | BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role (BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC) 
+FinanceAppB2Api |  0/24 | 10:49:09 p. m. | CREATE_IN_PROGRESS      | AWS::Cognito::UserPool         | Users (Users0A0EEA89) 
+FinanceAppB2Api |  0/24 | 10:49:09 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Role                 | ImportWorkerFn/ServiceRole (ImportWorkerFnServiceRole168C185D) 
+FinanceAppB2Api |  0/24 | 10:49:09 p. m. | CREATE_IN_PROGRESS      | AWS::S3::Bucket                | RawIngest (RawIngest26C2413E) 
+FinanceAppB2Api |  0/24 | 10:49:09 p. m. | CREATE_IN_PROGRESS      | AWS::CDK::Metadata             | CDKMetadata/Default (CDKMetadata) 
+FinanceAppB2Api |  0/24 | 10:49:09 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Role                 | ApiFn/ServiceRole (ApiFnServiceRoleD18AAE0E) 
+FinanceAppB2Api |  0/24 | 10:49:09 p. m. | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Api         | HttpApi 
+FinanceAppB2Api |  0/24 | 10:49:10 p. m. | CREATE_IN_PROGRESS      | AWS::CDK::Metadata             | CDKMetadata/Default (CDKMetadata) Resource creation Initiated
+FinanceAppB2Api |  0/24 | 10:49:10 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Role                 | ImportWorkerFn/ServiceRole (ImportWorkerFnServiceRole168C185D) Resource creation Initiated
+FinanceAppB2Api |  1/24 | 10:49:10 p. m. | CREATE_COMPLETE         | AWS::CDK::Metadata             | CDKMetadata/Default (CDKMetadata) 
+FinanceAppB2Api |  1/24 | 10:49:10 p. m. | CREATE_IN_PROGRESS      | AWS::S3::Bucket                | RawIngest (RawIngest26C2413E) Resource creation Initiated
+FinanceAppB2Api |  1/24 | 10:49:10 p. m. | CREATE_FAILED           | AWS::ApiGatewayV2::Api         | HttpApi Resource handler returned message: "Invalid API name specified (Service: AmazonApiGatewayV2; Status Code: 400; Error Code: BadRequestException; Request ID: 2ce50ab8-2985-41a7-917a-868f368d0018; Proxy: null)" (RequestToken: 810a194c-1ee6-f887-2542-f74ab78291fd, HandlerErrorCode: GeneralServiceException)
+FinanceAppB2Api |  1/24 | 10:49:10 p. m. | CREATE_FAILED           | AWS::IAM::Role                 | ImportWorkerFn/ServiceRole (ImportWorkerFnServiceRole168C185D) Resource creation cancelled
+FinanceAppB2Api |  1/24 | 10:49:10 p. m. | CREATE_FAILED           | AWS::S3::Bucket                | RawIngest (RawIngest26C2413E) Resource creation cancelled
+FinanceAppB2Api |  1/24 | 10:49:11 p. m. | CREATE_FAILED           | AWS::Cognito::UserPool         | Users (Users0A0EEA89) Resource creation cancelled
+FinanceAppB2Api |  1/24 | 10:49:11 p. m. | CREATE_FAILED           | AWS::IAM::Role                 | ApiFn/ServiceRole (ApiFnServiceRoleD18AAE0E) Resource creation cancelled
+FinanceAppB2Api |  1/24 | 10:49:11 p. m. | CREATE_FAILED           | AWS::IAM::Role                 | BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role (BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC) Resource creation cancelled
+FinanceAppB2Api |  1/24 | 10:49:12 p. m. | ROLLBACK_IN_PROGRESS    | AWS::CloudFormation::Stack     | FinanceAppB2Api The following resource(s) failed to create: [RawIngest26C2413E, ImportWorkerFnServiceRole168C185D, HttpApi, Users0A0EEA89, BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC, ApiFnServiceRoleD18AAE0E]. Rollback requested by user.
+FinanceAppB2Api |  1/24 | 10:49:13 p. m. | DELETE_IN_PROGRESS      | AWS::IAM::Role                 | ApiFn/ServiceRole (ApiFnServiceRoleD18AAE0E) 
+FinanceAppB2Api |  1/24 | 10:49:13 p. m. | DELETE_IN_PROGRESS      | AWS::IAM::Role                 | ImportWorkerFn/ServiceRole (ImportWorkerFnServiceRole168C185D) 
+FinanceAppB2Api |  1/24 | 10:49:13 p. m. | DELETE_IN_PROGRESS      | AWS::IAM::Role                 | BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role (BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC) 
+FinanceAppB2Api |  1/24 | 10:49:13 p. m. | DELETE_IN_PROGRESS      | AWS::CDK::Metadata             | CDKMetadata/Default (CDKMetadata) 
+FinanceAppB2Api |  1/24 | 10:49:13 p. m. | DELETE_SKIPPED          | AWS::Cognito::UserPool         | Users (Users0A0EEA89) 
+FinanceAppB2Api |  1/24 | 10:49:13 p. m. | DELETE_SKIPPED          | AWS::S3::Bucket                | RawIngest (RawIngest26C2413E) 
+FinanceAppB2Api |  0/24 | 10:49:14 p. m. | DELETE_COMPLETE         | AWS::CDK::Metadata             | CDKMetadata/Default (CDKMetadata) 
+FinanceAppB2Api |  1/24 | 10:49:14 p. m. | DELETE_COMPLETE         | AWS::IAM::Role                 | BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role (BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC) 
+FinanceAppB2Api |  2/24 | 10:49:15 p. m. | DELETE_COMPLETE         | AWS::IAM::Role                 | ApiFn/ServiceRole (ApiFnServiceRoleD18AAE0E) 
+FinanceAppB2Api |  3/24 | 10:49:16 p. m. | DELETE_COMPLETE         | AWS::IAM::Role                 | ImportWorkerFn/ServiceRole (ImportWorkerFnServiceRole168C185D) 
+FinanceAppB2Api |  4/24 | 10:51:34 p. m. | DELETE_COMPLETE         | AWS::ApiGatewayV2::Api         | HttpApi 
+FinanceAppB2Api |  5/24 | 10:51:34 p. m. | ROLLBACK_COMPLETE       | AWS::CloudFormation::Stack     | FinanceAppB2Api 
+
+Failed resources:
+FinanceAppB2Api | 10:49:10 p. m. | CREATE_FAILED           | AWS::ApiGatewayV2::Api         | HttpApi Resource handler returned message: "Invalid API name specified (Service: AmazonApiGatewayV2; Status Code: 400; Error Code: BadRequestException; Request ID: 2ce50ab8-2985-41a7-917a-868f368d0018; Proxy: null)" (RequestToken: 810a194c-1ee6-f887-2542-f74ab78291fd, HandlerErrorCode: GeneralServiceException)
+❌  FinanceAppB2Api failed to deploy
+‣ DeploymentError: Resource updates failed:
+FinanceAppB2Api/HttpApi  (AWS::ApiGatewayV2::Api HttpApi)
+  Resource handler returned message: "Invalid API name specified (Service: AmazonApiGatewayV2; Status Code: 400; Error
+  Code: BadRequestException; Request ID: 2ce50ab8-2985-41a7-917a-868f368d0018; Proxy: null)" (RequestToken:
+  810a194c-1ee6-f887-2542-f74ab78291fd, HandlerErrorCode: GeneralServiceException)
+Source Location: new ApiStack (/Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/infra/app.ts:5:2262)
+                 api (/Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/infra/app.ts:7:90)
+                 <anonymous> (/Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/infra/app.ts:7:181)
+                 ...node internals, tsx...
+
+   CloudTrail delivery can lag up to 15 minutes behind the failure; re-run `cdk diagnose` in a few minutes to check for additional control-plane errors (e.g. AccessDenied).

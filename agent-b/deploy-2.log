@@ -1,0 +1,382 @@
+[WARNING] aws-cdk-lib.aws_dynamodb.TableOptions#pointInTimeRecovery is deprecated, and will be removed in the next major release.
+  use `pointInTimeRecoverySpecification` instead
+Bundling asset FinanceAppB2Api/ApiFn/Code/Stage...
+
+  ...20fc833eef593fc322c15aa25f86b584baa743441cf7e3-building/index.js  2.0mb ⚠️
+
+⚡ Done in 53ms
+[cdk-nextjs] Running: "npm run build" in directory: /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b
+
+> finance-app-b2@1.0.0 build
+> next build
+
+[1m[38;2;173;127;168m▲ Next.js 16.4.6[39m[22m (Turbopack)
+[33m[1m⚠[22m[39m Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/package-lock.json
+
+[37m[1m [22m[39m Applying modifyConfig from cdk-nextjs-adapter
+[32m[1m✓[22m[39m Running next.config.ts took 17ms
+
+[37m[1m [22m[39m Creating an optimized production build ...
+[32m[1m✓[22m[39m Compiled successfully in 225ms
+[37m[1m [22m[39m Running TypeScript ...
+[37m[1m [22m[39m Finished TypeScript in 2.8s ...
+[37m[1m [22m[39m Collecting page data using 10 workers ...
+[37m[1m [22m[39m Generating static pages using 10 workers (0/9) ...
+[37m[1m [22m[39m Generating static pages using 10 workers (2/9) 
+[37m[1m [22m[39m Generating static pages using 10 workers (4/9) 
+[37m[1m [22m[39m Generating static pages using 10 workers (6/9) 
+[32m[1m✓[22m[39m Generating static pages using 10 workers (9/9) in 444ms
+[37m[1m [22m[39m Finalizing page optimization ...
+[37m[1m [22m[39m Running onBuildComplete from cdk-nextjs-adapter
+[cdk-nextjs] Staged 384 files for 18 entrypoints in /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/.next/cdk-nextjs-adapter/app
+
+[4mRoute (app)[24m
+┌ ○ /
+├ ○ /_not-found
+├ ○ /accounts
+├ ƒ /auth
+├ ○ /dashboard
+├ ○ /portfolio
+├ ○ /sign-in
+└ ○ /transactions
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+[cdk-nextjs] Deploying init cache from /Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/.next/cdk-nextjs-init-cache
+WARNING No cross-stack-reference strength configured, defaulting to "strong". We recommend you set feature flag "@aws-cdk/core:defaultCrossStackReferences" to "both", then deploy everywhere, then set it to "weak". Alternatively, set it to "strong" explicitly to lock in the current producer-protecting behavior. (See: https://github.com/aws/aws-cdk/blob/main/packages/aws-cdk-lib/README.md#reference-strength) (Construct Annotations)
+   FinanceAppB2Api
+   Acknowledge with 'Annotation::@aws-cdk/core:crossStackReferencesDefaultStrong'
+
+infra/app.ts:6:123
+WARNING Ignoring 'minimumProtocolVersion': it has no effect without a custom 'certificate'. The distribution uses the CloudFront default certificate, whose security policy is fixed at TLSv1. (Construct Annotations)
+   FinanceAppB2Web/Nextjs/NextjsDistribution/Distribution
+   Acknowledge with 'Annotation::@aws-cdk/aws-cloudfront:minimumProtocolVersionWithoutCertificate'
+
+infra/app.ts:6:123
+WARNING When the origin with AccessLevel.LIST is associated to the default behavior, it is strongly recommended to ensure the distribution's defaultRootObject is specified,
+See the "Setting up OAC with LIST permission" section of module's README for more info. (Construct Annotations)
+   FinanceAppB2Web/Nextjs/NextjsDistribution/Distribution/Origin2
+   Acknowledge with 'Annotation::@aws-cdk/aws-cloudfront-origins:listBucketSecurityRisk'
+
+✨  Synthesis time: 9.69s
+
+FinanceAppB2Data
+FinanceAppB2Api: start: Building FinanceAppB2Api Template
+FinanceAppB2Api: success: Built FinanceAppB2Api Template
+FinanceAppB2Web: start: Building FinanceAppB2Web/Custom::S3AutoDeleteObjectsCustomResourceProvider Code
+FinanceAppB2Web: success: Built FinanceAppB2Web/Custom::S3AutoDeleteObjectsCustomResourceProvider Code
+FinanceAppB2Web: start: Building Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/Code
+FinanceAppB2Web: success: Built Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/Code
+FinanceAppB2Web: start: Building Nextjs/NextjsCache/InitCacheDeployment/Asset1
+FinanceAppB2Web: success: Built Nextjs/NextjsCache/InitCacheDeployment/Asset1
+FinanceAppB2Web: start: Building Nextjs/NextjsStaticAssets/Deployment/Asset1
+FinanceAppB2Web: success: Built Nextjs/NextjsStaticAssets/Deployment/Asset1
+FinanceAppB2Web: start: Building Nextjs/NextjsFunctions/Functions/Code
+FinanceAppB2Web: success: Built Nextjs/NextjsFunctions/Functions/Code
+FinanceAppB2Web: start: Building FinanceAppB2Web Template
+FinanceAppB2Web: success: Built FinanceAppB2Web Template
+FinanceAppB2Data: deploying... [1/3]
+
+✅  FinanceAppB2Data (no changes)
+
+✨  Deployment time: 0s
+
+Outputs:
+FinanceAppB2Data.ExportsOutputFnGetAttAggregatesDCEBC1D6ArnCAD2A494 = arn:aws:dynamodb:us-east-2:935824161416:table/FinanceAppB2Data-AggregatesDCEBC1D6-1MY5G21JTDS8Q
+FinanceAppB2Data.ExportsOutputFnGetAttIngestion47A52C70Arn390BBE6A = arn:aws:dynamodb:us-east-2:935824161416:table/FinanceAppB2Data-Ingestion47A52C70-7HUXVZ8MVTU2
+FinanceAppB2Data.ExportsOutputFnGetAttInvestmentTransactions47AA9B69Arn650D331A = arn:aws:dynamodb:us-east-2:935824161416:table/FinanceAppB2Data-InvestmentTransactions47AA9B69-11LU0S82EICZW
+FinanceAppB2Data.ExportsOutputFnGetAttReference0C8B785EArn83DBD852 = arn:aws:dynamodb:us-east-2:935824161416:table/FinanceAppB2Data-Reference0C8B785E-1RLKE0FN3B6YT
+FinanceAppB2Data.ExportsOutputFnGetAttTransactions098C5767Arn676F935D = arn:aws:dynamodb:us-east-2:935824161416:table/FinanceAppB2Data-Transactions098C5767-MI3NW841JVD8
+FinanceAppB2Data.ExportsOutputRefAggregatesDCEBC1D610A6721B = FinanceAppB2Data-AggregatesDCEBC1D6-1MY5G21JTDS8Q
+FinanceAppB2Data.ExportsOutputRefIngestion47A52C70B519B76F = FinanceAppB2Data-Ingestion47A52C70-7HUXVZ8MVTU2
+FinanceAppB2Data.ExportsOutputRefInvestmentTransactions47AA9B6996ADE760 = FinanceAppB2Data-InvestmentTransactions47AA9B69-11LU0S82EICZW
+FinanceAppB2Data.ExportsOutputRefReference0C8B785E9390FAA2 = FinanceAppB2Data-Reference0C8B785E-1RLKE0FN3B6YT
+FinanceAppB2Data.ExportsOutputRefTransactions098C5767FC1DE80D = FinanceAppB2Data-Transactions098C5767-MI3NW841JVD8
+Stack ARN:
+arn:aws:cloudformation:us-east-2:935824161416:stack/FinanceAppB2Data/19be2380-dd8b-11f1-9165-06bd7261febb
+FinanceAppB2Api: start: Publishing FinanceAppB2Api Template (935824161416-us-east-2-7832b9d7)
+FinanceAppB2Api: success: Published FinanceAppB2Api Template (935824161416-us-east-2-7832b9d7)
+FinanceAppB2Api
+FinanceAppB2Api: creating CloudFormation changeset...
+FinanceAppB2Api: deploying... [2/3]
+FinanceAppB2Api |  0/24 | 10:52:55 p. m. | REVIEW_IN_PROGRESS      | AWS::CloudFormation::Stack     | FinanceAppB2Api User Initiated
+FinanceAppB2Api |  0/24 | 10:53:03 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFormation::Stack     | FinanceAppB2Api User Initiated
+FinanceAppB2Api |  0/24 | 10:53:05 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Role                 | BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role (BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC) 
+FinanceAppB2Api |  0/24 | 10:53:05 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Role                 | ApiFn/ServiceRole (ApiFnServiceRoleD18AAE0E) 
+FinanceAppB2Api |  0/24 | 10:53:05 p. m. | CREATE_IN_PROGRESS      | AWS::Cognito::UserPool         | Users (Users0A0EEA89) 
+FinanceAppB2Api |  0/24 | 10:53:05 p. m. | CREATE_IN_PROGRESS      | AWS::CDK::Metadata             | CDKMetadata/Default (CDKMetadata) 
+FinanceAppB2Api |  0/24 | 10:53:05 p. m. | CREATE_IN_PROGRESS      | AWS::S3::Bucket                | RawIngest (RawIngest26C2413E) 
+FinanceAppB2Api |  0/24 | 10:53:05 p. m. | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Api         | HttpApi (HttpApiF5A9A8A7) 
+FinanceAppB2Api |  0/24 | 10:53:05 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Role                 | ImportWorkerFn/ServiceRole (ImportWorkerFnServiceRole168C185D) 
+FinanceAppB2Api |  0/24 | 10:53:06 p. m. | CREATE_IN_PROGRESS      | AWS::CDK::Metadata             | CDKMetadata/Default (CDKMetadata) Resource creation Initiated
+FinanceAppB2Api |  1/24 | 10:53:06 p. m. | CREATE_COMPLETE         | AWS::CDK::Metadata             | CDKMetadata/Default (CDKMetadata) 
+FinanceAppB2Api |  1/24 | 10:53:06 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Role                 | ApiFn/ServiceRole (ApiFnServiceRoleD18AAE0E) Resource creation Initiated
+FinanceAppB2Api |  1/24 | 10:53:06 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Role                 | ImportWorkerFn/ServiceRole (ImportWorkerFnServiceRole168C185D) Resource creation Initiated
+FinanceAppB2Api |  1/24 | 10:53:06 p. m. | CREATE_IN_PROGRESS      | AWS::S3::Bucket                | RawIngest (RawIngest26C2413E) Resource creation Initiated
+FinanceAppB2Api |  1/24 | 10:53:07 p. m. | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Api         | HttpApi (HttpApiF5A9A8A7) Resource creation Initiated
+FinanceAppB2Api |  1/24 | 10:53:07 p. m. | CREATE_IN_PROGRESS      | AWS::Cognito::UserPool         | Users (Users0A0EEA89) Resource creation Initiated
+FinanceAppB2Api |  2/24 | 10:53:07 p. m. | CREATE_COMPLETE         | AWS::ApiGatewayV2::Api         | HttpApi (HttpApiF5A9A8A7) 
+FinanceAppB2Api |  2/24 | 10:53:07 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Role                 | BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role (BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC) Resource creation Initiated
+FinanceAppB2Api |  3/24 | 10:53:08 p. m. | CREATE_COMPLETE         | AWS::Cognito::UserPool         | Users (Users0A0EEA89) 
+FinanceAppB2Api |  3/24 | 10:53:08 p. m. | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Stage       | Stage 
+FinanceAppB2Api |  3/24 | 10:53:08 p. m. | CREATE_IN_PROGRESS      | AWS::Cognito::UserPoolClient   | Users/WebClient (UsersWebClient8EE36D42) 
+FinanceAppB2Api |  3/24 | 10:53:09 p. m. | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Stage       | Stage Resource creation Initiated
+FinanceAppB2Api |  3/24 | 10:53:09 p. m. | CREATE_IN_PROGRESS      | AWS::Cognito::UserPoolClient   | Users/WebClient (UsersWebClient8EE36D42) Resource creation Initiated
+FinanceAppB2Api |  4/24 | 10:53:09 p. m. | CREATE_COMPLETE         | AWS::ApiGatewayV2::Stage       | Stage 
+FinanceAppB2Api |  5/24 | 10:53:09 p. m. | CREATE_COMPLETE         | AWS::Cognito::UserPoolClient   | Users/WebClient (UsersWebClient8EE36D42) 
+FinanceAppB2Api |  5/24 | 10:53:10 p. m. | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Authorizer  | JwtAuthorizer 
+FinanceAppB2Api |  5/24 | 10:53:11 p. m. | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Authorizer  | JwtAuthorizer Resource creation Initiated
+FinanceAppB2Api |  6/24 | 10:53:11 p. m. | CREATE_COMPLETE         | AWS::ApiGatewayV2::Authorizer  | JwtAuthorizer 
+FinanceAppB2Api |  7/24 | 10:53:20 p. m. | CREATE_COMPLETE         | AWS::S3::Bucket                | RawIngest (RawIngest26C2413E) 
+FinanceAppB2Api |  7/24 | 10:53:21 p. m. | CREATE_IN_PROGRESS      | AWS::S3::BucketPolicy          | RawIngest/Policy (RawIngestPolicyCE384134) 
+FinanceAppB2Api |  7/24 | 10:53:22 p. m. | CREATE_IN_PROGRESS      | AWS::S3::BucketPolicy          | RawIngest/Policy (RawIngestPolicyCE384134) Resource creation Initiated
+FinanceAppB2Api |  8/24 | 10:53:22 p. m. | CREATE_COMPLETE         | AWS::S3::BucketPolicy          | RawIngest/Policy (RawIngestPolicyCE384134) 
+FinanceAppB2Api |  9/24 | 10:53:23 p. m. | CREATE_COMPLETE         | AWS::IAM::Role                 | ApiFn/ServiceRole (ApiFnServiceRoleD18AAE0E) 
+FinanceAppB2Api | 10/24 | 10:53:23 p. m. | CREATE_COMPLETE         | AWS::IAM::Role                 | ImportWorkerFn/ServiceRole (ImportWorkerFnServiceRole168C185D) 
+FinanceAppB2Api | 10/24 | 10:53:23 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Policy               | ApiFn/ServiceRole/DefaultPolicy (ApiFnServiceRoleDefaultPolicy56A1E6E5) 
+FinanceAppB2Api | 10/24 | 10:53:23 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Policy               | ImportWorkerFn/ServiceRole/DefaultPolicy (ImportWorkerFnServiceRoleDefaultPolicy123BC1F8) 
+FinanceAppB2Api | 10/24 | 10:53:24 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Policy               | ApiFn/ServiceRole/DefaultPolicy (ApiFnServiceRoleDefaultPolicy56A1E6E5) Resource creation Initiated
+FinanceAppB2Api | 11/24 | 10:53:24 p. m. | CREATE_COMPLETE         | AWS::IAM::Role                 | BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role (BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC) 
+FinanceAppB2Api | 11/24 | 10:53:24 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Policy               | ImportWorkerFn/ServiceRole/DefaultPolicy (ImportWorkerFnServiceRoleDefaultPolicy123BC1F8) Resource creation Initiated
+FinanceAppB2Api | 11/24 | 10:53:24 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Policy               | RawIngest/Notifications/HandlerPolicy (RawIngestNotificationsHandlerPolicyE78D8097) 
+FinanceAppB2Api | 11/24 | 10:53:24 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function          | BucketNotificationsHandler050a0587b7544547bf325f094a3db834 (BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691) 
+FinanceAppB2Api | 11/24 | 10:53:25 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Policy               | RawIngest/Notifications/HandlerPolicy (RawIngestNotificationsHandlerPolicyE78D8097) Resource creation Initiated
+FinanceAppB2Api | 11/24 | 10:53:26 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function          | BucketNotificationsHandler050a0587b7544547bf325f094a3db834 (BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691) Resource creation Initiated
+FinanceAppB2Api | 11/24 | 10:53:26 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function          | BucketNotificationsHandler050a0587b7544547bf325f094a3db834 (BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691) Eventual consistency check initiated
+FinanceAppB2Api | 12/24 | 10:53:32 p. m. | CREATE_COMPLETE         | AWS::Lambda::Function          | BucketNotificationsHandler050a0587b7544547bf325f094a3db834 (BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691) 
+FinanceAppB2Api | 13/24 | 10:53:39 p. m. | CREATE_COMPLETE         | AWS::IAM::Policy               | ApiFn/ServiceRole/DefaultPolicy (ApiFnServiceRoleDefaultPolicy56A1E6E5) 
+FinanceAppB2Api | 14/24 | 10:53:39 p. m. | CREATE_COMPLETE         | AWS::IAM::Policy               | ImportWorkerFn/ServiceRole/DefaultPolicy (ImportWorkerFnServiceRoleDefaultPolicy123BC1F8) 
+FinanceAppB2Api | 14/24 | 10:53:40 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function          | ApiFn (ApiFnE0725F78) 
+FinanceAppB2Api | 14/24 | 10:53:40 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function          | ImportWorkerFn (ImportWorkerFn412FE6FF) 
+FinanceAppB2Api | 15/24 | 10:53:40 p. m. | CREATE_COMPLETE         | AWS::IAM::Policy               | RawIngest/Notifications/HandlerPolicy (RawIngestNotificationsHandlerPolicyE78D8097) 
+FinanceAppB2Api | 15/24 | 10:53:41 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function          | ImportWorkerFn (ImportWorkerFn412FE6FF) Resource creation Initiated
+FinanceAppB2Api | 15/24 | 10:53:42 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function          | ApiFn (ApiFnE0725F78) Resource creation Initiated
+FinanceAppB2Api | 15/24 | 10:53:42 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function          | ImportWorkerFn (ImportWorkerFn412FE6FF) Eventual consistency check initiated
+FinanceAppB2Api | 15/24 | 10:53:42 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function          | ApiFn (ApiFnE0725F78) Eventual consistency check initiated
+FinanceAppB2Api | 15/24 | 10:53:43 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Permission        | RawIngest/AllowBucketNotificationsToFinanceAppB2ApiImportWorkerFn616B98FA (RawIngestAllowBucketNotificationsToFinanceAppB2ApiImportWorkerFn616B98FA3807D47A) 
+FinanceAppB2Api | 15/24 | 10:53:43 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Permission        | ApiFn/ApiGatewayInvoke (ApiFnApiGatewayInvokeE9C113F8) 
+FinanceAppB2Api | 15/24 | 10:53:43 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Permission        | RawIngest/AllowBucketNotificationsToFinanceAppB2ApiImportWorkerFn616B98FA (RawIngestAllowBucketNotificationsToFinanceAppB2ApiImportWorkerFn616B98FA3807D47A) Resource creation Initiated
+FinanceAppB2Api | 15/24 | 10:53:44 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Permission        | ApiFn/ApiGatewayInvoke (ApiFnApiGatewayInvokeE9C113F8) Resource creation Initiated
+FinanceAppB2Api | 16/24 | 10:53:44 p. m. | CREATE_COMPLETE         | AWS::Lambda::Permission        | RawIngest/AllowBucketNotificationsToFinanceAppB2ApiImportWorkerFn616B98FA (RawIngestAllowBucketNotificationsToFinanceAppB2ApiImportWorkerFn616B98FA3807D47A) 
+FinanceAppB2Api | 17/24 | 10:53:44 p. m. | CREATE_COMPLETE         | AWS::Lambda::Permission        | ApiFn/ApiGatewayInvoke (ApiFnApiGatewayInvokeE9C113F8) 
+FinanceAppB2Api | 18/24 | 10:53:48 p. m. | CREATE_COMPLETE         | AWS::Lambda::Function          | ImportWorkerFn (ImportWorkerFn412FE6FF) 
+FinanceAppB2Api | 19/24 | 10:53:48 p. m. | CREATE_COMPLETE         | AWS::Lambda::Function          | ApiFn (ApiFnE0725F78) 
+FinanceAppB2Api | 19/24 | 10:53:48 p. m. | CREATE_IN_PROGRESS      | Custom::S3BucketNotifications  | RawIngest/Notifications (RawIngestNotifications39A7287F) 
+FinanceAppB2Api | 19/24 | 10:53:48 p. m. | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Integration | LambdaIntegration 
+FinanceAppB2Api | 19/24 | 10:53:49 p. m. | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Integration | LambdaIntegration Resource creation Initiated
+FinanceAppB2Api | 20/24 | 10:53:49 p. m. | CREATE_COMPLETE         | AWS::ApiGatewayV2::Integration | LambdaIntegration 
+FinanceAppB2Api | 20/24 | 10:53:50 p. m. | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route       | ApiRoute 
+FinanceAppB2Api | 20/24 | 10:53:50 p. m. | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route       | IngestRoute 
+FinanceAppB2Api | 20/24 | 10:53:51 p. m. | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route       | ApiRoute Resource creation Initiated
+FinanceAppB2Api | 20/24 | 10:53:51 p. m. | CREATE_IN_PROGRESS      | AWS::ApiGatewayV2::Route       | IngestRoute Resource creation Initiated
+FinanceAppB2Api | 20/24 | 10:53:51 p. m. | CREATE_IN_PROGRESS      | Custom::S3BucketNotifications  | RawIngest/Notifications (RawIngestNotifications39A7287F) Resource creation Initiated
+FinanceAppB2Api | 21/24 | 10:53:51 p. m. | CREATE_COMPLETE         | Custom::S3BucketNotifications  | RawIngest/Notifications (RawIngestNotifications39A7287F) 
+FinanceAppB2Api | 22/24 | 10:53:51 p. m. | CREATE_COMPLETE         | AWS::ApiGatewayV2::Route       | ApiRoute 
+FinanceAppB2Api | 23/24 | 10:53:51 p. m. | CREATE_COMPLETE         | AWS::ApiGatewayV2::Route       | IngestRoute 
+FinanceAppB2Api | 24/24 | 10:53:53 p. m. | CREATE_COMPLETE         | AWS::CloudFormation::Stack     | FinanceAppB2Api 
+
+✅  FinanceAppB2Api
+
+✨  Deployment time: 57.13s
+
+Outputs:
+FinanceAppB2Api.ApiUrl = https://r0drjegn3l.execute-api.us-east-2.amazonaws.com
+FinanceAppB2Api.ExportsOutputFnGetAttHttpApiF5A9A8A7ApiEndpoint082134F8 = https://r0drjegn3l.execute-api.us-east-2.amazonaws.com
+FinanceAppB2Api.ExportsOutputRefUsersWebClient8EE36D427F5C395C = 3rpvhobb70dq6lddisj4caktdo
+FinanceAppB2Api.UserPoolClientId = 3rpvhobb70dq6lddisj4caktdo
+FinanceAppB2Api.UserPoolId = us-east-2_OC4kexk09
+Stack ARN:
+arn:aws:cloudformation:us-east-2:935824161416:stack/FinanceAppB2Api/c1e50380-dd8b-11f1-b6b3-02ab7fbdd39f
+FinanceAppB2Web: start: Publishing FinanceAppB2Web/Custom::S3AutoDeleteObjectsCustomResourceProvider Code (935824161416-us-east-2-a1e13453)
+FinanceAppB2Web: start: Publishing Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/Code (935824161416-us-east-2-4ffe6848)
+FinanceAppB2Web: start: Publishing Nextjs/NextjsCache/InitCacheDeployment/Asset1 (935824161416-us-east-2-2150b6d6)
+FinanceAppB2Web: start: Publishing Nextjs/NextjsStaticAssets/Deployment/Asset1 (935824161416-us-east-2-1db04f74)
+FinanceAppB2Web: start: Publishing Nextjs/NextjsFunctions/Functions/Code (935824161416-us-east-2-0e860c47)
+FinanceAppB2Web: start: Publishing FinanceAppB2Web Template (935824161416-us-east-2-aa2d9a9e)
+FinanceAppB2Web: success: Published FinanceAppB2Web/Custom::S3AutoDeleteObjectsCustomResourceProvider Code (935824161416-us-east-2-a1e13453)
+FinanceAppB2Web: success: Published Nextjs/NextjsCache/InitCacheDeployment/Asset1 (935824161416-us-east-2-2150b6d6)
+FinanceAppB2Web: success: Published FinanceAppB2Web Template (935824161416-us-east-2-aa2d9a9e)
+FinanceAppB2Web: success: Published Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/Code (935824161416-us-east-2-4ffe6848)
+FinanceAppB2Web: success: Published Nextjs/NextjsStaticAssets/Deployment/Asset1 (935824161416-us-east-2-1db04f74)
+FinanceAppB2Web: success: Published Nextjs/NextjsFunctions/Functions/Code (935824161416-us-east-2-0e860c47)
+FinanceAppB2Web
+FinanceAppB2Web: creating CloudFormation changeset...
+FinanceAppB2Web: deploying... [3/3]
+FinanceAppB2Web |  0/43 | 10:54:04 p. m. | REVIEW_IN_PROGRESS      | AWS::CloudFormation::Stack             | FinanceAppB2Web User Initiated
+FinanceAppB2Web |  0/43 | 10:54:12 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFormation::Stack             | FinanceAppB2Web User Initiated
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::ResponseHeadersPolicy | Nextjs/NextjsDistribution/StaticResponseHeadersPolicy (NextjsNextjsDistributionStaticResponseHeadersPolicyC51F07E3) 
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::OriginAccessControl   | Nextjs/NextjsDistribution/Distribution/Origin2/S3OriginAccessControl (NextjsNextjsDistributionOrigin2S3OriginAccessControl8BC97BF9) 
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::CDK::Metadata                     | CDKMetadata/Default (CDKMetadata) 
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::Function              | Nextjs/NextjsDistribution/CloudFrontFn (NextjsNextjsDistributionCloudFrontFnFBDAA703) 
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::S3::Bucket                        | Nextjs/NextjsCache/Bucket (NextjsNextjsCacheBucket9BF8C787) 
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Role                         | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleBA21DBC1) 
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::CachePolicy           | Nextjs/NextjsDistribution/ImageCachePolicy (NextjsNextjsDistributionImageCachePolicy7FA62DDD) 
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::S3::Bucket                        | Nextjs/NextjsStaticAssets/Bucket (NextjsNextjsStaticAssetsBucketB30C63EE) 
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::DynamoDB::GlobalTable             | Nextjs/NextjsCache/RevalidationTable (NextjsNextjsCacheRevalidationTable94FA6CD2) 
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Role                         | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265) 
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::CachePolicy           | Nextjs/NextjsDistribution/DynamicCachePolicy (NextjsNextjsDistributionDynamicCachePolicy9F681160) 
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::LayerVersion              | Nextjs/NextjsStaticAssets/Deployment/AwsCliLayer (NextjsNextjsStaticAssetsDeploymentAwsCliLayerDF7DA6AC) 
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Role                         | Custom::S3AutoDeleteObjectsCustomResourceProvider/Role (CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092) 
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::LayerVersion              | Nextjs/NextjsCache/InitCacheDeployment/AwsCliLayer (NextjsNextjsCacheInitCacheDeploymentAwsCliLayer1B96D0AA) 
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Role                         | Nextjs/NextjsFunctions/Functions/ServiceRole (NextjsNextjsFunctionsServiceRoleA3B22166) 
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::ResponseHeadersPolicy | Nextjs/NextjsDistribution/ImageResponseHeadersPolicy (NextjsNextjsDistributionImageResponseHeadersPolicyC62CA1AD) 
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::OriginAccessControl   | Nextjs/NextjsDistribution/Distribution/Origin1/FunctionUrlOriginAccessControl (NextjsNextjsDistributionOrigin1FunctionUrlOriginAccessControl3C1C2E6F) 
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::ResponseHeadersPolicy | Nextjs/NextjsDistribution/DynamicResponseHeadersPolicy (NextjsNextjsDistributionDynamicResponseHeadersPolicy7B9494AD) 
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::OriginAccessControl   | Nextjs/NextjsDistribution/Distribution/Origin2/S3OriginAccessControl (NextjsNextjsDistributionOrigin2S3OriginAccessControl8BC97BF9) Resource creation Initiated
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::DynamoDB::GlobalTable             | Nextjs/NextjsCache/RevalidationTable (NextjsNextjsCacheRevalidationTable94FA6CD2) Resource creation Initiated
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::CDK::Metadata                     | CDKMetadata/Default (CDKMetadata) Resource creation Initiated
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Role                         | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265) Resource creation Initiated
+FinanceAppB2Web |  0/43 | 10:54:15 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::CachePolicy           | Nextjs/NextjsDistribution/ImageCachePolicy (NextjsNextjsDistributionImageCachePolicy7FA62DDD) Resource creation Initiated
+FinanceAppB2Web |  0/43 | 10:54:16 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Role                         | Nextjs/NextjsFunctions/Functions/ServiceRole (NextjsNextjsFunctionsServiceRoleA3B22166) Resource creation Initiated
+FinanceAppB2Web |  0/43 | 10:54:16 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::OriginAccessControl   | Nextjs/NextjsDistribution/Distribution/Origin1/FunctionUrlOriginAccessControl (NextjsNextjsDistributionOrigin1FunctionUrlOriginAccessControl3C1C2E6F) Resource creation Initiated
+FinanceAppB2Web |  1/43 | 10:54:16 p. m. | CREATE_COMPLETE         | AWS::CDK::Metadata                     | CDKMetadata/Default (CDKMetadata) 
+FinanceAppB2Web |  1/43 | 10:54:16 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Role                         | Custom::S3AutoDeleteObjectsCustomResourceProvider/Role (CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092) Resource creation Initiated
+FinanceAppB2Web |  1/43 | 10:54:16 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::ResponseHeadersPolicy | Nextjs/NextjsDistribution/StaticResponseHeadersPolicy (NextjsNextjsDistributionStaticResponseHeadersPolicyC51F07E3) Resource creation Initiated
+FinanceAppB2Web |  1/43 | 10:54:16 p. m. | CREATE_IN_PROGRESS      | AWS::S3::Bucket                        | Nextjs/NextjsStaticAssets/Bucket (NextjsNextjsStaticAssetsBucketB30C63EE) Resource creation Initiated
+FinanceAppB2Web |  1/43 | 10:54:16 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::ResponseHeadersPolicy | Nextjs/NextjsDistribution/ImageResponseHeadersPolicy (NextjsNextjsDistributionImageResponseHeadersPolicyC62CA1AD) Resource creation Initiated
+FinanceAppB2Web |  1/43 | 10:54:16 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::ResponseHeadersPolicy | Nextjs/NextjsDistribution/DynamicResponseHeadersPolicy (NextjsNextjsDistributionDynamicResponseHeadersPolicy7B9494AD) Resource creation Initiated
+FinanceAppB2Web |  2/43 | 10:54:16 p. m. | CREATE_COMPLETE         | AWS::CloudFront::OriginAccessControl   | Nextjs/NextjsDistribution/Distribution/Origin2/S3OriginAccessControl (NextjsNextjsDistributionOrigin2S3OriginAccessControl8BC97BF9) 
+FinanceAppB2Web |  3/43 | 10:54:16 p. m. | CREATE_COMPLETE         | AWS::CloudFront::CachePolicy           | Nextjs/NextjsDistribution/ImageCachePolicy (NextjsNextjsDistributionImageCachePolicy7FA62DDD) 
+FinanceAppB2Web |  4/43 | 10:54:16 p. m. | CREATE_COMPLETE         | AWS::CloudFront::OriginAccessControl   | Nextjs/NextjsDistribution/Distribution/Origin1/FunctionUrlOriginAccessControl (NextjsNextjsDistributionOrigin1FunctionUrlOriginAccessControl3C1C2E6F) 
+FinanceAppB2Web |  5/43 | 10:54:16 p. m. | CREATE_COMPLETE         | AWS::CloudFront::ResponseHeadersPolicy | Nextjs/NextjsDistribution/StaticResponseHeadersPolicy (NextjsNextjsDistributionStaticResponseHeadersPolicyC51F07E3) 
+FinanceAppB2Web |  6/43 | 10:54:16 p. m. | CREATE_COMPLETE         | AWS::CloudFront::ResponseHeadersPolicy | Nextjs/NextjsDistribution/ImageResponseHeadersPolicy (NextjsNextjsDistributionImageResponseHeadersPolicyC62CA1AD) 
+FinanceAppB2Web |  6/43 | 10:54:16 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::Function              | Nextjs/NextjsDistribution/CloudFrontFn (NextjsNextjsDistributionCloudFrontFnFBDAA703) Resource creation Initiated
+FinanceAppB2Web |  6/43 | 10:54:17 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::CachePolicy           | Nextjs/NextjsDistribution/DynamicCachePolicy (NextjsNextjsDistributionDynamicCachePolicy9F681160) Resource creation Initiated
+FinanceAppB2Web |  6/43 | 10:54:17 p. m. | CREATE_IN_PROGRESS      | AWS::S3::Bucket                        | Nextjs/NextjsCache/Bucket (NextjsNextjsCacheBucket9BF8C787) Resource creation Initiated
+FinanceAppB2Web |  6/43 | 10:54:17 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Role                         | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleBA21DBC1) Resource creation Initiated
+FinanceAppB2Web |  7/43 | 10:54:17 p. m. | CREATE_COMPLETE         | AWS::CloudFront::CachePolicy           | Nextjs/NextjsDistribution/DynamicCachePolicy (NextjsNextjsDistributionDynamicCachePolicy9F681160) 
+FinanceAppB2Web |  8/43 | 10:54:17 p. m. | CREATE_COMPLETE         | AWS::CloudFront::Function              | Nextjs/NextjsDistribution/CloudFrontFn (NextjsNextjsDistributionCloudFrontFnFBDAA703) 
+FinanceAppB2Web |  9/43 | 10:54:21 p. m. | CREATE_COMPLETE         | AWS::CloudFront::ResponseHeadersPolicy | Nextjs/NextjsDistribution/DynamicResponseHeadersPolicy (NextjsNextjsDistributionDynamicResponseHeadersPolicy7B9494AD) 
+FinanceAppB2Web |  9/43 | 10:54:23 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::LayerVersion              | Nextjs/NextjsCache/InitCacheDeployment/AwsCliLayer (NextjsNextjsCacheInitCacheDeploymentAwsCliLayer1B96D0AA) Resource creation Initiated
+FinanceAppB2Web |  9/43 | 10:54:23 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::LayerVersion              | Nextjs/NextjsStaticAssets/Deployment/AwsCliLayer (NextjsNextjsStaticAssetsDeploymentAwsCliLayerDF7DA6AC) Resource creation Initiated
+FinanceAppB2Web | 10/43 | 10:54:24 p. m. | CREATE_COMPLETE         | AWS::Lambda::LayerVersion              | Nextjs/NextjsCache/InitCacheDeployment/AwsCliLayer (NextjsNextjsCacheInitCacheDeploymentAwsCliLayer1B96D0AA) 
+FinanceAppB2Web | 11/43 | 10:54:24 p. m. | CREATE_COMPLETE         | AWS::Lambda::LayerVersion              | Nextjs/NextjsStaticAssets/Deployment/AwsCliLayer (NextjsNextjsStaticAssetsDeploymentAwsCliLayerDF7DA6AC) 
+FinanceAppB2Web | 12/43 | 10:54:28 p. m. | CREATE_COMPLETE         | AWS::DynamoDB::GlobalTable             | Nextjs/NextjsCache/RevalidationTable (NextjsNextjsCacheRevalidationTable94FA6CD2) 
+FinanceAppB2Web | 13/43 | 10:54:29 p. m. | CREATE_COMPLETE         | AWS::S3::Bucket                        | Nextjs/NextjsStaticAssets/Bucket (NextjsNextjsStaticAssetsBucketB30C63EE) 
+FinanceAppB2Web | 14/43 | 10:54:30 p. m. | CREATE_COMPLETE         | AWS::S3::Bucket                        | Nextjs/NextjsCache/Bucket (NextjsNextjsCacheBucket9BF8C787) 
+FinanceAppB2Web | 15/43 | 10:54:32 p. m. | CREATE_COMPLETE         | AWS::IAM::Role                         | Nextjs/NextjsFunctions/Functions/ServiceRole (NextjsNextjsFunctionsServiceRoleA3B22166) 
+FinanceAppB2Web | 16/43 | 10:54:32 p. m. | CREATE_COMPLETE         | AWS::IAM::Role                         | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265) 
+FinanceAppB2Web | 17/43 | 10:54:32 p. m. | CREATE_COMPLETE         | AWS::IAM::Role                         | Custom::S3AutoDeleteObjectsCustomResourceProvider/Role (CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092) 
+FinanceAppB2Web | 17/43 | 10:54:33 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function                  | Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler (CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F) 
+FinanceAppB2Web | 17/43 | 10:54:33 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Policy                       | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF) 
+FinanceAppB2Web | 17/43 | 10:54:33 p. m. | CREATE_IN_PROGRESS      | AWS::S3::BucketPolicy                  | Nextjs/NextjsCache/Bucket/Policy (NextjsNextjsCacheBucketPolicyA2EE5400) 
+FinanceAppB2Web | 18/43 | 10:54:33 p. m. | CREATE_COMPLETE         | AWS::IAM::Role                         | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleBA21DBC1) 
+FinanceAppB2Web | 18/43 | 10:54:33 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Policy                       | Nextjs/NextjsFunctions/Functions/ServiceRole/DefaultPolicy (NextjsNextjsFunctionsServiceRoleDefaultPolicy8DBFF6DF) 
+FinanceAppB2Web | 18/43 | 10:54:33 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Policy                       | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF) Resource creation Initiated
+FinanceAppB2Web | 18/43 | 10:54:34 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Policy                       | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/DefaultPolicy (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleDefaultPolicy96C3E726) 
+FinanceAppB2Web | 18/43 | 10:54:34 p. m. | CREATE_IN_PROGRESS      | AWS::S3::BucketPolicy                  | Nextjs/NextjsCache/Bucket/Policy (NextjsNextjsCacheBucketPolicyA2EE5400) Resource creation Initiated
+FinanceAppB2Web | 18/43 | 10:54:34 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function                  | Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler (CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F) Resource creation Initiated
+FinanceAppB2Web | 18/43 | 10:54:34 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Policy                       | Nextjs/NextjsFunctions/Functions/ServiceRole/DefaultPolicy (NextjsNextjsFunctionsServiceRoleDefaultPolicy8DBFF6DF) Resource creation Initiated
+FinanceAppB2Web | 19/43 | 10:54:34 p. m. | CREATE_COMPLETE         | AWS::S3::BucketPolicy                  | Nextjs/NextjsCache/Bucket/Policy (NextjsNextjsCacheBucketPolicyA2EE5400) 
+FinanceAppB2Web | 19/43 | 10:54:35 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Policy                       | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/DefaultPolicy (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleDefaultPolicy96C3E726) Resource creation Initiated
+FinanceAppB2Web | 19/43 | 10:54:35 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function                  | Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler (CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F) Eventual consistency check initiated
+FinanceAppB2Web | 20/43 | 10:54:40 p. m. | CREATE_COMPLETE         | AWS::Lambda::Function                  | Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler (CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F) 
+FinanceAppB2Web | 20/43 | 10:54:41 p. m. | CREATE_IN_PROGRESS      | Custom::S3AutoDeleteObjects            | Nextjs/NextjsCache/Bucket/AutoDeleteObjectsCustomResource/Default (NextjsNextjsCacheBucketAutoDeleteObjectsCustomResource3159BF45) 
+FinanceAppB2Web | 20/43 | 10:54:42 p. m. | CREATE_IN_PROGRESS      | Custom::S3AutoDeleteObjects            | Nextjs/NextjsCache/Bucket/AutoDeleteObjectsCustomResource/Default (NextjsNextjsCacheBucketAutoDeleteObjectsCustomResource3159BF45) Resource creation Initiated
+FinanceAppB2Web | 21/43 | 10:54:43 p. m. | CREATE_COMPLETE         | Custom::S3AutoDeleteObjects            | Nextjs/NextjsCache/Bucket/AutoDeleteObjectsCustomResource/Default (NextjsNextjsCacheBucketAutoDeleteObjectsCustomResource3159BF45) 
+FinanceAppB2Web | 22/43 | 10:54:49 p. m. | CREATE_COMPLETE         | AWS::IAM::Policy                       | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF) 
+FinanceAppB2Web | 23/43 | 10:54:50 p. m. | CREATE_COMPLETE         | AWS::IAM::Policy                       | Nextjs/NextjsFunctions/Functions/ServiceRole/DefaultPolicy (NextjsNextjsFunctionsServiceRoleDefaultPolicy8DBFF6DF) 
+FinanceAppB2Web | 23/43 | 10:54:50 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function                  | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536) 
+FinanceAppB2Web | 24/43 | 10:54:50 p. m. | CREATE_COMPLETE         | AWS::IAM::Policy                       | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/DefaultPolicy (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleDefaultPolicy96C3E726) 
+FinanceAppB2Web | 24/43 | 10:54:50 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function                  | Nextjs/NextjsFunctions/Functions (NextjsNextjsFunctions9D230BB2) 
+FinanceAppB2Web | 24/43 | 10:54:51 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function                  | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB6723FB92) 
+FinanceAppB2Web | 24/43 | 10:54:51 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function                  | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536) Resource creation Initiated
+FinanceAppB2Web | 24/43 | 10:54:52 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function                  | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536) Eventual consistency check initiated
+FinanceAppB2Web | 24/43 | 10:54:52 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function                  | Nextjs/NextjsFunctions/Functions (NextjsNextjsFunctions9D230BB2) Resource creation Initiated
+FinanceAppB2Web | 24/43 | 10:54:52 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function                  | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB6723FB92) Resource creation Initiated
+FinanceAppB2Web | 24/43 | 10:54:53 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function                  | Nextjs/NextjsFunctions/Functions (NextjsNextjsFunctions9D230BB2) Eventual consistency check initiated
+FinanceAppB2Web | 24/43 | 10:54:53 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Function                  | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB6723FB92) Eventual consistency check initiated
+FinanceAppB2Web | 24/43 | 10:54:54 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Url                       | Nextjs/NextjsFunctions/Functions/FunctionUrl (NextjsNextjsFunctionsFunctionUrl70379F86) 
+FinanceAppB2Web | 24/43 | 10:54:55 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Url                       | Nextjs/NextjsFunctions/Functions/FunctionUrl (NextjsNextjsFunctionsFunctionUrl70379F86) Resource creation Initiated
+FinanceAppB2Web | 25/43 | 10:54:55 p. m. | CREATE_COMPLETE         | AWS::Lambda::Url                       | Nextjs/NextjsFunctions/Functions/FunctionUrl (NextjsNextjsFunctionsFunctionUrl70379F86) 
+FinanceAppB2Web | 25/43 | 10:54:57 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::Distribution          | Nextjs/NextjsDistribution/Distribution (NextjsNextjsDistributionD6DC51E9) 
+FinanceAppB2Web | 26/43 | 10:54:57 p. m. | CREATE_COMPLETE         | AWS::Lambda::Function                  | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536) 
+FinanceAppB2Web | 26/43 | 10:54:58 p. m. | CREATE_IN_PROGRESS      | Custom::CDKBucketDeployment            | Nextjs/NextjsStaticAssets/Deployment/CustomResource/Default (NextjsNextjsStaticAssetsDeploymentCustomResource66994B39) 
+FinanceAppB2Web | 27/43 | 10:54:58 p. m. | CREATE_COMPLETE         | AWS::Lambda::Function                  | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB6723FB92) 
+FinanceAppB2Web | 28/43 | 10:54:58 p. m. | CREATE_COMPLETE         | AWS::Lambda::Function                  | Nextjs/NextjsFunctions/Functions (NextjsNextjsFunctions9D230BB2) 
+FinanceAppB2Web | 28/43 | 10:54:59 p. m. | CREATE_IN_PROGRESS      | Custom::CDKBucketDeployment            | Nextjs/NextjsCache/InitCacheDeployment/CustomResource-512MiB/Default (NextjsNextjsCacheInitCacheDeploymentCustomResource512MiBDBB641F3) 
+FinanceAppB2Web | 28/43 | 10:54:59 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::Distribution          | Nextjs/NextjsDistribution/Distribution (NextjsNextjsDistributionD6DC51E9) Resource creation Initiated
+FinanceAppB2Web | 28/43 | 10:55:00 p. m. | CREATE_IN_PROGRESS      | AWS::CloudFront::Distribution          | Nextjs/NextjsDistribution/Distribution (NextjsNextjsDistributionD6DC51E9) Eventual consistency check initiated
+FinanceAppB2Web | 28/43 | 10:55:00 p. m. | CREATE_IN_PROGRESS      | AWS::SSM::Parameter                    | Nextjs/DistributionIdParameter (NextjsDistributionIdParameter17DC2044) 
+FinanceAppB2Web | 28/43 | 10:55:00 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Policy                       | Nextjs/InvalidationPolicy (NextjsInvalidationPolicy154AA645) 
+FinanceAppB2Web | 28/43 | 10:55:01 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Permission                | Nextjs/NextjsDistribution/Distribution/Origin1/InvokeFromApiForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3 (NextjsNextjsDistributionOrigin1InvokeFromApiForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3757FDF5C) 
+FinanceAppB2Web | 28/43 | 10:55:01 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Permission                | Nextjs/NextjsDistribution/Distribution/Origin1/InvokeFunctionFromCloudFrontForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3 (NextjsNextjsDistributionOrigin1InvokeFunctionFromCloudFrontForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB313927163) 
+FinanceAppB2Web | 28/43 | 10:55:01 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Permission                | Nextjs/NextjsDistribution/InvokeFunction-default (NextjsNextjsDistributionInvokeFunctiondefault54C6C2BD) 
+FinanceAppB2Web | 28/43 | 10:55:01 p. m. | CREATE_IN_PROGRESS      | AWS::SSM::Parameter                    | Nextjs/DistributionIdParameter (NextjsDistributionIdParameter17DC2044) Resource creation Initiated
+FinanceAppB2Web | 28/43 | 10:55:01 p. m. | CREATE_FAILED           | AWS::SSM::Parameter                    | Nextjs/DistributionIdParameter (NextjsDistributionIdParameter17DC2044) Resource handler returned message: "Access denied for operation 'PutParameter'." (RequestToken: 3c85b79a-f894-c59c-7e55-1d5e95ecff65, HandlerErrorCode: AccessDenied)
+FinanceAppB2Web | 28/43 | 10:55:01 p. m. | CREATE_IN_PROGRESS      | AWS::IAM::Policy                       | Nextjs/InvalidationPolicy (NextjsInvalidationPolicy154AA645) Resource creation Initiated
+FinanceAppB2Web | 28/43 | 10:55:01 p. m. | CREATE_IN_PROGRESS      | AWS::Lambda::Permission                | Nextjs/NextjsDistribution/Distribution/Origin1/InvokeFromApiForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3 (NextjsNextjsDistributionOrigin1InvokeFromApiForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3757FDF5C) Resource creation Initiated
+FinanceAppB2Web | 28/43 | 10:55:01 p. m. | CREATE_FAILED           | Custom::CDKBucketDeployment            | Nextjs/NextjsCache/InitCacheDeployment/CustomResource-512MiB/Default (NextjsNextjsCacheInitCacheDeploymentCustomResource512MiBDBB641F3) Resource creation cancelled
+FinanceAppB2Web | 28/43 | 10:55:01 p. m. | CREATE_FAILED           | Custom::CDKBucketDeployment            | Nextjs/NextjsStaticAssets/Deployment/CustomResource/Default (NextjsNextjsStaticAssetsDeploymentCustomResource66994B39) Resource creation cancelled
+FinanceAppB2Web | 28/43 | 10:55:02 p. m. | CREATE_FAILED           | AWS::Lambda::Permission                | Nextjs/NextjsDistribution/Distribution/Origin1/InvokeFromApiForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3 (NextjsNextjsDistributionOrigin1InvokeFromApiForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3757FDF5C) Resource creation cancelled
+FinanceAppB2Web | 28/43 | 10:55:02 p. m. | CREATE_FAILED           | AWS::CloudFront::Distribution          | Nextjs/NextjsDistribution/Distribution (NextjsNextjsDistributionD6DC51E9) Resource creation cancelled
+FinanceAppB2Web | 28/43 | 10:55:02 p. m. | CREATE_FAILED           | AWS::IAM::Policy                       | Nextjs/InvalidationPolicy (NextjsInvalidationPolicy154AA645) Resource creation cancelled
+FinanceAppB2Web | 28/43 | 10:55:03 p. m. | CREATE_FAILED           | AWS::Lambda::Permission                | Nextjs/NextjsDistribution/Distribution/Origin1/InvokeFunctionFromCloudFrontForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3 (NextjsNextjsDistributionOrigin1InvokeFunctionFromCloudFrontForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB313927163) Resource creation cancelled
+FinanceAppB2Web | 28/43 | 10:55:03 p. m. | CREATE_FAILED           | AWS::Lambda::Permission                | Nextjs/NextjsDistribution/InvokeFunction-default (NextjsNextjsDistributionInvokeFunctiondefault54C6C2BD) Resource creation cancelled
+FinanceAppB2Web | 28/43 | 10:55:03 p. m. | ROLLBACK_IN_PROGRESS    | AWS::CloudFormation::Stack             | FinanceAppB2Web The following resource(s) failed to create: [NextjsNextjsDistributionOrigin1InvokeFunctionFromCloudFrontForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB313927163, NextjsInvalidationPolicy154AA645, NextjsNextjsStaticAssetsDeploymentCustomResource66994B39, NextjsNextjsDistributionInvokeFunctiondefault54C6C2BD, NextjsNextjsDistributionOrigin1InvokeFromApiForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3757FDF5C, NextjsDistributionIdParameter17DC2044, NextjsNextjsDistributionD6DC51E9, NextjsNextjsCacheInitCacheDeploymentCustomResource512MiBDBB641F3]. Rollback requested by user.
+FinanceAppB2Web | 28/43 | 10:55:05 p. m. | DELETE_IN_PROGRESS      | AWS::Lambda::Permission                | Nextjs/NextjsDistribution/Distribution/Origin1/InvokeFromApiForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3 (NextjsNextjsDistributionOrigin1InvokeFromApiForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3757FDF5C) 
+FinanceAppB2Web | 28/43 | 10:55:05 p. m. | DELETE_IN_PROGRESS      | Custom::CDKBucketDeployment            | Nextjs/NextjsStaticAssets/Deployment/CustomResource/Default (NextjsNextjsStaticAssetsDeploymentCustomResource66994B39) 
+FinanceAppB2Web | 28/43 | 10:55:05 p. m. | DELETE_IN_PROGRESS      | AWS::Lambda::Permission                | Nextjs/NextjsDistribution/Distribution/Origin1/InvokeFunctionFromCloudFrontForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3 (NextjsNextjsDistributionOrigin1InvokeFunctionFromCloudFrontForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB313927163) 
+FinanceAppB2Web | 28/43 | 10:55:05 p. m. | DELETE_IN_PROGRESS      | AWS::Lambda::Permission                | Nextjs/NextjsDistribution/InvokeFunction-default (NextjsNextjsDistributionInvokeFunctiondefault54C6C2BD) 
+FinanceAppB2Web | 28/43 | 10:55:05 p. m. | DELETE_IN_PROGRESS      | AWS::CDK::Metadata                     | CDKMetadata/Default (CDKMetadata) 
+FinanceAppB2Web | 28/43 | 10:55:05 p. m. | DELETE_IN_PROGRESS      | Custom::CDKBucketDeployment            | Nextjs/NextjsCache/InitCacheDeployment/CustomResource-512MiB/Default (NextjsNextjsCacheInitCacheDeploymentCustomResource512MiBDBB641F3) 
+FinanceAppB2Web | 28/43 | 10:55:05 p. m. | DELETE_IN_PROGRESS      | AWS::IAM::Policy                       | Nextjs/InvalidationPolicy (NextjsInvalidationPolicy154AA645) 
+FinanceAppB2Web | 28/43 | 10:55:05 p. m. | DELETE_IN_PROGRESS      | Custom::S3AutoDeleteObjects            | Nextjs/NextjsCache/Bucket/AutoDeleteObjectsCustomResource/Default (NextjsNextjsCacheBucketAutoDeleteObjectsCustomResource3159BF45) 
+FinanceAppB2Web | 28/43 | 10:55:05 p. m. | DELETE_IN_PROGRESS      | AWS::SSM::Parameter                    | Nextjs/DistributionIdParameter (NextjsDistributionIdParameter17DC2044) 
+FinanceAppB2Web | 28/43 | 10:55:05 p. m. | DELETE_FAILED           | AWS::SSM::Parameter                    | Nextjs/DistributionIdParameter (NextjsDistributionIdParameter17DC2044) Resource handler returned message: "Error occurred during operation 'DeleteParameter'." (RequestToken: 494666b9-7c6b-4974-f965-889651d61747, HandlerErrorCode: GeneralServiceException)
+FinanceAppB2Web | 27/43 | 10:55:05 p. m. | DELETE_COMPLETE         | AWS::CDK::Metadata                     | CDKMetadata/Default (CDKMetadata) 
+FinanceAppB2Web | 28/43 | 10:55:06 p. m. | DELETE_COMPLETE         | AWS::Lambda::Permission                | Nextjs/NextjsDistribution/InvokeFunction-default (NextjsNextjsDistributionInvokeFunctiondefault54C6C2BD) 
+FinanceAppB2Web | 29/43 | 10:55:06 p. m. | DELETE_COMPLETE         | AWS::IAM::Policy                       | Nextjs/InvalidationPolicy (NextjsInvalidationPolicy154AA645) 
+FinanceAppB2Web | 30/43 | 10:55:06 p. m. | DELETE_COMPLETE         | AWS::Lambda::Permission                | Nextjs/NextjsDistribution/Distribution/Origin1/InvokeFromApiForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3 (NextjsNextjsDistributionOrigin1InvokeFromApiForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3757FDF5C) 
+FinanceAppB2Web | 31/43 | 10:55:06 p. m. | DELETE_COMPLETE         | Custom::CDKBucketDeployment            | Nextjs/NextjsStaticAssets/Deployment/CustomResource/Default (NextjsNextjsStaticAssetsDeploymentCustomResource66994B39) 
+FinanceAppB2Web | 32/43 | 10:55:06 p. m. | DELETE_COMPLETE         | Custom::CDKBucketDeployment            | Nextjs/NextjsCache/InitCacheDeployment/CustomResource-512MiB/Default (NextjsNextjsCacheInitCacheDeploymentCustomResource512MiBDBB641F3) 
+FinanceAppB2Web | 32/43 | 10:55:07 p. m. | DELETE_IN_PROGRESS      | AWS::Lambda::Function                  | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536) 
+FinanceAppB2Web | 32/43 | 10:55:07 p. m. | DELETE_IN_PROGRESS      | AWS::Lambda::Function                  | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB6723FB92) 
+FinanceAppB2Web | 33/43 | 10:55:07 p. m. | DELETE_COMPLETE         | AWS::Lambda::Permission                | Nextjs/NextjsDistribution/Distribution/Origin1/InvokeFunctionFromCloudFrontForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB3 (NextjsNextjsDistributionOrigin1InvokeFunctionFromCloudFrontForFinanceAppB2WebNextjsNextjsDistributionOrigin114DC3FB313927163) 
+FinanceAppB2Web | 32/43 | 10:55:07 p. m. | DELETE_COMPLETE         | Custom::S3AutoDeleteObjects            | Nextjs/NextjsCache/Bucket/AutoDeleteObjectsCustomResource/Default (NextjsNextjsCacheBucketAutoDeleteObjectsCustomResource3159BF45) 
+FinanceAppB2Web | 32/43 | 10:55:08 p. m. | DELETE_IN_PROGRESS      | AWS::S3::BucketPolicy                  | Nextjs/NextjsCache/Bucket/Policy (NextjsNextjsCacheBucketPolicyA2EE5400) 
+FinanceAppB2Web | 32/43 | 10:55:08 p. m. | DELETE_IN_PROGRESS      | AWS::Lambda::Function                  | Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler (CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F) 
+FinanceAppB2Web | 31/43 | 10:55:09 p. m. | DELETE_COMPLETE         | AWS::S3::BucketPolicy                  | Nextjs/NextjsCache/Bucket/Policy (NextjsNextjsCacheBucketPolicyA2EE5400) 
+FinanceAppB2Web | 30/43 | 10:55:10 p. m. | DELETE_COMPLETE         | AWS::Lambda::Function                  | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB6723FB92) 
+FinanceAppB2Web | 29/43 | 10:55:10 p. m. | DELETE_COMPLETE         | AWS::Lambda::Function                  | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536) 
+FinanceAppB2Web | 29/43 | 10:55:10 p. m. | DELETE_IN_PROGRESS      | AWS::Lambda::LayerVersion              | Nextjs/NextjsCache/InitCacheDeployment/AwsCliLayer (NextjsNextjsCacheInitCacheDeploymentAwsCliLayer1B96D0AA) 
+FinanceAppB2Web | 29/43 | 10:55:10 p. m. | DELETE_IN_PROGRESS      | AWS::IAM::Policy                       | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/DefaultPolicy (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleDefaultPolicy96C3E726) 
+FinanceAppB2Web | 29/43 | 10:55:10 p. m. | DELETE_IN_PROGRESS      | AWS::Lambda::LayerVersion              | Nextjs/NextjsStaticAssets/Deployment/AwsCliLayer (NextjsNextjsStaticAssetsDeploymentAwsCliLayerDF7DA6AC) 
+FinanceAppB2Web | 29/43 | 10:55:10 p. m. | DELETE_IN_PROGRESS      | AWS::IAM::Policy                       | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF) 
+FinanceAppB2Web | 28/43 | 10:55:11 p. m. | DELETE_COMPLETE         | AWS::Lambda::Function                  | Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler (CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F) 
+FinanceAppB2Web | 27/43 | 10:55:11 p. m. | DELETE_COMPLETE         | AWS::IAM::Policy                       | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/DefaultPolicy (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleDefaultPolicy96C3E726) 
+FinanceAppB2Web | 26/43 | 10:55:11 p. m. | DELETE_COMPLETE         | AWS::Lambda::LayerVersion              | Nextjs/NextjsCache/InitCacheDeployment/AwsCliLayer (NextjsNextjsCacheInitCacheDeploymentAwsCliLayer1B96D0AA) 
+FinanceAppB2Web | 25/43 | 10:55:11 p. m. | DELETE_COMPLETE         | AWS::IAM::Policy                       | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF) 
+FinanceAppB2Web | 24/43 | 10:55:12 p. m. | DELETE_COMPLETE         | AWS::Lambda::LayerVersion              | Nextjs/NextjsStaticAssets/Deployment/AwsCliLayer (NextjsNextjsStaticAssetsDeploymentAwsCliLayerDF7DA6AC) 
+FinanceAppB2Web | 24/43 | 10:55:12 p. m. | DELETE_IN_PROGRESS      | AWS::IAM::Role                         | Custom::S3AutoDeleteObjectsCustomResourceProvider/Role (CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092) 
+FinanceAppB2Web | 24/43 | 10:55:12 p. m. | DELETE_IN_PROGRESS      | AWS::IAM::Role                         | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleBA21DBC1) 
+FinanceAppB2Web | 24/43 | 10:55:12 p. m. | DELETE_IN_PROGRESS      | AWS::IAM::Role                         | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265) 
+FinanceAppB2Web | 23/43 | 10:55:24 p. m. | DELETE_COMPLETE         | AWS::IAM::Role                         | Custom::S3AutoDeleteObjectsCustomResourceProvider/Role (CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092) 
+FinanceAppB2Web | 22/43 | 10:55:24 p. m. | DELETE_COMPLETE         | AWS::IAM::Role                         | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265) 
+FinanceAppB2Web | 21/43 | 10:55:24 p. m. | DELETE_COMPLETE         | AWS::IAM::Role                         | Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole (CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleBA21DBC1) 
+FinanceAppB2Web | 21/43 | 10:55:24 p. m. | ROLLBACK_FAILED         | AWS::CloudFormation::Stack             | FinanceAppB2Web The following resource(s) failed to delete: [NextjsDistributionIdParameter17DC2044]. 
+
+Failed resources:
+FinanceAppB2Web | 10:55:01 p. m. | CREATE_FAILED           | AWS::SSM::Parameter                    | Nextjs/DistributionIdParameter (NextjsDistributionIdParameter17DC2044) Resource handler returned message: "Access denied for operation 'PutParameter'." (RequestToken: 3c85b79a-f894-c59c-7e55-1d5e95ecff65, HandlerErrorCode: AccessDenied)
+FinanceAppB2Web | 10:55:05 p. m. | DELETE_FAILED           | AWS::SSM::Parameter                    | Nextjs/DistributionIdParameter (NextjsDistributionIdParameter17DC2044) Resource handler returned message: "Error occurred during operation 'DeleteParameter'." (RequestToken: 494666b9-7c6b-4974-f965-889651d61747, HandlerErrorCode: GeneralServiceException)
+❌  FinanceAppB2Web failed to deploy
+‣ DeploymentError: Resource updates failed:
+FinanceAppB2Web/Nextjs/DistributionIdParameter/Resource  (AWS::SSM::Parameter NextjsDistributionIdParameter17DC2044)
+  Resource handler returned message: "Access denied for operation 'PutParameter'." (RequestToken:
+  3c85b79a-f894-c59c-7e55-1d5e95ecff65, HandlerErrorCode: AccessDenied)
+  Resource handler returned message: "Error occurred during operation 'DeleteParameter'." (RequestToken:
+  494666b9-7c6b-4974-f965-889651d61747, HandlerErrorCode: GeneralServiceException)
+Source Location: ...aws-cdk-lib, new NextjsGlobalFunctions in cdk-nextjs...
+                 new WebStack (/Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/infra/app.ts:6:123)
+                 api (/Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/infra/app.ts:7:137)
+                 <anonymous> (/Users/keisynf/Documents/SoftwareEngineering/Project2/cs3365-finance-app/agent-b/infra/app.ts:7:181)
+                 ...node internals, tsx...
+
+   CloudTrail delivery can lag up to 15 minutes behind the failure; re-run `cdk diagnose` in a few minutes to check for additional control-plane errors (e.g. AccessDenied).

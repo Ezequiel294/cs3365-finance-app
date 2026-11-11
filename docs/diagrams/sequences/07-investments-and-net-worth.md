@@ -2,20 +2,29 @@
 
 Module 07 of the [context model](../context.md). Investments are recorded as four kinds of
 investment transaction in `InvestmentTx`: deposit, withdrawal, buy, and sell. Each carries
-the broker, the amount or gross trade value, the commission actually charged, and an
-optional name; buys and sells also carry the ticker and quantity. Holdings and broker cash
-are rollups in `Aggregates`, written in the same `TransactWriteItems` as the investment
+the broker, the amount or gross trade value, the commission charged, and an optional name;
+buys and sells also carry the ticker, its asset class, and the quantity. Holdings and broker
+cash are rollups in `Aggregates`, written in the same `TransactWriteItems` as the investment
 transaction:
 
-- `HOLDING#<brokerId>#<ticker>` holds `quantityMicro` (6 decimals), `costBasisCents`,
-  `realizedGainCents`, and `version`.
-- `CASH#<brokerId>` holds uninvested cash at the broker.
+- `HOLDING#<brokerId>#<ticker>` holds `assetClass`, `name`, `quantityMicro` (6 decimals),
+  `costBasisCents`, `realizedGainCents`, and `version`.
+- `CASH#<brokerId>` holds uninvested cash at the broker. It may go below zero when buys are
+  recorded without the deposits that paid for them; the portfolio then shows a warning.
 - `MONTH#<yyyy-mm>#INV` holds deposits, withdrawals, buys, sells, and commissions per month.
 
-Cost basis uses the average-cost method. Each broker has one commission rule
-(`flatCents`, `percentBps`) used to estimate the cost of selling. Prices come from a market
-price API and are cached as `PRICE#<ticker>` items with a 15-minute TTL, shared by all
-users. Investment transactions never count toward spending or budgets.
+Cost basis uses the average-cost method. **Each broker has a fee schedule**: one fee for
+deposits, one for withdrawals, and one per asset class (stocks and ETFs, or crypto) for buys
+and for sells. Each fee is a flat amount plus a percentage. The schedule pre-fills the
+commission when a transaction is recorded, the user can override it, and it estimates what
+selling would cost. The shared `FeeCalculator` does the arithmetic in the browser and in the
+API, so both always agree (see [class diagram section 10](../class-diagram.md#10-module-07-investments)).
+
+Prices come from the Yahoo Finance chart API, which needs no key and covers stocks, ETFs,
+mutual funds, crypto, and exchanges outside the US. Twelve Data is an optional fallback when
+its key is configured. Prices are shared by all users as `PRICE#<ticker>` items: fresh for
+15 minutes, then refreshed, and kept for 30 days so a last known price can still be shown,
+marked stale with its age. Investment transactions never count toward spending or budgets.
 
 ---
 
@@ -24,8 +33,10 @@ users. Investment transactions never count toward spending or budgets.
 **Story:** As Ezequiel, I want to record what I hold by entering it myself so that I can
 track my positions without connecting the product to my broker.
 
-A buy adds units and cost to the holding. Correcting an older trade changes the cost of
-later sales, so the holding is rebuilt from its trades using the ticker index.
+The ticker is looked up first, so the form can show the instrument's name and live price,
+choose its asset class, and suggest the gross value and the commission. A buy adds units and
+cost to the holding. Correcting an older trade changes the cost of later sales, so the
+holding is rebuilt from its trades using the ticker index.
 
 ```mermaid
 sequenceDiagram
@@ -34,27 +45,44 @@ sequenceDiagram
     participant UI as Browser
     participant Web as Next.js server
     participant API as ApiFn router
+    participant VS as ValuationService
+    participant PC as PriceClient
     participant IS as InvestmentService
     participant Ref as Reference
     participant DB as InvestmentTx + Aggregates
     participant Inv as InvestmentTx
 
-    U->>UI: Buy: VOO, 3.215 units, broker Schwab, $1,450.00, commission $0.15
-    UI->>Web: POST /api/investments/transactions {type BUY}
+    U->>UI: Buy tab: broker Hapi, ticker VT
+    UI->>Web: quote("VT")
+    Web->>API: GET /api/portfolio/quote?ticker=VT
+    API->>VS: quote("VT")
+    VS->>PC: quote("VT")
+    Note right of PC: Cached PRICE#VT if fresh, otherwise<br/>the provider, as in 07-S02
+    alt Unknown ticker
+        PC-->>UI: 404 "No instrument VTX on Yahoo Finance"
+        UI-->>U: Ticker flagged, saving is still allowed
+    else Found
+        PC-->>UI: Vanguard Total World Stock ETF, ETF, $154.94 at 15:00
+        UI->>UI: Asset class stocks and ETFs, gross = units x price,<br/>commission = Hapi buy fee for stocks and ETFs ($0.15 flat)
+    end
+    U->>UI: 0.6533 units, gross $101.22, commission left at $0.15, Save
+    UI->>Web: recordInvestment({BUY, VT, SECURITY, quantityMicro 653300, grossCents 10122})
     Web->>API: POST /api/investments/transactions
     API->>IS: record(userId, buy)
-    IS->>Ref: Get BROKER#brk-schwab (exists for this user)
+    IS->>Ref: Get BROKER#brk-hapi (exists, fee schedule)
+    IS->>IS: commissionCents omitted, so FeeCalculator.fee(fees.buy.security, 10122) = 15, source rule
     IS->>DB: TransactWriteItems
-    Note right of DB: Put INV#date#id (BUY, quantityMicro 3215000,<br/>grossCents 145000, commissionCents 15),<br/>ADD HOLDING quantity and cost (gross + commission),<br/>ADD CASH minus (gross + commission),<br/>ADD MONTH#...#INV boughtCents and commissionsCents
-    IS-->>UI: 201
-    U->>UI: Correct the units to 3.2155
+    Note right of DB: Put INV#date#id (BUY, assetClass SECURITY,<br/>quantityMicro 653300, grossCents 10122, commissionCents 15),<br/>ADD HOLDING quantity and cost (gross + commission),<br/>ADD CASH minus (gross + commission),<br/>ADD MONTH#...#INV boughtCents and commissionsCents
+    IS-->>UI: 201 with the holding's new cost basis
+    UI-->>U: "VT: 0.6533 units, cost basis $101.37 including $0.15 in fees"
+    U->>UI: Correct the units to 0.6534
     UI->>Web: PATCH /api/investments/transactions/id
     Web->>API: PATCH /api/investments/transactions/id
     API->>IS: correct(userId, id, changes)
     IS->>Inv: Update INV item (version condition)
-    IS->>Inv: Query ticker GSI (USER#id#VOO), all trades in date order
+    IS->>Inv: Query ticker GSI (USER#id#VT), all trades in date order
     IS->>IS: Replay trades, recompute quantity, cost basis, realized gain
-    IS->>DB: Put HOLDING#brk-schwab#VOO (version condition)
+    IS->>DB: Put HOLDING#brk-hapi#VT (version condition)
     IS-->>UI: 200
 ```
 
@@ -64,6 +92,11 @@ sequenceDiagram
 
 **Story:** As Ezequiel, I want to see my holdings valued at current market prices so that I
 can stop looking at figures anchored to a stale quote.
+
+Prices older than 15 minutes are refreshed when the portfolio opens. A quote in another
+currency is converted to USD with Yahoo's own exchange rate for that currency. When a price
+cannot be refreshed, the last known price is shown with its age; when there has never been
+one, the holding says why.
 
 ```mermaid
 sequenceDiagram
@@ -75,45 +108,62 @@ sequenceDiagram
     participant VS as ValuationService
     participant Agg as Aggregates
     participant PC as PriceClient
-    participant SSM as SSM Parameter Store
-    participant Feed as Market price API
+    participant Prov as FallbackPriceProvider
+    participant Y as Yahoo Finance chart API
+    participant TD as Twelve Data API
 
     U->>UI: Open Portfolio
-    UI->>Web: GET /api/portfolio/valuation
+    UI->>Web: getValuation()
     Web->>API: GET /api/portfolio/valuation
     API->>VS: value(userId)
     VS->>Agg: Query USER#id begins_with HOLDING#
-    VS->>PC: prices(tickers)
-    PC->>Agg: BatchGet PRICE#VOO, PRICE#BTC
-    alt Price cached and under 15 min old
-        Agg-->>PC: price, retrievedAt
-    else Missing or expired
-        opt First call in this Lambda container
-            PC->>SSM: GetParameter price API key (decrypted)
+    VS->>PC: prices([VT, BTC-USD, SHOP.TO])
+    PC->>Agg: BatchGet PRICE#VT, PRICE#BTC-USD, PRICE#SHOP.TO
+    loop Each ticker whose retrievedAt is over 15 min old (at most 4 at a time)
+        PC->>Prov: quote(ticker)
+        Prov->>Y: GET /v8/finance/chart/SHOP.TO?range=1d&interval=1d<br/>User-Agent: Mozilla/5.0, timeout 4 s
+        alt 200
+            Y-->>Prov: meta.regularMarketPrice 208.12, regularMarketTime,<br/>currency CAD, instrumentType EQUITY, longName
+        else 429, 5xx, or timeout, and a Twelve Data key is configured
+            Prov->>TD: GET /price?symbol=...&apikey=... (US symbols and crypto only)
+            TD-->>Prov: {"price": "..."} or {"status": "error", ...}
         end
-        PC->>Feed: Quote request
-        alt API answers
-            Feed-->>PC: price
-            PC->>Agg: Put PRICE#ticker (price, retrievedAt, TTL 15 min)
-        else API down or rate limited
-            PC->>PC: Use last known price, stale true
+        alt A provider answered
+            Prov-->>PC: Quote (price, currency, time, type, name)
+            opt Currency is not USD
+                PC->>Prov: quote("USDCAD=X"), cached as PRICE#USDCAD=X
+                PC->>PC: USD price = 208.12 / rate (GBp, ZAc, ILA divided by 100 first)
+            end
+            PC->>Agg: Put PRICE#SHOP.TO (priceMicros, native price and currency,<br/>fxRate, retrievedAt, TTL 30 days)
+        else Yahoo answered 404 Not Found
+            Prov-->>PC: PriceError NOT_FOUND
+            PC->>Agg: Update PRICE#ticker (lastError NOT_FOUND, lastAttemptAt)
+        else Every provider failed
+            Prov-->>PC: PriceError UNAVAILABLE
+            PC->>Agg: Update PRICE#ticker (lastError UNAVAILABLE),<br/>the last known price stays
         end
     end
-    PC-->>VS: price, retrievedAt, stale per ticker
-    VS->>VS: value = quantity x price per holding
-    VS-->>UI: Each holding: units, cost basis, price, price time, value, stale flag
-    UI-->>U: "VOO $1,612.40 (price 10:42)", stale prices marked with their age
+    PC-->>VS: Per ticker: priceMicros, retrievedAt, fresh or stale, lastError
+    VS->>VS: value = quantityMicro x priceMicros / 10^12 (BigInt, half-to-even to cents)
+    VS-->>UI: Each holding: units, cost basis, price, price time, value, stale age or reason;<br/>total of priced holdings; unpriced tickers
+    UI-->>U: "VT $101.22 (price 15:00)", "BTC-USD price from 3 h ago",<br/>"VTX is not a Yahoo Finance ticker"
 ```
+
+A `NOT_FOUND` ticker is asked again at most once an hour. The Twelve Data key, when it
+exists, is read from SSM Parameter Store (`/FinanceApp/prices/twelvedata-api-key`) once per
+Lambda container; without it only Yahoo is used.
 
 ---
 
-### 07-S03 — Describe a broker's commission
+### 07-S03 — Describe a broker's fees
 
 **Story:** As Ezequiel, I want to describe the fees my broker charges so that I can have
 every figure account for them instead of correcting each one by hand.
 
-The commission rule is used to estimate what selling would cost (07-S05). Commissions
-already stored on past transactions are not changed when the rule is edited.
+Each broker has six fees, each a flat amount plus a percentage. Hapi, for example, charges
+1.55% on deposits, $0.15 flat to buy or sell stocks and ETFs, 1% to buy or sell crypto, and a
+flat charge to withdraw. Commissions already stored on past transactions are not changed
+when the schedule is edited.
 
 ```mermaid
 sequenceDiagram
@@ -125,13 +175,27 @@ sequenceDiagram
     participant BrS as BrokerService
     participant Ref as Reference
 
-    U->>UI: Edit Schwab: commission $0.15 flat plus 0%
-    UI->>Web: PUT /api/brokers/brk-schwab {flatCents 15, percentBps 0, version}
-    Web->>API: PUT /api/brokers/brk-schwab
-    API->>BrS: update(userId, brokerId, rule, version)
-    BrS->>BrS: Validate: flat fee in cents, percentage in basis points, both 0 or more
-    BrS->>Ref: Update BROKER#brk-schwab (version condition)
-    BrS-->>UI: 200 broker
+    U->>UI: Brokers: Hapi fee table<br/>deposit 1.55%, withdrawal $25.00 flat,<br/>buy and sell stocks and ETFs $0.15, buy and sell crypto 1%
+    alt New broker
+        UI->>Web: createBroker("Hapi", fees)
+        Web->>API: POST /api/brokers {name, fees}
+        API->>API: Validate (Zod): every flatCents 0 or more, every percentBps 0 to 9999
+        API->>BrS: create(userId, name, fees)
+        BrS->>Ref: Put BROKER#id (version 1)
+        BrS-->>UI: 201 broker
+    else Existing broker
+        UI->>Web: updateBroker(brk-hapi, fees, version)
+        Web->>API: PUT /api/brokers/brk-hapi {fees, version}
+        API->>API: Validate (Zod), same rules
+        API->>BrS: update(userId, brokerId, fees, version)
+        BrS->>Ref: Update BROKER#brk-hapi (version condition)
+        alt Edited elsewhere meanwhile
+            BrS-->>UI: 409 reload and try again
+        else Saved
+            BrS-->>UI: 200 broker
+        end
+    end
+    Note over UI,Ref: Stored as fees: {deposit, withdrawal, buy: {security, crypto},<br/>sell: {security, crypto}}, each {flatCents, percentBps}. 1.55% = 155 bps
 ```
 
 ---
@@ -141,35 +205,64 @@ sequenceDiagram
 **Story:** As Ezequiel, I want to record a contribution with the fees it actually incurred so
 that I can know what a position has really cost me.
 
-A contribution is a deposit to the broker followed by a buy. Each records the commission
-actually charged, and both commissions become part of the holding's cost basis.
+A contribution is a deposit to the broker followed by a buy. For each one the form suggests
+the commission from the broker's fee schedule as the amounts are typed, explains it, and
+lets the user change it. A deposit can be entered as the amount sent from the bank or as the
+amount that arrived at the broker; the other is worked out by grossing up. Both commissions
+become part of what the position cost.
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor U as Ezequiel
     participant UI as Browser
+    participant FC as FeeCalculator (shared)
     participant Web as Next.js server
     participant API as ApiFn router
     participant IS as InvestmentService
+    participant Ref as Reference
     participant DB as InvestmentTx + Aggregates
 
-    U->>UI: Deposit $203.15 to Schwab, commission $3.15
-    UI->>Web: POST /api/investments/transactions {type DEPOSIT}
+    U->>UI: Deposit tab, broker Hapi, amount sent $300.00
+    UI->>FC: suggest(Hapi, DEPOSIT, none, 30000)
+    FC-->>UI: commission 465, arrives 29535, "1.55% of $300.00 = $4.65"
+    UI-->>U: Commission $4.65 pre-filled, "$295.35 arrives at Hapi"
+    opt Only the amount that arrived is known
+        U->>UI: Switch to "amount that arrived": $295.35
+        UI->>FC: grossUp(fees.deposit, 29535)
+        FC-->>UI: sent 30000, commission 465
+    end
+    opt The broker charged something else
+        U->>UI: Change the commission, the suggestion stops overwriting it
+    end
+    UI->>Web: recordInvestment({DEPOSIT, amountCents 30000}),<br/>commissionCents sent only if the user changed it
     Web->>API: POST /api/investments/transactions
     API->>IS: record(userId, deposit)
+    IS->>Ref: Get BROKER#brk-hapi (fee schedule)
+    alt commissionCents omitted
+        IS->>FC: fee(fees.deposit, 30000) = 465, commissionSource rule
+    else commissionCents given
+        IS->>IS: commissionSource manual
+    end
     IS->>DB: TransactWriteItems
-    Note right of DB: Put DEPOSIT (amountCents 20315, commissionCents 315),<br/>ADD CASH#brk-schwab 20000,<br/>ADD MONTH#...#INV depositedCents and commissionsCents
+    Note right of DB: Put DEPOSIT (amountCents 30000, commissionCents 465),<br/>ADD CASH#brk-hapi 29535,<br/>ADD MONTH#...#INV depositedCents and commissionsCents
     IS-->>UI: 201
-    U->>UI: Buy 0.389 VOO for $199.75, commission $0.15
-    UI->>Web: POST /api/investments/transactions {type BUY}
+    UI-->>U: "Deposit saved: $300.00 sent, $4.65 fee, $295.35 now in cash at Hapi"
+    U->>UI: Buy tab: ticker BTC-USD, quote "Bitcoin USD", crypto, gross $200.00
+    UI->>FC: suggest(Hapi, BUY, CRYPTO, 20000)
+    FC-->>UI: commission 200, "1% of $200.00 = $2.00"
+    UI->>Web: recordInvestment({BUY, BTC-USD, CRYPTO, quantityMicro 2712, grossCents 20000})
     Web->>API: POST /api/investments/transactions
     API->>IS: record(userId, buy)
+    IS->>FC: fee(fees.buy.crypto, 20000) = 200
     IS->>DB: TransactWriteItems
-    Note right of DB: Put BUY, ADD HOLDING quantity and cost 19990,<br/>ADD CASH minus 19990, ADD MONTH#...#INV
+    Note right of DB: Put BUY, ADD HOLDING quantity and cost 20200,<br/>ADD CASH minus 20200, ADD MONTH#...#INV
     IS-->>UI: 201 with cost basis per unit
-    UI-->>U: "VOO cost basis now $1,649.90 including $3.45 in commissions"
+    UI-->>U: "BTC-USD: 0.002712 units, cost basis $202.00 including $2.00 in fees"
 ```
+
+Switching tabs clears the previous success message, so a deposit never shows a buy's cost
+basis line.
 
 ---
 
@@ -177,6 +270,10 @@ sequenceDiagram
 
 **Story:** As Ezequiel, I want to see what I would actually receive if I sold everything
 today so that I can know what my investments are worth to me rather than on paper.
+
+Selling costs each holding its broker's sell fee for its asset class, and bringing the money
+home costs the broker's withdrawal fee, charged once on everything withdrawn from that
+broker. Every deduction is listed with the rule that produced it.
 
 ```mermaid
 sequenceDiagram
@@ -186,22 +283,27 @@ sequenceDiagram
     participant Web as Next.js server
     participant API as ApiFn router
     participant VS as ValuationService
+    participant FC as FeeCalculator (shared)
     participant Ref as Reference
     participant Agg as Aggregates
 
     U->>UI: Open "If I sold everything today"
-    UI->>Web: GET /api/portfolio/liquidation
+    UI->>Web: getLiquidation()
     Web->>API: GET /api/portfolio/liquidation
     API->>VS: liquidation(userId)
     VS->>VS: value(userId), as in 07-S02
-    VS->>Ref: Query BROKER# commission rules
-    loop Each holding
-        VS->>VS: sellCommission = flatCents + marketValue x percentBps
-        VS->>VS: netIfSold = marketValue - sellCommission
-        VS->>VS: unrealizedGain = netIfSold - costBasis
-    end
+    VS->>Ref: Query BROKER# (fee schedules)
     VS->>Agg: Query CASH# per broker
-    VS->>VS: total = sum(netIfSold) + sum(cash)
-    VS-->>UI: Per holding market value, sell commission, net, gain, plus cash, total, price time
-    UI-->>U: "You would receive $4,812.06 (prices from 10:42), before taxes"
+    loop Each broker
+        loop Each priced holding at that broker
+            VS->>FC: fee(fees.sell[assetClass], marketValue)
+            VS->>VS: net = marketValue - sellFee, gain = net - costBasis
+        end
+        VS->>VS: proceeds = sum of net + cash
+        VS->>FC: fee(fees.withdrawal, proceeds), only when proceeds are above 0
+        VS->>VS: netToBank = proceeds - withdrawalFee, negativeCash = cash below 0
+    end
+    VS->>VS: total = sum of netToBank
+    VS-->>UI: Per broker: holdings (market value, sell fee and its rule, net, gain),<br/>cash, withdrawal fee and its rule, net to bank; total, price time, unpriced tickers
+    UI-->>U: "You would receive $4,812.06 (prices from 15:00), before taxes",<br/>each deduction itemised, a warning when a broker's cash is negative
 ```

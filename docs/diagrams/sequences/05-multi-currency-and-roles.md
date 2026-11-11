@@ -93,7 +93,11 @@ sequenceDiagram
 **Story:** As Patricia, I want to import a statement in a currency and have it stay in that
 currency so that I can reconcile what I imported against the document I downloaded.
 
-This is the currency step of the CSV pipeline in 01-S02. Each row keeps its own currency.
+This is the currency step of the CSV pipeline in 01-S02. The two supported statements state
+their currency differently (see [Bank Formats](../bank-formats.md)): a BAC statement names it
+once, in the `Moneda` field of its first section, and a Banco Nacional statement does not
+name it at all, so the account's currency is used. Either way every row keeps that currency
+and its original amount.
 
 ```mermaid
 sequenceDiagram
@@ -103,21 +107,27 @@ sequenceDiagram
     participant Ref as Reference
     participant Fx as FxService
     participant TS as TransactionService
+    participant Ing as Ingestion
 
-    P->>T: template for this file
-    T-->>P: currency from a column (e.g. "Moneda"), or from the account
-    alt Template takes currency from the account
-        P->>Ref: Get ACCOUNT#id currency
+    P->>Ref: Get ACCOUNT#id (bank, currency)
+    P->>T: detect(lines)
+    T-->>P: Template and where it takes the currency from
+    alt bac-transacciones-mes: currency from the preamble
+        P->>P: currency = Moneda (e.g. USD)
+        alt Moneda differs from the account's currency
+            P->>Ing: Update IMPORT#id (FAILED, "This statement is in USD,<br/>but the account BAC colones is in CRC")
+        end
+    else bn-consulta-saldos: currency from the account
+        P->>P: currency = account currency
     end
     loop Each row
-        P->>P: currency = row column, or account currency
         alt Currency missing or not CRC or USD
-            P->>P: Record row error "unknown currency"
+            P->>P: Row error "unknown currency"
         else
             P->>Fx: toUsd(amountMinor, currency, rowDate)
             Fx-->>P: amountUsdCents, rate, date
             P->>TS: save(currency, amountMinor unchanged, plus USD fields)
         end
     end
-    Note over P,TS: A file mixing CRC and USD rows imports row by row.<br/>The original amount is stored exactly as it appears in the file.
+    Note over P,TS: The original amount is stored exactly as it appears in the file.<br/>A CRC statement keeps its colones, a USD statement its dollars.
 ```

@@ -1861,9 +1861,9 @@ classDiagram
 
 - `setup()` checks the token by calling `GET /ingest/gmail/config`, then creates a 5-minute
   time trigger for `run()`.
-- `run()` searches for allowlisted senders without the `yourapp-processed` label, with the
+- `run()` searches for allowlisted senders without the `financeapp-processed` label, with the
   query `from:(notificacionbac@baccredomatic.cr OR bncontacto@bncr.fi.cr)
-  -label:yourapp-processed` built from `IngestConfig.senders`, and sends each message's raw
+  -label:financeapp-processed` built from `IngestConfig.senders`, and sends each message's raw
   MIME (`getRawContent()`) to `POST /ingest/gmail`.
 - A message is labelled only after a `2xx` response, so failures are retried on the next run.
   A `401` removes the trigger, because the token was revoked.

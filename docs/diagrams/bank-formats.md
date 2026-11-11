@@ -361,4 +361,4 @@ const bnVoucherDigital: EmailTemplate = {
 ```
 
 The Gmail script's search uses the senders of every email template:
-`from:(notificacionbac@baccredomatic.cr OR bncontacto@bncr.fi.cr) -label:yourapp-processed`.
+`from:(notificacionbac@baccredomatic.cr OR bncontacto@bncr.fi.cr) -label:financeapp-processed`.

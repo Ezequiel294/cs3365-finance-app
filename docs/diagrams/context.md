@@ -117,7 +117,7 @@ solid arrows are data flows; dashed arrows are optional, future, or cross-cuttin
 
 | Entity | Direction | What crosses the boundary |
 |---|---|---|
-| Account holder | In and out | Entries, uploads, settings, and every view. Represents all five personas in `../personas.md`. |
+| Account holder | In and out | Entries, uploads, settings, and every view. Represents all five personas the one-pagers' stories are written for. |
 | Household partner | In and out | Accepts an invitation and reads only the shared budget and its attributed transactions (03-S07 to 03-S09). |
 | Gmail + Apps Script | In | Raw BAC and Banco Nacional card alert emails, sent with a revocable ingest token. |
 | Bank statement file | In | CSV rows the holder downloaded from BAC Credomatic or Banco Nacional. |

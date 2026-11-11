@@ -145,7 +145,7 @@ sequenceDiagram
     end
     PC-->>VS: Per ticker: priceMicros, retrievedAt, fresh or stale, lastError
     VS->>VS: value = quantityMicro x priceMicros / 10^12 (BigInt, half-to-even to cents)
-    VS-->>UI: Each holding: units, cost basis, price, price time, value, stale age or reason;<br/>total of priced holdings; unpriced tickers
+    VS-->>UI: Each holding: units, cost basis, price, price time, value, stale age or reason,<br/>total of priced holdings, unpriced tickers
     UI-->>U: "VT $101.22 (price 15:00)", "BTC-USD price from 3 h ago",<br/>"VTX is not a Yahoo Finance ticker"
 ```
 
@@ -208,8 +208,10 @@ that I can know what a position has really cost me.
 A contribution is a deposit to the broker followed by a buy. For each one the form suggests
 the commission from the broker's fee schedule as the amounts are typed, explains it, and
 lets the user change it. A deposit can be entered as the amount sent from the bank or as the
-amount that arrived at the broker; the other is worked out by grossing up. Both commissions
-become part of what the position cost.
+amount that arrived at the broker; the other is worked out by grossing up. The deposit fee
+reduces the cash that reaches the broker and is not part of any holding's cost basis; the
+buy fee is added to the cost basis of the holding it bought. Both fees are counted in the
+month's `commissionsCents`.
 
 ```mermaid
 sequenceDiagram
@@ -304,6 +306,6 @@ sequenceDiagram
         VS->>VS: netToBank = proceeds - withdrawalFee, negativeCash = cash below 0
     end
     VS->>VS: total = sum of netToBank
-    VS-->>UI: Per broker: holdings (market value, sell fee and its rule, net, gain),<br/>cash, withdrawal fee and its rule, net to bank; total, price time, unpriced tickers
+    VS-->>UI: Per broker: holdings (market value, sell fee and its rule, net, gain),<br/>cash, withdrawal fee and its rule, net to bank, total, price time, unpriced tickers
     UI-->>U: "You would receive $4,812.06 (prices from 15:00), before taxes",<br/>each deduction itemised, a warning when a broker's cash is negative
 ```

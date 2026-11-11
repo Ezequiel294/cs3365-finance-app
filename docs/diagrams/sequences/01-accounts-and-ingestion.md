@@ -340,7 +340,7 @@ sequenceDiagram
     participant DM as DuplicateMatcher
     participant TS as TransactionService
 
-    GS->>GS: Search from:(BAC and BN alert senders) -label:yourapp-processed
+    GS->>GS: Search from:(BAC and BN alert senders) -label:financeapp-processed
     loop Each email
         GS->>API: POST /ingest/gmail (Bearer token, raw MIME)
         API->>CS: authenticate(token)
@@ -386,7 +386,7 @@ sequenceDiagram
                 end
             end
         end
-        GS->>GS: Add label yourapp-processed
+        GS->>GS: Add label financeapp-processed
     end
     GS->>API: POST /ingest/gmail/heartbeat
     Note over GS,API: A 5xx response leaves the email unlabelled,<br/>so it is sent again on the next run

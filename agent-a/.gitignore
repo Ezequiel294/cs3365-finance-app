@@ -1,0 +1,8 @@
+node_modules/
+.next/
+next-env.d.ts
+*.tsbuildinfo
+cdk.out/
+infra/cdk.context.json
+*.log
+.DS_Store

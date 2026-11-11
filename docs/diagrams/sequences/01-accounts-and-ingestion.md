@@ -6,6 +6,52 @@ the Gmail script. All three end in the same `TransactionService.save` path (see 
 [conventions](README.md#conventions)), so categorization, rollups, and budgets never need a
 separate code path per source.
 
+Two banks are supported, **BAC Credomatic** and **Banco Nacional**. The exact layout of their
+statement files and alert emails, the rules that read them, and the result expected from
+each redacted sample are in [Bank Formats](../bank-formats.md). The diagrams below name
+those rules but do not repeat them.
+
+---
+
+### 01-S02a — Register an account
+
+**Story (supporting 01-S02 and 01-S08):** As Ezequiel, I want to register each of my bank
+accounts with its bank, currency, number, and cards so that statements import into the right
+account and card alerts find their account.
+
+An account is needed before anything can be imported. Its IBAN lets a statement row such as
+`TEF A : 123456781` be recognized as a transfer to one of the user's own accounts (the local
+number appears inside the IBAN), and its
+cards route alert emails, which name a card and never an account.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as Ezequiel
+    participant UI as Browser
+    participant Web as Next.js server
+    participant API as ApiFn router
+    participant AS as AccountService
+    participant Ref as Reference
+
+    U->>UI: Accounts, New: "BAC colones", BAC, CRC, IBAN CR00010200000123456781, card 1111
+    UI->>Web: createAccount(input)
+    Web->>API: POST /api/accounts
+    API->>API: Validate body (Zod): bank BAC or BN, currency CRC or USD,<br/>IBAN CR plus 20 digits, cards of 4 digits
+    API->>AS: create(userId, input)
+    AS->>Ref: Query ACCOUNT# (the user's accounts)
+    alt A card already belongs to another account
+        AS-->>UI: 400 card 1111 is already on "BAC dólares"
+    else Valid
+        AS->>Ref: Put ACCOUNT#id (version 1)
+        AS-->>UI: 201 account
+        UI-->>U: Account listed, available in the import account picker
+    end
+```
+
+Editing an account (`PATCH /api/accounts/id`, with its version) follows the same checks, for
+example to add a new card's last four digits.
+
 ---
 
 ### 01-S02 — Import a CSV statement
@@ -14,9 +60,11 @@ separate code path per source.
 I can use the product without giving it access to my account.
 
 The browser uploads the file straight to S3 with a presigned POST, so the file never passes
-through a Lambda. The S3 event starts `ImportWorkerFn`, which runs the same `IngestPipeline`
-that emails use. The file is matched to a bank template by its header row. Each row is
-saved independently, and a bad row is reported with its reason while the rest import.
+through a Lambda. The bucket's CORS rule allows `POST` from the app's CloudFront domain and
+from `http://localhost:3000`, and its event notification (prefix `imports/`, suffix `.csv`)
+starts `ImportWorkerFn`, which runs the same `IngestPipeline` that emails use. The file is
+matched to a bank template, checked against the chosen account, and then each row is saved
+independently: a bad row is reported with its line number and reason while the rest import.
 
 ```mermaid
 sequenceDiagram
@@ -31,54 +79,70 @@ sequenceDiagram
     participant W as ImportWorkerFn
     participant P as IngestPipeline
     participant T as TemplateRegistry
+    participant Ref as Reference
     participant TS as TransactionService
 
-    U->>UI: Pick account and CSV file
-    UI->>UI: Compute SHA-256 of the file
-    UI->>Web: startImport(accountId, fileName, sha256)
+    U->>UI: Pick account "BAC dólares" and the downloaded CSV
+    UI->>UI: SHA-256 of the file (crypto.subtle), refuse over 1 MiB
+    UI->>Web: startImport(accountId, fileName, sha256, size)
     Web->>API: POST /api/imports
-    API->>Imp: createImport(userId, accountId, sha256)
-    Imp->>Ing: Put FILE#sha256 (attribute_not_exists)
-    alt Same file already imported
+    API->>Imp: createImport(userId, accountId, sha256, size)
+    Imp->>Ref: Get ACCOUNT#id (must exist)
+    Imp->>Ing: Put FILE#sha256 (importId, UPLOADING)<br/>if it does not exist or its status is FAILED
+    alt File already imported or being imported
         Ing-->>Imp: ConditionalCheckFailed
-        Imp-->>UI: 409 already imported
-    else New file
-        Imp->>Ing: Put IMPORT#id (status UPLOADING)
-        Imp->>S3: Create presigned POST imports/userId/id.csv (max 1 MB)
+        Imp-->>UI: 409 already imported, with that import's id
+    else New file, or a retry of a failed one
+        Imp->>Ing: Put IMPORT#id (UPLOADING, accountId)
+        Imp->>S3: Presigned POST imports/userId/id.csv (1 byte to 1 MiB, 5 min)
         Imp-->>UI: importId + upload form
-        UI->>S3: Upload file
+        UI->>S3: POST the file with the form fields
         S3-)W: ObjectCreated event
-        W->>Ing: Update IMPORT#id (status PROCESSING)
-        W->>P: processCsv(importId)
-        P->>T: detect(header row)
-        alt No bank template matches
-            P->>Ing: Update IMPORT#id (status FAILED, no template for this file)
-        else Template found
-            loop Each row
-                P->>P: Parse with template, validate (Zod)
+        W->>W: URL-decode the key into userId and importId
+        W->>Ing: Update IMPORT#id (PROCESSING)
+        W->>P: processCsv(userId, importId)
+        P->>Ref: Get ACCOUNT#id and query every ACCOUNT# (the user's IBANs)
+        P->>S3: Get the object's bytes
+        P->>P: Decode as UTF-8, else Windows-1252, then split lines
+        P->>T: detect(lines)
+        P->>P: checkFile(template, account, preamble)
+        alt Not a BAC or BN statement, other bank, other currency, or unexpected columns
+            P->>Ing: Update IMPORT#id (FAILED, reason) and FILE#sha256 (FAILED)
+        else File accepted
+            loop Each data row (header, total, and summary lines are not data rows)
+                P->>P: parseRow, validate (Zod), resolve kind, normalize, categorize, toUsd
                 alt Row invalid
-                    P->>Ing: Append row error (row number, reason)
-                else Row fingerprint already seen
-                    P->>Ing: Count as overlap, skip
-                else Valid new row
-                    P->>Ing: Put ROWFP#hash
-                    P->>TS: save(parsed row) or merge with an email match
+                    P->>P: Row error with line number and reason
+                else Valid
+                    P->>TS: save or merge(row, categorization, extra item ROWFP#hash)
+                    Note right of TS: One TransactWriteItems: TXN, rollups,<br/>budget items, and the row claim
+                    alt Row claim already exists
+                        TS-->>P: AlreadyClaimedError, counted as skipped
+                    else Saved, or merged with an email
+                        TS-->>P: transaction
+                    end
                 end
             end
-            P->>Ing: Update IMPORT#id (DONE, imported, merged, skipped, errors)
+            P->>P: Compare out and in totals with the totals printed in the file
+            P->>Ing: Update IMPORT#id (DONE, counts, row errors, checksum)<br/>and FILE#sha256 (DONE)
         end
         loop Every 2 s until DONE or FAILED
-            UI->>Web: GET /api/imports/id
+            UI->>Web: getImport(id)
             Web->>API: GET /api/imports/id
-            API->>Ing: Get IMPORT#id
-            API-->>UI: status and counts
+            API->>Imp: getImport(userId, id)
+            Imp->>Ing: Get IMPORT#id
+            API-->>UI: Status, counts, failure reason
         end
-        UI-->>U: Summary with each unreadable row and its reason
+        UI-->>U: Summary: imported, transfers, merged, skipped,<br/>each unreadable row, and whether the totals match
     end
 ```
 
-Re-running a failed import is safe because every row is keyed by its fingerprint, so an
-interrupted import resumes rather than creating duplicates.
+Re-running an import is safe: a row is claimed by its fingerprint in the same write that
+saves its transaction, so rows that were saved are skipped and rows that failed (for
+example because no exchange rate was available) import on the next try. Importing the BAC
+sample into "BAC dólares" gives 65 rows, of which 58 are transfers between the holder's own
+accounts, and totals that match the bank's (see
+[Bank Formats](../bank-formats.md#5-import-checks-and-expected-results)).
 
 ---
 
@@ -255,8 +319,10 @@ sequenceDiagram
 
 ### 01-S08b — Gmail delivers a bank alert
 
-Every 5 minutes the script sends new bank emails. An email is labelled as processed only
-after a `2xx`, so a failed call is retried on the next run.
+Every 5 minutes the script sends new BAC and BN alert emails. An email is labelled as
+processed only after a `2xx`, so a failed call is retried on the next run. The template
+decides which DKIM domain must have signed the email, and the card's last four digits decide
+the account.
 
 ```mermaid
 sequenceDiagram
@@ -267,50 +333,104 @@ sequenceDiagram
     participant S3 as S3 raw-ingest
     participant P as IngestPipeline
     participant Ing as Ingestion
-    participant DK as DkimVerifier
     participant T as TemplateRegistry
+    participant DK as DkimVerifier
+    participant EP as EmailTemplateParser
+    participant Ref as Reference
     participant DM as DuplicateMatcher
     participant TS as TransactionService
 
-    GS->>GS: Search allowlisted senders without label yourapp-processed
+    GS->>GS: Search from:(BAC and BN alert senders) -label:financeapp-processed
     loop Each email
         GS->>API: POST /ingest/gmail (Bearer token, raw MIME)
         API->>CS: authenticate(token)
         CS->>Ing: Get TOKEN#hash, update lastSeenAt
         API->>S3: Put raw/userId/messageId.eml
-        API->>P: processEmail(userId, rawRef)
+        API->>P: processEmail(userId, messageId, rawRef)
         P->>Ing: Put MSG#messageId (attribute_not_exists)
         alt Already processed
             P-->>GS: 200 duplicate
         else New
-            P->>DK: verify(raw MIME, allowlisted domain)
-            alt DKIM fails or sender not allowed
+            P->>T: match(sender, subject)
+            alt Sender not on the allowlist
                 P->>Ing: Update MSG# (rejected)
                 P-->>GS: 200 rejected
-            else Verified
-                P->>T: match(sender, subject)
-                alt No template matches
-                    P->>Ing: Update MSG# (unparsed, shown in review inbox)
-                    P-->>GS: 200 unparsed
-                else Template matches
-                    P->>P: Parse, validate, normalize merchant and account (last 4)
-                    P->>DM: findMatch(account, original amount, date window)
-                    alt Exact match from a statement
-                        P->>TS: merge(existing, email fields)
-                    else Near match
-                        P->>TS: save(flagged possibleDuplicateOf)
-                    else No match
-                        P->>TS: save(transaction)
+            else Allowed sender but no template for the subject
+                P->>Ing: Update MSG# (unparsed, NO_TEMPLATE)
+                P-->>GS: 200 unparsed
+            else bac-notificacion or bn-voucher-digital
+                P->>DK: verify(raw MIME, template.dkimDomain)
+                alt No valid signature from that domain
+                    P->>Ing: Update MSG# (rejected)
+                    P-->>GS: 200 rejected
+                else Verified
+                    P->>EP: parse(mime, template)
+                    Note right of EP: HTML to one line of text, then the<br/>field patterns in bank-formats.md section 6
+                    P->>Ref: findAccountByCard(userId, cardLast4)
+                    alt Field missing, unknown type, or card on no account
+                        P->>Ing: Update MSG# (unparsed, reason), shown in the review inbox
+                        P-->>GS: 200 unparsed
+                    else Parsed and routed
+                        P->>P: Normalize merchant, categorize, toUsd
+                        P->>DM: findMatch(account, original amount, date window)
+                        alt Exact match from a statement
+                            P->>TS: merge(existing, email fields)
+                        else Near match
+                            P->>TS: save(flagged possibleDuplicateOf)
+                        else No match
+                            P->>TS: save(transaction)
+                        end
+                        P->>Ing: Update MSG# (imported, transactionId)
+                        P-->>GS: 200 imported
                     end
-                    P->>Ing: Update MSG# (imported, transactionId)
-                    P-->>GS: 200 imported
                 end
             end
         end
-        GS->>GS: Add label yourapp-processed
+        GS->>GS: Add label financeapp-processed
     end
     GS->>API: POST /ingest/gmail/heartbeat
     Note over GS,API: A 5xx response leaves the email unlabelled,<br/>so it is sent again on the next run
+```
+
+The BAC sample becomes a ₡2,000.00 `purchase` at `FM ESC AVENIDA ESCAZU` on the account
+holding card 1111; the BN sample becomes a ₡113.00 `purchase` at `TRANSPORTES JACO CENTRAL
+CR` on the account holding card 2222.
+
+### 01-S08c — Retry an email that was not understood
+
+**Story (supporting 01-S08):** As Ezequiel, I want to retry an alert the product could not
+read once I have fixed the cause so that I don't have to type that purchase by hand.
+
+The usual cause is a card that is not on any account yet. The raw email is still stored in
+S3, so after the card is added (01-S02a) the same email is processed again.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as Ezequiel
+    participant UI as Browser
+    participant Web as Next.js server
+    participant API as ApiFn router
+    participant RS as ReviewService
+    participant Ing as Ingestion
+    participant P as IngestPipeline
+
+    U->>UI: Review inbox shows "Card ending 1111 isn't linked to an account"
+    U->>UI: Add card 1111 to "BAC colones" (01-S02a), then Retry
+    UI->>Web: retryMessage(messageId)
+    Web->>API: POST /api/review/messages/messageId/retry
+    API->>RS: retry(userId, messageId)
+    RS->>Ing: Get MSG#messageId
+    alt Status is not unparsed
+        RS-->>UI: 409 nothing to retry
+    else Unparsed
+        RS->>Ing: Delete MSG#messageId
+        RS->>P: processEmail(userId, messageId, rawRef)
+        Note right of P: Same steps as 01-S08b from the MSG# claim on,<br/>reading the email already stored in S3
+        P-->>RS: imported, unparsed with a new reason, or rejected
+        RS-->>UI: 200 result
+        UI-->>U: The row leaves the inbox, or shows its new reason
+    end
 ```
 
 ---

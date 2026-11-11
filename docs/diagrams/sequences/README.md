@@ -58,19 +58,20 @@ Rules that apply to every diagram, so they are not repeated in each one:
 |---|---|
 | `Transactions` | `TXN#<date>#<id>`. GSI **review** (`reviewPK`, sparse: set only while a transaction needs a decision) |
 | `InvestmentTx` | `INV#<date>#<id>`. GSI **ticker** (`USER#id#<ticker>`) |
-| `Aggregates` | `DAY#<date>#TOTAL`, `MONTH#<yyyy-mm>#TOTAL`, `#CAT#<id>`, `#TAG#<id>`, `#INV`, `BUDGET#<id>#P#<periodStart>`, `BUDGET#<id>#D#<date>`, `HOLDING#<broker>#<ticker>`, `CASH#<broker>`. Global: `PK = FX#USD-CRC#<date>`, `PK = PRICE#<ticker>` (TTL) |
-| `Reference` | `PROFILE` (time zone, week start), `ACCOUNT#`, `CAT#`, `TAG#`, `RULE#<merchantKey>`, `BUDGET#`, `BROKER#`. Global (`PK = GLOBAL`): `CAT#`, `TAG#`, `RULE#` |
-| `Ingestion` | `CONN#gmail#<id>`, `MSG#<Message-ID>`, `IMPORT#<id>`, `FILE#<sha256>`, `ROWFP#<hash>`. Lookup: `PK = TOKEN#<sha256>` |
+| `Aggregates` | `DAY#<date>#TOTAL`, `MONTH#<yyyy-mm>#TOTAL`, `#CAT#<id>`, `#TAG#<id>`, `#INV`, `BUDGET#<id>#P#<periodStart>`, `BUDGET#<id>#D#<date>`, `HOLDING#<broker>#<ticker>`, `CASH#<broker>`. Global: `PK = FX#USD-CRC#<date>`, `PK = PRICE#<ticker>` (fresh for 15 min by `retrievedAt`; DynamoDB TTL 30 days so the last known price survives) |
+| `Reference` | `PROFILE` (time zone, week start), `ACCOUNT#` (bank, currency, `iban`, `cardLast4s`), `CAT#`, `TAG#`, `RULE#<merchantKey>` (category, tags, optional kind), `BUDGET#`, `BROKER#` (fee schedule). Global (`PK = GLOBAL`): `CAT#`, `TAG#`, `RULE#` |
+| `Ingestion` | `CONN#gmail#<id>`, `MSG#<Message-ID>` (status, reason, rawRef), `IMPORT#<id>`, `FILE#<sha256>` (latest importId and its status; reclaimable when `FAILED`), `ROWFP#<hash>` (written in the same transaction as the row's `TXN`). Lookup: `PK = TOKEN#<sha256>` |
 
 ## Index (in scope)
 
 | Story | Title | Diagram |
 |---|---|---|
+| 01-S02a | Register an account (supports 01-S02, 01-S08) | [01](01-accounts-and-ingestion.md#01-s02a--register-an-account) |
 | 01-S02 | Import a statement file | [01](01-accounts-and-ingestion.md#01-s02--import-a-csv-statement) |
 | 01-S03 | Add a transaction by hand | [01](01-accounts-and-ingestion.md#01-s03--add-a-transaction-by-hand) |
 | 01-S04 | Review possible duplicates | [01](01-accounts-and-ingestion.md#01-s04--review-possible-duplicates) |
 | 01-S05 | Record incoming money | [01](01-accounts-and-ingestion.md#01-s05--record-incoming-money) |
-| 01-S08 | Authorise a connection (Gmail) | [01](01-accounts-and-ingestion.md#01-s08a--connect-gmail) (2 diagrams) |
+| 01-S08 | Authorise a connection (Gmail) | [01](01-accounts-and-ingestion.md#01-s08a--connect-gmail) (3 diagrams, including retrying an email that was not understood) |
 | 01-S09 | Be told a connection stopped working | [01](01-accounts-and-ingestion.md#01-s09--detect-a-stale-connection) |
 | 02-S02 | Category and tags on a transaction | [02](02-categorization-and-rules.md#02-s02--set-category-and-tags) |
 | 02-S03 | Automatic categorization | [02](02-categorization-and-rules.md#02-s03--categorize-automatically) |
@@ -88,7 +89,7 @@ Rules that apply to every diagram, so they are not repeated in each one:
 | 06-S02 | See and withdraw access | [06](06-security-and-data-control.md#06-s02--see-and-revoke-the-gmail-connection) |
 | 07-S01 | Record a holding | [07](07-investments-and-net-worth.md#07-s01--record-a-holding) |
 | 07-S02 | Value holdings at market prices | [07](07-investments-and-net-worth.md#07-s02--value-holdings-at-current-prices) |
-| 07-S03 | Describe broker fees | [07](07-investments-and-net-worth.md#07-s03--describe-a-brokers-commission) |
+| 07-S03 | Describe broker fees | [07](07-investments-and-net-worth.md#07-s03--describe-a-brokers-fees) |
 | 07-S04 | Record a contribution with fees | [07](07-investments-and-net-worth.md#07-s04--record-a-contribution-with-commissions) |
 | 07-S05 | What I would receive if I sold today | [07](07-investments-and-net-worth.md#07-s05--value-if-sold-today) |
 
@@ -100,7 +101,7 @@ sequence diagram and are carried into the product backlog.
 | Story | Title | What the design lacks |
 |---|---|---|
 | 01-S01 | Connect an account | Split story; replaced by 01-S07 to 01-S09 |
-| 01-S06 | All accounts and balances | Account balances are not tracked |
+| 01-S06 | All accounts and balances | Accounts are registered (01-S02a), but their balances are not tracked |
 | 01-S07 | Which institutions can be connected | No institution capability list |
 | 02-S01 | Prompt at the time of the charge | No push notifications or in-app prompts |
 | 02-S04 | Create and order rules | Rules are only created from corrections; no rule editor, ordering, or amount ranges |
@@ -135,7 +136,19 @@ sequence diagram and are carried into the product backlog.
   date. The original amount, currency, rate, and rate date stay on the transaction.
 - A transaction that arrives from both Gmail and a CSV statement is **merged
   automatically**. Only near matches are flagged for the user to review.
-- Parsing uses **bank templates only**. There is no LLM fallback and no user column mapping.
+- Parsing uses **bank templates only**, for two banks: **BAC Credomatic and Banco Nacional**
+  (one statement export and one card alert email each). Their exact formats, with redacted
+  samples and expected results, are in [Bank Formats](../bank-formats.md). There is no LLM
+  fallback and no user column mapping.
+- Statement rows that move money between the user's own accounts are imported as
+  `transfer` and stay out of spending: a BAC `TEF A : <number>` whose number appears in the
+  IBAN of an account the user registered, or a SINPE received from the statement's own holder.
+  Transfers and SINPE payments to other people still count.
 - The only "connection" is the **Gmail script**. Bank connection APIs are out of scope.
-- Each broker has **one commission rule** (flat and/or percentage). The user enters the
-  actual commission on each investment transaction.
+- Each broker has a **fee schedule**: deposit, withdrawal, and buy and sell fees per asset
+  class (stocks and ETFs, or crypto), each a flat amount plus a percentage. It pre-fills the
+  commission of every investment transaction (deposits can be grossed up from the amount
+  that arrived), the user can override it, and it prices the "if I sold today" estimate
+  including the withdrawal fee.
+- Market prices come from the **Yahoo Finance chart API** (no key), with Twelve Data as an
+  optional fallback. Quotes in other currencies are converted with Yahoo's exchange rate.

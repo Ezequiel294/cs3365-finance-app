@@ -27,11 +27,11 @@ flowchart LR
     partner(["Household partner<br/>(invited to a shared budget)"])
 
     %% ---------- External systems ----------
-    gmail["Gmail + Apps Script<br/>(bank alert emails)"]
-    bankfile["Bank statement file<br/>(CSV downloaded by the holder)"]
+    gmail["Gmail + Apps Script<br/>(BAC and BN card alert emails)"]
+    bankfile["Bank statement file<br/>(BAC or BN CSV downloaded by the holder)"]
     bankapi["Bank connection API<br/>(e.g. BAC developer portal)<br/>unverified, not in MVP"]
     bccr["BCCR exchange-rate API<br/>(official CRC/USD rate)"]
-    prices["Market price feed<br/>(funds and crypto)<br/>provider to be chosen"]
+    prices["Market price feed<br/>(stocks, ETFs, funds, crypto)<br/>Yahoo Finance; Twelve Data optional"]
     push["Browser push service<br/>(Web Push)<br/>future, not in MVP"]
     authn["Device lock<br/>(biometric / passcode,<br/>via the browser)"]
 
@@ -46,7 +46,7 @@ flowchart LR
             m04["04 Dashboard and Insights<br/>breakdowns · period comparison ·<br/>drill-through · income vs spending"]
             m05["05 Multi-Currency<br/>and Account Roles<br/>BCCR rates · CRC→USD conversion ·<br/>transfers · roles"]
             m06["06 Security and<br/>Data Control<br/>access screen · revoke · lock ·<br/>export · delete · recovery"]
-            m07["07 Investments<br/>and Net Worth<br/>holdings · fee profiles ·<br/>contributions · liquidation value ·<br/>net worth"]
+            m07["07 Investments<br/>and Net Worth<br/>holdings · broker fee schedules ·<br/>contributions · liquidation value ·<br/>net worth"]
         end
 
         subgraph core["Shared services"]
@@ -58,7 +58,7 @@ flowchart LR
     end
 
     %% ---------- Flows across the boundary ----------
-    holder -->|"manual entries, CSV uploads,<br/>categories, budgets, holdings"| m01
+    holder -->|"accounts, manual entries, CSV uploads,<br/>categories, budgets, holdings"| m01
     holder -->|"sign-in, device lock"| idn
     holder <-->|"views, drill-through"| m04
     holder -->|"export / delete / revoke requests"| m06
@@ -66,7 +66,7 @@ flowchart LR
     gmail -->|"raw alert emails<br/>(POST /ingest, ingest token)"| m01
     bankapi -.->|"transactions (future)"| m01
     bccr -->|"daily CRC/USD rate"| m05
-    prices -->|"current prices"| m07
+    prices -->|"current prices, FX pairs"| m07
     ntf -.->|"filing prompts,<br/>budget warnings (future)"| push
     push -.->|"notifications"| holder
     authn -.->|"unlock result"| idn
@@ -95,13 +95,13 @@ solid arrows are data flows; dashed arrows are optional, future, or cross-cuttin
 
 | Module | Responsibility | Stories |
 |---|---|---|
-| 01 Accounts and Transaction Ingestion | Holds accounts and their balances. Brings transactions in by manual entry, CSV statement import, and bank alert emails from Gmail, all through one template-based parsing pipeline. Merges exact duplicates across sources, flags near matches for review, and reports when the Gmail connection has gone quiet. | 01-S02 to 01-S09 |
+| 01 Accounts and Transaction Ingestion | Holds the holder's accounts (bank, currency, IBAN, linked cards). Brings transactions in by manual entry, CSV statement import, and bank alert emails from Gmail, all through one template-based parsing pipeline that reads BAC Credomatic and Banco Nacional formats ([Bank Formats](bank-formats.md)). Recognizes transfers between the holder's own accounts, merges exact duplicates across sources, flags near matches for review, and reports when the Gmail connection has gone quiet. | 01-S02 to 01-S09 |
 | 02 Categorization and Rules | Gives each transaction one category and any number of tags, applies the user's merchant rules, and sends anything no rule settles to the review inbox. Corrections become rules. | 02-S01 to 02-S07 |
 | 03 Budgets and Limits | Weekly, monthly, quarterly, yearly, and custom budgets per category and/or tags (any of the tags), with progress, burn-down, and history views, plus warnings, safe-to-spend, runway, commitments, shared household budgets, and the year-end saving figure. | 03-S01 to 03-S12 |
 | 04 Dashboard and Insights | The read-only views: where the money went, period comparisons, category and tag breakdowns, drill-through to transactions, per-person household split, and income against spending. | 04-S01 to 04-S06 |
 | 05 Multi-Currency and Account Roles | Uses USD as the base currency. CRC amounts are converted at the BCCR rate of the transaction date; the original amount and the rate are kept on the transaction. Excludes transfers between the holder's own accounts and card payments from spending, and records account roles. | 05-S01 to 05-S06 |
 | 06 Security and Data Control | One screen of everything the product can access, immediate revocation, idle lock, full export, verified deletion, and account recovery. | 06-S01 to 06-S06 |
-| 07 Investments and Net Worth | Manually entered holdings, broker fee profiles, contributions with derived fees, liquidation value at live prices net of exit costs, and net worth. | 07-S01 to 07-S06 |
+| 07 Investments and Net Worth | Manually entered holdings, broker fee schedules (deposit, withdrawal, and buy and sell fees per asset class), contributions with suggested and overridable fees, liquidation value at live prices net of sell and withdrawal fees, and net worth. | 07-S01 to 07-S06 |
 
 **Shared services**
 
@@ -117,13 +117,13 @@ solid arrows are data flows; dashed arrows are optional, future, or cross-cuttin
 
 | Entity | Direction | What crosses the boundary |
 |---|---|---|
-| Account holder | In and out | Entries, uploads, settings, and every view. Represents all five personas in `../personas.md`. |
+| Account holder | In and out | Entries, uploads, settings, and every view. Represents all five personas the one-pagers' stories are written for. |
 | Household partner | In and out | Accepts an invitation and reads only the shared budget and its attributed transactions (03-S07 to 03-S09). |
-| Gmail + Apps Script | In | Raw bank alert emails, sent with a revocable ingest token. |
-| Bank statement file | In | CSV rows the holder downloaded from their bank. |
+| Gmail + Apps Script | In | Raw BAC and Banco Nacional card alert emails, sent with a revocable ingest token. |
+| Bank statement file | In | CSV rows the holder downloaded from BAC Credomatic or Banco Nacional. |
 | Bank connection API | In (future) | Transactions through an institution-issued token. Shown dashed because 01-S08 is unverified and not part of the MVP. |
 | BCCR exchange-rate API | In | The official CRC/USD rate, fetched daily and cached per date. |
-| Market price feed | In | Current prices for funds and crypto. The provider is still to be chosen (07, unverified assumption). |
+| Market price feed | In | Current prices for stocks, ETFs, mutual funds, and crypto, plus exchange rates for quotes not in USD. The Yahoo Finance chart API is the primary source (no key); Twelve Data is an optional fallback. |
 | Browser push service | Out (future) | Filing prompts and budget warnings. Shown dashed because Web Push is not part of the MVP. |
 | Device lock | In | The browser's biometric or passcode check (06-S03). |
 

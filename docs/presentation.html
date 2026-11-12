@@ -265,12 +265,12 @@
 <section class="slide">
   <div class="band slim"><h2>Architecture Diagram</h2>
     <div class="links">
-      <a href="https://app.diagrams.net/#Uhttps%3A%2F%2Fraw.githubusercontent.com%2FEzequiel294%2Fcs3365-finance-app%2Fattempt1%2Fdocs%2Fdiagrams%2Farchitecture.drawio" target="_blank" rel="noopener">Full diagram (draw.io)</a>
-      <a href="https://github.com/Ezequiel294/cs3365-finance-app/blob/attempt1/docs/diagrams/architecture.md" target="_blank" rel="noopener">Full diagram (Mermaid)</a>
+      <a href="https://app.diagrams.net/#Uhttps%3A%2F%2Fraw.githubusercontent.com%2FEzequiel294%2Fcs3365-finance-app%2Fmain%2Fdocs%2Fdiagrams%2Farchitecture.drawio" target="_blank" rel="noopener">Full diagram (draw.io)</a>
+      <a href="https://github.com/Ezequiel294/cs3365-finance-app/blob/main/docs/diagrams/architecture.md" target="_blank" rel="noopener">Full diagram (Mermaid)</a>
     </div></div>
   <div class="diagram"><pre class="mermaid" data-src="arch-src"></pre></div>
   <div class="num-footer">5</div>
-  <aside class="notes">(~1 min 15 s) This is a simplified version of the attempt 1 architecture diagram, and the link opens the full draw.io version. Everything runs in a personal AWS account in us-east-2, split into three CDK stacks. The web stack serves the Next.js app through CloudFront, with the server running in a Lambda. The API stack has API Gateway with a Cognito JWT authorizer in front of one Lambda, ApiFn, which has all the routes and services. CSV statements are uploaded straight from the browser to a private S3 bucket, and the S3 event starts a second Lambda, ImportWorkerFn, built from the same code. The Gmail script posts each bank email to the ingest route with its own token. Inside ApiFn, the services cover transactions and accounts, the Gmail ingest pipeline, categories, rules, and the review inbox, budgets and analytics, and investments, with PriceClient getting quotes from Yahoo Finance and FxService getting the BCCR rate. The data stack has five DynamoDB tables: Transactions, InvestmentTransactions, Aggregates for the precomputed totals, holdings, and cached rates and prices, Reference for accounts, categories, rules, budgets, and brokers, and Ingestion for Gmail connections and imports. The totals and budgets are updated in the same transaction as each write, so the dashboard reads stored numbers instead of adding everything up. The BCCR token is kept in SSM Parameter Store. We used AWS instead of Vercel or Railway because the backend needs S3 events, a JWT authorizer, and DynamoDB transactions, and the agents could deploy it with one CDK command.</aside>
+  <aside class="notes">(~1 min 15 s) This is a simplified version of the architecture diagram, and the links open the full draw.io version. Everything runs in a personal AWS account in us-east-2, split into three CDK stacks. The web stack serves the Next.js app through CloudFront. CloudFront sends the static files, the JavaScript and CSS, from an S3 bucket, and sends every page request to the Next.js server running in a Lambda. The API stack has API Gateway with a Cognito JWT authorizer in front of one Lambda, ApiFn, which has all the routes and services. CSV statements are uploaded straight from the browser to a private S3 bucket, and the S3 event starts a second Lambda, ImportWorkerFn, built from the same code. The Gmail script posts each bank email to the ingest route with its own token. Inside ApiFn, the services cover transactions and accounts, the Gmail ingest pipeline, categories, rules, and the review inbox, budgets and analytics, and investments, with PriceClient getting quotes from Yahoo Finance and FxService getting the BCCR rate. The data stack has five DynamoDB tables: Transactions, InvestmentTransactions, Aggregates for the precomputed totals, holdings, and cached rates and prices, Reference for accounts, categories, rules, budgets, and brokers, and Ingestion for Gmail connections and imports. The totals and budgets are updated in the same transaction as each write, so the dashboard reads stored numbers instead of adding everything up. The BCCR token is kept in SSM Parameter Store. We used AWS instead of Vercel or Railway because the backend needs S3 events, a JWT authorizer, and DynamoDB transactions, and the agents could deploy it with one CDK command.</aside>
 </section>
 
 <!-- 6 Sequence and class diagrams -->
@@ -580,6 +580,7 @@ flowchart LR
         subgraph web["Web stack"]
             cf@{ icon: "logos:aws-cloudfront", label: "CloudFront", pos: "b", h: 56 }
             nx@{ icon: "logos:aws-lambda", label: "Next.js server", pos: "b", h: 56 }
+            static@{ icon: "logos:aws-s3", label: "Static files", pos: "b", h: 56 }
         end
         subgraph api["API stack"]
             apigw@{ icon: "logos:aws-api-gateway", label: "API Gateway", pos: "b", h: 56 }
@@ -596,7 +597,9 @@ flowchart LR
         end
     end
 
-    browser --> cf --> nx
+    browser --> cf
+    cf -->|"pages"| nx
+    cf -->|"JS, CSS"| static
     nx -->|"API + JWT"| apigw
     nx -.->|"sign-in"| cog
     apigw -.->|"checks JWT"| cog

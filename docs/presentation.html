@@ -408,13 +408,19 @@
 
 <!-- 11 Attempt 3 changes -->
 <section class="slide">
-  <div class="band"><h2>Attempt 3 Changes</h2><div class="steps"><span class="done">1</span><i></i><span class="done">2</span><i></i><span class="now">3</span></div></div>
+  <div class="band"><h2>Attempt 3 Changes</h2><div class="steps"><span class="done">1</span><i></i><span class="done">2</span><i></i><span class="now">3</span></div>
+    <div class="links"><a href="https://github.com/Ezequiel294/cs3365-finance-app/compare/b3c58fb...ed8dbe9" target="_blank" rel="noopener">Diagram changes</a></div></div>
   <div class="changes">
-    <div class="change"><div><b>Holding value formula</b><span class="d">Value in cents divides by 10¹⁰</span></div></div>
-    <div class="change"><div><b class="tbd">TBD</b><span class="d">To fill in after the diagram pull request</span></div></div>
+    <div class="change"><div><b>App shell and UI kit</b><span class="d">New shared service: navigation, components, and page states for every module</span></div></div>
+    <div class="change"><div><b>Every page specified</b><span class="d">Section order, headline figures, charts, empty and error states, and wording</span></div></div>
+    <div class="change"><div><b>Charts drawn on the server</b><span class="d">Hand-written SVG and Tailwind CSS, no component or chart library</span></div></div>
+    <div class="change"><div><b>Categories, tags, and settings</b><span class="d">16 built-in categories, plus the user's own on a Settings page</span></div></div>
+    <div class="change"><div><b>Dashboard and portfolio views</b><span class="d">Dashboard opens on the current month, portfolio shows gains and fees on selling</span></div></div>
+    <div class="change"><div><b>Holding value formula</b><span class="d">Value in cents divides by 10¹⁰ instead of 10¹²</span></div></div>
   </div>
+  <div class="foot"><span class="chip">19 files changed</span><span class="chip">+1,528 / −178 lines</span><span class="chip teal">Prompt: exact fix for the resource that blocked agent B</span></div>
   <div class="num-footer">11</div>
-  <aside class="notes">(~30 s) TBD. Fill in after the attempt 3 diagram pull request is merged.</aside>
+  <aside class="notes">(~50 s) In attempt 2, agent A's app computed the right numbers, but each module looked like its own set of tables and forms. For attempt 3, most of the changes are about the screens. We added an app shell and UI kit to the context model as a shared service that every module uses to reach the screen, and the class diagram now specifies every page: the order of its sections, its headline figures, which chart answers which question, its loading, empty, and error states, and its wording. The charts are drawn on the server as SVG, with no chart library, so both agents build the same components instead of each choosing its own. We also added 16 built-in categories and a Settings page for the user's own categories and tags, since the earlier design never said where the list of categories came from. The dashboard now opens on the current month, the portfolio shows how the value splits across holdings and what fees would take on selling, and prices show the time the market traded instead of the time we fetched them. Lastly, we fixed the holding value formula that agent A found. The prompt only changed to give the exact code that removes the SSM parameter that made agent B's web stack fail twice.</aside>
 </section>
 
 <!-- 12 Attempt 3 results -->
@@ -422,26 +428,26 @@
   <div class="band"><h2>Attempt 3 Results</h2><div class="steps"><span class="done">1</span><i></i><span class="done">2</span><i></i><span class="now">3</span></div></div>
   <div class="results">
     <div class="card">
-      <div class="head"><span class="av">A</span><b>Claude Opus 5.5</b><span class="pill tbd">TBD</span></div>
+      <div class="head"><span class="av">A</span><b>Claude Opus 5.5</b><span class="pill ok">Deployed</span></div>
       <div class="stats">
-        <div><strong class="tbd">–</strong><span>unit tests</span></div>
-        <div><strong class="tbd">–</strong><span>bank sample tests</span></div>
-        <div><strong class="tbd">–</strong><span>stacks deployed</span></div>
+        <div><strong>171</strong><span>unit tests</span></div>
+        <div><strong>4/4</strong><span>bank sample tests</span></div>
+        <div><strong>3/3</strong><span>stacks deployed</span></div>
       </div>
-      <ul><li class="tbd">TBD</li></ul>
+      <ul><li>Built the UI kit and the server-drawn charts</li></ul>
     </div>
     <div class="card">
-      <div class="head"><span class="av b">B</span><b>GPT Terra 5.6</b><span class="pill tbd">TBD</span></div>
+      <div class="head"><span class="av b">B</span><b>GPT Terra 5.6</b><span class="pill ok">Deployed</span></div>
       <div class="stats">
-        <div><strong class="tbd">–</strong><span>unit tests</span></div>
-        <div><strong class="tbd">–</strong><span>bank sample tests</span></div>
-        <div><strong class="tbd">–</strong><span>stacks deployed</span></div>
+        <div><strong>10</strong><span>unit tests</span></div>
+        <div><strong>4/4</strong><span>bank sample tests</span></div>
+        <div><strong>3/3</strong><span>stacks deployed</span></div>
       </div>
-      <ul><li class="tbd">TBD</li></ul>
+      <ul><li>Most pages are still empty shells</li></ul>
     </div>
   </div>
   <div class="num-footer">12</div>
-  <aside class="notes">(~30 s) TBD. Fill in after attempt 3 runs.</aside>
+  <aside class="notes">(~50 s) In attempt 3, both agents deployed all three stacks, which is the first time agent B's web stack worked, so the exact fix in the prompt was enough. Agent A wrote 171 unit tests and built the UI kit and the charts from the new page specifications. On AWS it seeded the 16 built-in categories, converted a colones entry at the live BCCR rate, imported the BAC sample with its 65 rows and matching totals, and got live prices from Yahoo Finance. Agent B passed the four bank sample tests and wrote 10 unit tests, but its web app is one generic page that changes its title for each route, so most of its screens are empty. This is the deployment we will use for the demo.</aside>
 </section>
 
 <!-- 13 Backlog -->
@@ -453,7 +459,7 @@
     <div class="chips">
       <span class="chip">Account balances and net worth</span><span class="chip">Shared household budgets</span><span class="chip">Budget warnings</span>
       <span class="chip">Rule editor</span><span class="chip">Period comparison</span><span class="chip">Transfer pairing</span>
-      <span class="chip">Data export and deletion</span><span class="chip">More banks</span>
+      <span class="chip">Data export and deletion</span><span class="chip">Rename and archive categories</span><span class="chip">More banks</span>
     </div>
   </div>
   <div class="num-footer">13</div>
@@ -466,7 +472,7 @@
     <polyline points="0,760 180,700 330,725 500,610 660,640 820,520 980,560 1150,420 1320,450 1600,300" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="6"/>
   </svg>
   <h1>Demo</h1>
-  <aside class="notes">Use the attempt 3 deployment (URL TBD). Sign up and sign in, register the BAC and BN accounts, import the BAC statement, add an expense in colones, change a category and save it as a rule, create a budget, show the dashboard and money in vs. out, add a broker with fees, make a deposit, buy VT, and open "if I sold everything today". Then show the pull requests and attempt branches in the repo.</aside>
+  <aside class="notes">Use agent A's attempt 3 deployment. Sign up and sign in, register the BAC and BN accounts, import the BAC statement, add an expense in colones, change a category and save it as a rule, create a budget, show the dashboard and money in vs. out, add a broker with fees, make a deposit, buy VT, and open "if I sold everything today". Then show the pull requests and attempt branches in the repo.</aside>
 </section>
 
 </div>

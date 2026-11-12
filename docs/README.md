@@ -18,6 +18,7 @@ design iteration so that the generated application and its documents use the sam
 | [`sizing.md`](sizing.md) | The effort metric, the baseline anchor, the estimation dimensions, and the roll-up of every story |
 | [`one-pagers/`](one-pagers/) | One document per initiative: the situation it addresses, the assumptions behind it, its stories, its non-functional requirements, and its sizing |
 | [`requirements-changes.md`](requirements-changes.md) | Where the design departs from the 1-pagers, and which stories were removed from scope |
+| [`backlog.md`](backlog.md) | The ordered product backlog for the next phase, and the items selected for a first sprint |
 | [`drafts/`](drafts/) | Superseded versions of documents, retained with a note of what changed and why |
 
 ### 1-Pagers

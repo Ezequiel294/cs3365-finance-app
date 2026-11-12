@@ -7,7 +7,7 @@
 
 **FOR** people in Costa Rica who run their finances across several banks and two
 currencies, **WHO** are stuck maintaining a spreadsheet because no app understands how
-they actually move money, **THE** {{PRODUCT_NAME}} **is a** cross-platform finance
+they actually move money, **THE** Finance App **is a** cross-platform finance
 dashboard **THAT** captures each charge the moment it happens and asks one question to
 file it, keeps colones and dollars honest, ignores transfers between your own accounts,
 and shows what your investments are worth net of every fee it takes to cash out.

@@ -1,12 +1,13 @@
-# {{PRODUCT_NAME}} — Product Documentation
+# Finance App — Product Documentation
 
-This directory holds the documents that define what {{PRODUCT_NAME}} is for and who it
+This directory holds the documents that define what Finance App is for and who it
 serves. The rules governing how these documents are written, read, and updated live in
 `openspec/specs/documentation/`. Read the relevant capability there before authoring or
 revising anything here.
 
-The product name has not been chosen. Until it is, every document refers to the product
-as `{{PRODUCT_NAME}}`, so a single substitution pass will name it everywhere at once.
+The product is called **Finance App**. It is a working name: earlier versions of these
+documents used a placeholder, which was replaced everywhere in one pass for the third
+design iteration so that the generated application and its documents use the same name.
 
 ## Index
 

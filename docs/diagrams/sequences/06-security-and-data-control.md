@@ -32,8 +32,9 @@ sequenceDiagram
     API->>CS: list(userId)
     CS->>Ing: Query CONN#
     CS-->>UI: Gmail connection with status, token prefix, lastSeenAt
-    U->>UI: Revoke Gmail
-    UI-->>U: "New bank emails will stop arriving. Imported transactions stay."
+    UI-->>U: ConnectionCard: StatusBadge "Working", when the last email arrived,<br/>what it can read, and the last 7 days as four StatTiles
+    U->>UI: "Disconnect"
+    UI-->>U: ConfirmDialog "Disconnect Gmail?":<br/>"New bank emails will stop arriving. Imported transactions stay."
     U->>UI: Confirm
     UI->>Web: DELETE /api/connections/id
     Web->>API: DELETE /api/connections/id
@@ -41,6 +42,7 @@ sequenceDiagram
     CS->>Ing: TransactWriteItems
     Note right of Ing: Delete TOKEN#hash,<br/>Update CONN#gmail#id (REVOKED)
     CS-->>UI: 200 revoked
+    UI-->>U: The connection moves under "Past connections", the page offers "Connect Gmail"
     GS->>API: POST /ingest/gmail (old token)
     API->>CS: authenticate(token)
     CS->>Ing: Get TOKEN#hash

@@ -1,8 +1,9 @@
 # 02 Categorization and Rules — Sequence Diagrams
 
 Module 02 of the [context model](../context.md). A transaction has one category and any
-number of tags, drawn from the same `CAT#` and `TAG#` items that budgets use (global ones
-under `PK = GLOBAL` and the user's own under `PK = USER#id`). Categorization uses rules
+number of tags, drawn from the same `CAT#` and `TAG#` items that budgets use (the seeded
+global categories under `PK = GLOBAL`, and the user's own categories and tags under
+`PK = USER#id`; see [02-S02a](#02-s02a--list-and-create-categories-and-tags)). Categorization uses rules
 keyed by normalized merchant, `RULE#<merchantKey>`: the user's own rules first, then global
 rules. Anything no rule settles goes to the review inbox, and correcting it can save a rule
 so the same merchant files itself next time.
@@ -32,7 +33,7 @@ sequenceDiagram
     participant BM as BudgetMatcher
     participant DB as Transactions + Aggregates
 
-    U->>UI: Open transaction, set category Groceries, add tag University
+    U->>UI: Transactions, open a row (TransactionDialog):<br/>category Groceries, tag University (ChipSelect)
     UI->>Web: PATCH /api/transactions/id {categoryId, tagIds}
     Web->>API: PATCH /api/transactions/id
     API->>TS: update(userId, id, changes, by user)
@@ -50,12 +51,66 @@ sequenceDiagram
             TS->>Tx: Re-read and retry once
         end
         TS-->>UI: 200 transaction
-        UI-->>U: Both shown on the transaction, editable later
+        UI-->>U: Dialog closes, the row shows a Groceries badge and a University badge
     end
 ```
 
 Totals by category or by tag come from the `MONTH#...#CAT#` and `MONTH#...#TAG#` rollups
 (see 04-S01 and 04-S03).
+
+---
+
+### 02-S02a — List and create categories and tags
+
+**Story (supporting 02-S02 and 03-S02):** As Ezequiel, I want to see the categories and
+tags I can use and add my own so that I can file a purchase, or set a budget, under a name
+that means something to me.
+
+Every category select and tag picker in the product reads the same catalog: the global
+categories that were seeded when the product was deployed, then the user's own categories
+and tags. New ones are created on the Settings page, which is also where the week-start day
+lives (see [03-S10](03-budgets-and-limits.md#03-s10--change-a-budgets-period)).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as Ezequiel
+    participant UI as Browser
+    participant Web as Next.js server
+    participant API as ApiFn router
+    participant CtS as CatalogService
+    participant Ref as Reference
+
+    U->>UI: More, Settings
+    UI->>Web: Render /settings
+    Web->>API: GET /api/catalog
+    API->>CtS: list(userId)
+    CtS->>Ref: Query GLOBAL begins_with CAT#
+    CtS->>Ref: Query USER#id begins_with CAT# and begins_with TAG#
+    CtS-->>Web: Catalog: categories (global, then own) and tags, sorted by name, not archived
+    Web-->>UI: SettingsPage: Preferences, Categories, and Tags sections (CatalogEditor)
+    UI-->>U: Built-in categories with a "Built-in" badge, own categories, own tags
+    U->>UI: New tag "University", Add
+    UI->>Web: createTag("University")
+    Web->>API: POST /api/tags {name}
+    API->>API: Validate (Zod): name trimmed, 1 to 40 characters
+    API->>CtS: createTag(userId, "University")
+    CtS->>Ref: Query USER#id begins_with TAG#
+    alt A tag with that name exists (ignoring case)
+        CtS-->>UI: 409
+        UI-->>U: Under the field: "You already have a tag called University."
+    else Free
+        CtS->>Ref: Put USER#id / TAG#id (name, scope user)
+        CtS-->>UI: 201 tag
+        UI-->>U: The tag appears in the list and in every tag picker
+    end
+    Note over UI,Ref: POST /api/categories works the same way and also checks<br/>the name against the global categories
+```
+
+The transaction dialog, the review inbox, and the budget dialog call the same
+`GET /api/catalog` for their options. "Uncategorized" is not in the catalog: it is what a
+transaction without a category is called. No rule or fallback files a transaction under
+"Other" by itself; only the user chooses it.
 
 ---
 
@@ -125,7 +180,7 @@ sequenceDiagram
     Web->>API: PATCH /api/transactions/id
     API->>TS: update(userId, id, {categoryId}, by user)
     TS-->>UI: 200, removed from review inbox
-    UI-->>U: "Always file Spotify as Subscriptions?"
+    UI-->>U: The dialog (or the Review toast) asks<br/>"Always file Spotify as Subscriptions?" with "Always" and "Only this one"
     alt Yes
         U->>UI: Yes
         UI->>Web: PUT /api/rules/spotify {categoryId, tagIds, kind if it was changed}
@@ -162,13 +217,14 @@ sequenceDiagram
     participant Ing as Ingestion
     participant TS as TransactionService
 
-    U->>UI: Tap "12 to review" on the main view
+    U->>UI: Open Review from the nav (badge "12") or the Dashboard's "To review" tile
     UI->>Web: GET /api/review
     Web->>API: GET /api/review
     API->>RS: list(userId)
     RS->>Tx: Query review GSI (reviewPK = USER#id)
     RS->>Ing: Query MSG# with status unparsed
     RS-->>UI: Pending transactions, unparsed emails, and the count
+    Note over UI: ReviewInbox, Tabs with counts: To categorize,<br/>Possible duplicates, Emails not understood.<br/>With a count of 0 the page shows one "All caught up" EmptyState
     loop Each transaction, without opening it
         U->>UI: Pick category from the row's dropdown
         UI->>Web: PATCH /api/transactions/id {categoryId}
@@ -176,6 +232,6 @@ sequenceDiagram
         API->>TS: update(userId, id, {categoryId}, by user)
         TS->>Tx: Update TXN, remove reviewPK (with rollup deltas)
         TS-->>UI: 200
-        UI->>UI: Remove row, count goes down by one
+        UI->>UI: Remove row, tab count and nav badge go down by one,<br/>toast "Filed under Groceries" with the action "Always file Automercado this way"
     end
 ```

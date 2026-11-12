@@ -2803,8 +2803,9 @@ and returns the first quote. It throws `NOT_FOUND` only when every provider said
   pair is cached as its own `PRICE#` item. If the pair cannot be fetched, the price fails with
   `UNSUPPORTED_CURRENCY`.
 - `priceMicros = round(price × 10⁶)`. A holding's value is `quantityMicro × priceMicros ÷
-  10¹²` cents, computed with **`BigInt`** (half a bitcoin is already beyond `2^53` in that
-  product) and rounded half-to-even.
+  10¹⁰` cents (the product is in millionths of a unit times millionths of a dollar, so
+  `÷ 10¹²` gives dollars and `÷ 10¹⁰` gives cents), computed with **`BigInt`** (half a
+  bitcoin is already beyond `2^53` in that product) and rounded half-to-even.
 - A successful refresh writes `PRICE#<ticker>` with `marketTime` (the quote's
   `regularMarketTime`), `retrievedAt`, and a **DynamoDB TTL of 30 days**. Freshness comes from `retrievedAt`, not from the TTL, so the last known price is
   still there to be shown, marked stale with its age, when a refresh fails. A failed refresh

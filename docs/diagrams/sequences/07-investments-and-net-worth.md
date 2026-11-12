@@ -151,7 +151,7 @@ sequenceDiagram
         end
     end
     PC-->>VS: Per ticker: priceMicros, marketTime, retrievedAt, fresh or stale, lastError
-    VS->>VS: value = quantityMicro x priceMicros / 10^12 (BigInt, half-to-even to cents)
+    VS->>VS: value in cents = quantityMicro x priceMicros / 10^10 (BigInt, half-to-even)
     VS->>VS: Per holding: gain = value - cost basis, gainBps, shareBps of the total.<br/>Totals over priced holdings: value, cost basis, gain, gainBps.<br/>priceTime = the oldest market time used
     VS->>Agg: Query USER#id begins_with CASH#
     VS-->>UI: Valuation: each holding (units, cost basis, price, priceTime, value, gain,<br/>share, stale age or reason), cash per broker, the totals, priceTime, unpriced tickers

@@ -1,0 +1,52 @@
+{
+  "name": "finance-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p api/tsconfig.json && tsc --noEmit -p infra/tsconfig.json",
+    "test": "vitest run",
+    "build:api": "node api/build.mjs",
+    "synth": "cd infra && cdk synth",
+    "deploy": "cd infra && cdk deploy --all --require-approval never"
+  },
+  "dependencies": {
+    "@aws-lambda-powertools/event-handler": "^2.36.0",
+    "@aws-sdk/client-dynamodb": "^3.1167.0",
+    "@aws-sdk/client-s3": "^3.1167.0",
+    "@aws-sdk/client-ssm": "^3.1167.0",
+    "@aws-sdk/lib-dynamodb": "^3.1167.0",
+    "@aws-sdk/s3-presigned-post": "^3.1167.0",
+    "entities": "^4.5.0",
+    "mailauth": "^8.0.6",
+    "mailparser": "^3.14.3",
+    "next": "^16.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@next/routing": "^16.4.6",
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/aws-lambda": "^8.10.164",
+    "@types/mailparser": "^3.9.0",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "aws-cdk": "^2.1148.1",
+    "aws-cdk-lib": "^2.276.0",
+    "aws-sdk-client-mock": "^4.1.0",
+    "cdk-nextjs": "^0.7.20",
+    "constructs": "^10.8.1",
+    "debug": "^4.4.3",
+    "esbuild": "^0.28.2",
+    "tailwindcss": "^4.3.5",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^5.1.0"
+  }
+}

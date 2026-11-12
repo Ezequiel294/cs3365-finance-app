@@ -1,0 +1,1 @@
+'use client';export default function Error({reset}:{reset:()=>void}){return <main className="empty"><h1>We could not load this page</h1><p>Please try again.</p><button className="primary" onClick={reset}>Try again</button></main>}

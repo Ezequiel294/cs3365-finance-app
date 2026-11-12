@@ -92,6 +92,21 @@
   .area .ico { margin-bottom: .2em; }
   .area b { color: var(--navy); line-height: 1.15; }
   .area span.d { font-size: .82em; color: #475569; line-height: 1.25; }
+  table { border-collapse: collapse; width: 100%; background: #fff; font-size: .9em; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(30,58,138,.07); }
+  th, td { border-bottom: 1px solid #c7d5ee; padding: .38em .8em; text-align: left; }
+  th { background: var(--blue); color: #fff; font-weight: 700; }
+  tr:nth-child(even) td { background: var(--blue-light); }
+  td.num { text-align: right; font-weight: 700; color: var(--navy); }
+  .applink { display: block; margin: 0 1em .8em; font-size: .8em; color: var(--blue); font-weight: 600; text-decoration: none; }
+  .applink::before { content: "↗ "; }
+  .demo-links { position: relative; display: flex; gap: 1em; margin-top: 1.2em; }
+  .demo-links a { text-decoration: none; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.55); border-radius: 999px; padding: .35em 1.1em; font-size: .9em; color: #fff; }
+  .demo-links b { color: #ccfbf1; margin-right: .3em; }
+  .releases { display: grid; grid-template-columns: auto 1fr; gap: .55em .8em; align-items: center; }
+  .releases .rel { font-weight: 700; color: var(--navy); font-size: .9em; white-space: nowrap; }
+  .rbar { height: 1.5em; border-radius: 6px; background: linear-gradient(90deg, var(--teal), var(--blue-mid)); display: flex; align-items: center; justify-content: flex-end; padding-right: .5em; min-width: 3.6em; }
+  .rbar span { color: #fff; font-weight: 700; font-size: .78em; }
+  .rtitle { display: block; font-size: .8em; color: #475569; margin-top: .15em; }
   .chips { display: flex; flex-wrap: wrap; gap: .45em; }
   .chip { background: var(--blue-light); color: var(--navy); border-radius: 999px; padding: .22em .85em; font-size: .86em; font-weight: 600; }
   .chip.teal { background: var(--teal-light); color: var(--teal-dark); }
@@ -435,6 +450,7 @@
         <div><strong>3/3</strong><span>stacks deployed</span></div>
       </div>
       <ul><li>Built the UI kit and the server-drawn charts</li></ul>
+      <a class="applink" href="https://d343n1cthv1u7o.cloudfront.net" target="_blank" rel="noopener">d343n1cthv1u7o.cloudfront.net</a>
     </div>
     <div class="card">
       <div class="head"><span class="av b">B</span><b>GPT Terra 5.6</b><span class="pill ok">Deployed</span></div>
@@ -444,6 +460,7 @@
         <div><strong>3/3</strong><span>stacks deployed</span></div>
       </div>
       <ul><li>Most pages are still empty shells</li></ul>
+      <a class="applink" href="https://d2r3kcip509cjc.cloudfront.net" target="_blank" rel="noopener">d2r3kcip509cjc.cloudfront.net</a>
     </div>
   </div>
   <div class="num-footer">12</div>
@@ -452,18 +469,55 @@
 
 <!-- 13 Backlog -->
 <section class="slide">
-  <div class="band"><h2>Product Backlog</h2></div>
-  <p class="tbd-box" style="margin-bottom:1em">TBD after attempt 3: backlog stories and the first sprint</p>
-  <div class="panel">
-    <h3>Candidates</h3>
-    <div class="chips">
-      <span class="chip">Account balances and net worth</span><span class="chip">Shared household budgets</span><span class="chip">Budget warnings</span>
-      <span class="chip">Rule editor</span><span class="chip">Period comparison</span><span class="chip">Transfer pairing</span>
-      <span class="chip">Data export and deletion</span><span class="chip">Rename and archive categories</span><span class="chip">More banks</span>
+  <div class="band"><h2>Product Backlog</h2>
+    <div class="links"><a href="https://github.com/Ezequiel294/cs3365-finance-app/blob/attempt3/docs/backlog.md" target="_blank" rel="noopener">Full backlog</a></div></div>
+  <div class="two">
+    <div class="panel">
+      <div class="bignum"><strong>47</strong><span>items, 200 story points</span></div>
+      <div class="chips">
+        <span class="chip">29 features</span><span class="chip">9 feature changes</span>
+        <span class="chip teal">7 engineering improvements</span><span class="chip teal">2 investigations</span>
+      </div>
+      <p class="muted" style="margin-top:.9em;font-size:.9em">Ordered by value to the vision, dependencies, risk, and cost. Baseline: 01-S03 = 2 points.</p>
+    </div>
+    <div class="panel">
+      <h3>Release plan</h3>
+      <div class="releases">
+        <span class="rel">Release 1</span><div><div class="rbar" style="width:100%"><span>64 pts</span></div><span class="rtitle">Correct and traceable figures</span></div>
+        <span class="rel">Release 2</span><div><div class="rbar" style="width:52%"><span>33 pts</span></div><span class="rtitle">Complete records and control of my data</span></div>
+        <span class="rel">Release 3</span><div><div class="rbar" style="width:61%"><span>39 pts</span></div><span class="rtitle">Planning ahead</span></div>
+        <span class="rel">Release 4</span><div><div class="rbar" style="width:100%"><span>64 pts</span></div><span class="rtitle">Reaching the user, sharing, and more sources</span></div>
+      </div>
     </div>
   </div>
   <div class="num-footer">13</div>
-  <aside class="notes">(~30 s) TBD. These candidates come from the stories that we removed from scope in the design. The final backlog and the first sprint will be written after attempt 3.</aside>
+  <aside class="notes">(~40 s) The backlog has 47 items and 200 story points. It follows the textbook's four kinds of item: 29 features, which are mostly the stories we removed from scope, 9 feature changes where the design does not fully meet a story, for example there is no way to delete a transaction or a budget, 7 engineering improvements that came from the attempts, such as checks on every pull request and signed-in tests on the deployment, and 2 investigations, for push notifications and bank APIs. Every item is estimated in story points against the same baseline we used in the first deliverable, adding a transaction by hand at 2 points. Items are ordered by value to the vision first, then dependencies, risk, and cost, and grouped into four releases. The first release is about making every figure correct and traceable, and the last one holds the items that still depend on an investigation, like push notifications, shared budgets, and bank APIs.</aside>
+</section>
+
+<!-- 14 First sprint -->
+<section class="slide">
+  <div class="band"><h2>First Sprint</h2>
+    <div class="links"><a href="https://github.com/Ezequiel294/cs3365-finance-app/blob/attempt3/docs/backlog.md#6-first-sprint" target="_blank" rel="noopener">Sprint plan</a></div></div>
+  <p class="lead">Goal: show where my money is, and let every figure on the dashboard be checked and corrected.</p>
+  <div class="impl" style="grid-template-columns: 1.6fr 1fr">
+    <table>
+      <tr><th>Story</th><th>Title</th><th style="text-align:right">Points</th></tr>
+      <tr><td>01-S10</td><td>Delete a transaction</td><td class="num">2</td></tr>
+      <tr><td>07-S07</td><td>Remove an investment transaction</td><td class="num">2</td></tr>
+      <tr><td>01-S06</td><td>See every account and its balance</td><td class="num">5</td></tr>
+      <tr><td>07-S06</td><td>Accounts and holdings in one total</td><td class="num">3</td></tr>
+      <tr><td>04-S04</td><td>See the transactions behind a figure</td><td class="num">5</td></tr>
+      <tr><td>TECH-01</td><td>Checks on every pull request</td><td class="num">3</td></tr>
+      <tr><td></td><td><b>Total</b></td><td class="num">20</td></tr>
+    </table>
+    <div class="vsteps">
+      <div><span class="n">6</span>Highest-ranked items in the backlog</div>
+      <div><span class="n">2</span>Weeks, fixed length</div>
+      <div><span class="n">½</span>Mid-sprint check at 10 points</div>
+    </div>
+  </div>
+  <div class="num-footer">14</div>
+  <aside class="notes">(~40 s) For the first sprint we chose a functional goal: show where my money is, and let every figure on the dashboard be checked and corrected. It takes the six highest-ranked items, for about 20 points in two weeks. We start with the two smallest items, deleting a transaction and removing an investment transaction, because we don't have a velocity yet and they help us measure it. Then account balances and net worth, the transactions behind any figure, and one engineering item, checks on every pull request, since every later item changes the diagrams. Halfway through, about 10 points should be done, and if not we move the lowest item back to the backlog instead of extending the sprint. Pairing transfers is the first candidate for the second sprint, since at 8 points it was too big for a sprint without a known velocity.</aside>
 </section>
 
 <!-- 14 Demo -->
@@ -472,7 +526,11 @@
     <polyline points="0,760 180,700 330,725 500,610 660,640 820,520 980,560 1150,420 1320,450 1600,300" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="6"/>
   </svg>
   <h1>Demo</h1>
-  <aside class="notes">Use agent A's attempt 3 deployment. Sign up and sign in, register the BAC and BN accounts, import the BAC statement, add an expense in colones, change a category and save it as a rule, create a budget, show the dashboard and money in vs. out, add a broker with fees, make a deposit, buy VT, and open "if I sold everything today". Then show the pull requests and attempt branches in the repo.</aside>
+  <div class="demo-links">
+    <a href="https://d343n1cthv1u7o.cloudfront.net" target="_blank" rel="noopener"><b>Agent A</b> d343n1cthv1u7o.cloudfront.net</a>
+    <a href="https://d2r3kcip509cjc.cloudfront.net" target="_blank" rel="noopener"><b>Agent B</b> d2r3kcip509cjc.cloudfront.net</a>
+  </div>
+  <aside class="notes">Use agent A's attempt 3 deployment, and show agent B's to compare. Sign up and sign in, register the BAC and BN accounts, import the BAC statement, add an expense in colones, change a category and save it as a rule, create a budget, show the dashboard and money in vs. out, add a broker with fees, make a deposit, buy VT, and open "if I sold everything today". Then show the pull requests and attempt branches in the repo.</aside>
 </section>
 
 </div>

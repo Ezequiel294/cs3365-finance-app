@@ -7,7 +7,7 @@ currency, and who have fallen back on a spreadsheet because no application under
 how they actually move money,
 **WHO** need to know where their money goes and what they are worth without spending an
 evening every month re-entering it by hand,
-**THE** {{PRODUCT_NAME}} **is a** cross-platform personal finance dashboard
+**THE** Finance App **is a** cross-platform personal finance dashboard
 **THAT** captures each charge close to the moment it happens and asks one question to
 file it, keeps colones and dollars distinct rather than silently blending them, ignores
 money moved between a person's own accounts, and values held investments at live prices
@@ -41,12 +41,12 @@ days right after someone updates it. Existing trackers automate some of the capt
 get the details wrong that matter most to this user: they count a transfer between two of
 your own accounts as spending, they convert currencies behind your back or refuse to
 handle them at all, and they show an investment's market value without acknowledging the
-fees standing between that number and money in your pocket. {{PRODUCT_NAME}} is built
+fees standing between that number and money in your pocket. Finance App is built
 around those details rather than in spite of them.
 
 ## Using This Vision
 
-Every initiative proposed for {{PRODUCT_NAME}} is checked against this statement. A
+Every initiative proposed for Finance App is checked against this statement. A
 proposed capability that this vision does not support is either dropped, or the vision is
 revised deliberately — with the superseded version retained under `drafts/` and a note
 recording what changed and why. The vision is what keeps the product from accumulating

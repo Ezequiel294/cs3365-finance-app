@@ -18,12 +18,15 @@ listed at the end and form part of the product backlog.
   as a participant must exist as a class, and every message must exist as a method.
 - **They expose shared paths.** Manual entry, Gmail alerts, and CSV statements all end in
   the same save path. Drawing them shows the reuse, so it is built once.
+- **They end in a screen, not in a sentence.** Each diagram's last messages name the page
+  section and the component that shows the result, and three supporting diagrams (02-S02a,
+  04-S01a, 07-S02a) show how several stories share one page.
 
 ## Conventions
 
 | Participant | What it is |
 |---|---|
-| `Browser` | The Next.js UI running in the user's browser |
+| `Browser` | The Next.js UI running in the user's browser. The component names in its messages (`BarList`, `BudgetCard`, `Dialog`, ...) are classes of [class diagram section 2](../class-diagram.md#2-nextjs-layer) |
 | `Next.js server` | The Next.js server Lambda behind CloudFront (Server Actions and Route Handlers) |
 | `ApiFn router` | API Gateway (HTTP API) plus the Powertools router inside `ApiFn` |
 | `...Service`, `...Pipeline`, `...Calculator` | Classes inside `ApiFn` or `ImportWorkerFn` (same code bundle) |
@@ -51,6 +54,16 @@ Rules that apply to every diagram, so they are not repeated in each one:
    `{code, message}` with an HTTP status. Diagrams show only the error branches that change
    what the user sees.
 5. **Logging.** Nothing logs amounts, merchant names, account numbers, or email bodies.
+6. **What the user sees.** The last `Web-->>UI` or `UI-->>U` messages of a diagram name the
+   page section and the component that shows the result. Text in quotes is an example of
+   the content inside that component; it is not the layout, and it is never printed as a
+   bare line of text. The layout, the order of the sections, and the exact wording of each
+   page are in class diagram section 2d.
+7. **States.** Every page render shows a skeleton while it loads, one empty state when
+   there is no data, and an error state with "Try again" when a call fails. Every action
+   disables its button while it runs and ends in a toast or in errors under the fields.
+   Creating or editing anything happens in a dialog. These are drawn only where a diagram
+   needs them.
 
 ## Keys and indexes used in these diagrams
 
@@ -58,8 +71,8 @@ Rules that apply to every diagram, so they are not repeated in each one:
 |---|---|
 | `Transactions` | `TXN#<date>#<id>`. GSI **review** (`reviewPK`, sparse: set only while a transaction needs a decision) |
 | `InvestmentTx` | `INV#<date>#<id>`. GSI **ticker** (`USER#id#<ticker>`) |
-| `Aggregates` | `DAY#<date>#TOTAL`, `MONTH#<yyyy-mm>#TOTAL`, `#CAT#<id>`, `#TAG#<id>`, `#INV`, `BUDGET#<id>#P#<periodStart>`, `BUDGET#<id>#D#<date>`, `HOLDING#<broker>#<ticker>`, `CASH#<broker>`. Global: `PK = FX#USD-CRC#<date>`, `PK = PRICE#<ticker>` (fresh for 15 min by `retrievedAt`; DynamoDB TTL 30 days so the last known price survives) |
-| `Reference` | `PROFILE` (time zone, week start), `ACCOUNT#` (bank, currency, `iban`, `cardLast4s`), `CAT#`, `TAG#`, `RULE#<merchantKey>` (category, tags, optional kind), `BUDGET#`, `BROKER#` (fee schedule). Global (`PK = GLOBAL`): `CAT#`, `TAG#`, `RULE#` |
+| `Aggregates` | `DAY#<date>#TOTAL`, `MONTH#<yyyy-mm>#TOTAL`, `#CAT#<id>`, `#TAG#<id>`, `#INV`, `BUDGET#<id>#P#<periodStart>`, `BUDGET#<id>#D#<date>`, `HOLDING#<broker>#<ticker>`, `CASH#<broker>`. Global: `PK = FX#USD-CRC#<date>`, `PK = PRICE#<ticker>` (`marketTime` is shown to the user; fresh for 15 min by `retrievedAt`; DynamoDB TTL 30 days so the last known price survives) |
+| `Reference` | `PROFILE` (time zone, week start), `ACCOUNT#` (bank, currency, `iban`, `cardLast4s`), `CAT#`, `TAG#`, `RULE#<merchantKey>` (category, tags, optional kind), `BUDGET#`, `BROKER#` (fee schedule). Global (`PK = GLOBAL`): `CAT#` (the sixteen categories seeded at deploy), `RULE#` |
 | `Ingestion` | `CONN#gmail#<id>`, `MSG#<Message-ID>` (status, reason, rawRef), `IMPORT#<id>`, `FILE#<sha256>` (latest importId and its status; reclaimable when `FAILED`), `ROWFP#<hash>` (written in the same transaction as the row's `TXN`). Lookup: `PK = TOKEN#<sha256>` |
 
 ## Index (in scope)
@@ -74,12 +87,14 @@ Rules that apply to every diagram, so they are not repeated in each one:
 | 01-S08 | Authorise a connection (Gmail) | [01](01-accounts-and-ingestion.md#01-s08a--connect-gmail) (3 diagrams, including retrying an email that was not understood) |
 | 01-S09 | Be told a connection stopped working | [01](01-accounts-and-ingestion.md#01-s09--detect-a-stale-connection) |
 | 02-S02 | Category and tags on a transaction | [02](02-categorization-and-rules.md#02-s02--set-category-and-tags) |
+| 02-S02a | List and create categories and tags (supports 02-S02, 03-S02) | [02](02-categorization-and-rules.md#02-s02a--list-and-create-categories-and-tags) |
 | 02-S03 | Automatic categorization | [02](02-categorization-and-rules.md#02-s03--categorize-automatically) |
 | 02-S05 | Correction remembered | [02](02-categorization-and-rules.md#02-s05--correct-and-remember) |
 | 02-S06 | Find uncategorized transactions | [02](02-categorization-and-rules.md#02-s06--clear-the-review-inbox) |
 | 03-S02 | A limit per category or tags | [03](03-budgets-and-limits.md#03-s02--create-a-budget-and-see-all-progress) |
-| 03-S10 | Week, month, or year budgets | [03](03-budgets-and-limits.md#03-s10--change-a-budgets-period) |
+| 03-S10 | Week, month, or year budgets | [03](03-budgets-and-limits.md#03-s10--change-a-budgets-period) (2 diagrams, including the day the week starts) |
 | 03-S11 | Proportion used, including over 100% | [03](03-budgets-and-limits.md#03-s11--proportion-used) |
+| 04-S01a | Open the dashboard (supports 04-S01, 04-S03, 04-S06, 03-S11) | [04](04-dashboard-and-insights.md#04-s01a--open-the-dashboard) |
 | 04-S01 | Where last month's money went | [04](04-dashboard-and-insights.md#04-s01--where-last-months-money-went) |
 | 04-S03 | Breakdown by tag and category | [04](04-dashboard-and-insights.md#04-s03--breakdown-by-tag-and-category) |
 | 04-S06 | Income alongside spending | [04](04-dashboard-and-insights.md#04-s06--income-alongside-spending) |
@@ -89,6 +104,7 @@ Rules that apply to every diagram, so they are not repeated in each one:
 | 06-S02 | See and withdraw access | [06](06-security-and-data-control.md#06-s02--see-and-revoke-the-gmail-connection) |
 | 07-S01 | Record a holding | [07](07-investments-and-net-worth.md#07-s01--record-a-holding) |
 | 07-S02 | Value holdings at market prices | [07](07-investments-and-net-worth.md#07-s02--value-holdings-at-current-prices) |
+| 07-S02a | Open the portfolio overview (supports 07-S02, 07-S04, 07-S05) | [07](07-investments-and-net-worth.md#07-s02a--open-the-portfolio-overview) |
 | 07-S03 | Describe broker fees | [07](07-investments-and-net-worth.md#07-s03--describe-a-brokers-fees) |
 | 07-S04 | Record a contribution with fees | [07](07-investments-and-net-worth.md#07-s04--record-a-contribution-with-commissions) |
 | 07-S05 | What I would receive if I sold today | [07](07-investments-and-net-worth.md#07-s05--value-if-sold-today) |
@@ -152,3 +168,10 @@ sequence diagram and are carried into the product backlog.
   including the withdrawal fee.
 - Market prices come from the **Yahoo Finance chart API** (no key), with Twelve Data as an
   optional fallback. Quotes in other currencies are converted with Yahoo's exchange rate.
+- **Screens are part of the design.** The one-pagers state figures; the design also fixes
+  how each page presents them: which is a headline number, which is a chart and of what
+  kind, what an empty page says, and the wording. The dashboard opens on the current month
+  (or the latest one with data), so "last month" in 04-S01 is one step back.
+- **Categories, tags, and settings are managed on a Settings page.** A fixed list of
+  sixteen categories is seeded for everyone, users add their own categories and tags, and
+  the week-start day is a setting. Renaming, archiving, and ordering stay in the backlog.

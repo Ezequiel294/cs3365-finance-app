@@ -19,6 +19,11 @@ why.
 | Market prices (07) | Provider to be chosen | The Yahoo Finance chart API (no key) is the primary source, with Twelve Data as an optional fallback; quotes in other currencies are converted with Yahoo's exchange rates, and the last known price is kept 30 days to be shown as stale | Leaving the provider open meant prices never loaded; Yahoo covers stocks, ETFs, mutual funds, crypto, and non-US exchanges without a key |
 | Budget periods (03-S10) | Week, month, or year | Week, month, quarter, year, or a custom date range | Small extension that reuses the same period logic |
 | Prompts and warnings (02-S01, 03-S01) | Prompt at the time of the charge; warning before a budget runs out | Removed. Uncategorized transactions wait in an in-app review inbox | Delivering them needs push notifications, which are not part of the design |
+| Presentation (all initiatives) | Each story states the figures its view must show; nothing fixes layout, page states, or wording | Every page is specified: the order of its sections, its headline figures, which chart answers which question, its loading, empty, and error states, forms in dialogs, and its wording. The components and charts are hand-written (Tailwind CSS, SVG) from one set of design tokens, with no component or chart library | The earlier generated versions computed the right numbers and presented them as stacked tables and forms. What a generator is not told, it improvises, and the result was hard to read at a glance, which is the dashboard's whole purpose |
+| Dashboard month (04-S01) | The view shows last month | The dashboard and the transaction list open on the current month, or on the latest month with data when the current one is empty; last month is one step back | One rule for every month view. The two pages used to open on different months, and one of them opened empty |
+| Investment views (07) | Figures only: value per holding, cost, and the net liquidation figure | The portfolio also shows how the value splits across holdings, each holding's value against what it cost, what part of the value fees would take on selling, and deposits and withdrawals by month, with each holding's gain | Each view answers a question the 1-pager already asks ("what a position has really cost me", "what I would actually receive"). All use recorded or current figures; none projects a future value |
+| Price time (07-S02, 07-S05) | The time the price was retrieved | The time the market last traded at that price, with its date; the retrieval time is shown only as the age of a stale price | The page showed two different times for the same price. The market time is the one that tells a price from today apart from one from last week |
+| Categories, tags, and settings (02, 03) | Categories and groups are assumed to exist; managing them is part of the rule editor | Sixteen built-in categories are seeded, the user adds their own categories and tags on a Settings page, and the day the week starts is a setting there | Budgets and filing need a list to pick from, and the earlier design did not say where it came from, so each generator invented one in a different place |
 
 ## Removed from scope
 
@@ -36,6 +41,6 @@ entry (01) is also removed: a transaction is saved only when the device is onlin
 
 ## Platform
 
-{{PRODUCT_NAME}} is built as a web application (Next.js) that works in a phone's browser, and
+Finance App is built as a web application (Next.js) that works in a phone's browser, and
 is deployed on AWS (CloudFront, Lambda, API Gateway, DynamoDB, S3, Cognito) rather than on a
 platform such as Vercel or Railway.

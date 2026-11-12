@@ -25,7 +25,7 @@ these rather than join them.
 
 # Personas
 
-Four personas describe the people {{PRODUCT_NAME}} is built for. Each one is here because
+Four personas describe the people Finance App is built for. Each one is here because
 it pulls at least one requirement none of the others pull; the requirement each is
 responsible for is stated with it. Where a persona rests on limited information it is
 labelled a proto-persona, which means it represents the team's current understanding
@@ -119,7 +119,7 @@ shared picture out, without ever linking an account. She wants to be the one who
 what the application can see, to be able to withdraw that access at any moment, and to
 understand what is stored about her. If the product ever requires a linked account to be
 useful, it is useless to her — which is what makes her the persona that keeps
-{{PRODUCT_NAME}} working when automatic capture is unavailable, whether because a bank
+Finance App working when automatic capture is unavailable, whether because a bank
 offers nothing or because the person using it says no.
 
 > **Grounded in:** limited information. **Proto-persona.**
@@ -162,14 +162,14 @@ unknowable — but for the money already in hand to be described honestly.
 These user types were considered and excluded. Each is recorded so that a later reader
 does not have to guess whether they were forgotten.
 
-**A financial advisor or planner.** {{PRODUCT_NAME}} describes what a person's money has
+**A financial advisor or planner.** Finance App describes what a person's money has
 done and what it is currently worth. It does not recommend, rank, or project — an advisor
 would need exactly the capabilities the product declines to have, and building for them
 would pull it toward giving advice.
 
 **Bank operations or support staff.** The product consumes whatever an institution
 exposes and never administers anything on the institution's side. Nobody in that role
-configures, operates, or supports {{PRODUCT_NAME}}.
+configures, operates, or supports Finance App.
 
 **An accountant or tax preparer.** Tax treatment is jurisdiction-specific, changes
 annually, and is needed by a small minority of users. Serving it would mean maintaining

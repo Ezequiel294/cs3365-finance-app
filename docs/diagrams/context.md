@@ -2,14 +2,14 @@
 
 ## What this diagram shows
 
-The context model draws the boundary of `{{PRODUCT_NAME}}`. Inside the boundary are its
+The context model draws the boundary of Finance App. Inside the boundary are its
 modules; outside it are the people and external systems it exchanges data with. Each arrow
 is a flow of data across the boundary or between modules, labelled with what moves.
 
 There is one module per initiative in [`../one-pagers/`](../one-pagers/), so every user
-story has exactly one home. Three shared services sit underneath them because several
-modules depend on them: identity, notifications, and the rollup engine that keeps totals
-precomputed.
+story has exactly one home. Four shared services sit underneath them because several
+modules depend on them: identity, notifications, the rollup engine that keeps totals
+precomputed, and the app shell and UI kit through which every module is shown.
 
 Where the design deliberately differs from a one-pager, this model follows the design:
 transactions carry one category and any number of tags (budgets are set per category
@@ -35,13 +35,13 @@ flowchart LR
     push["Browser push service<br/>(Web Push)<br/>future, not in MVP"]
     authn["Device lock<br/>(biometric / passcode,<br/>via the browser)"]
 
-    subgraph system["{{PRODUCT_NAME}} (system boundary)"]
+    subgraph system["Finance App (system boundary)"]
         direction TB
 
         subgraph modules["Feature modules (one per 1-pager)"]
             direction TB
             m01["01 Accounts and<br/>Transaction Ingestion<br/>accounts · manual entry ·<br/>CSV import · email alerts ·<br/>duplicates · connection status"]
-            m02["02 Categorization<br/>and Rules<br/>categories · tags · merchant rules ·<br/>review inbox"]
+            m02["02 Categorization<br/>and Rules<br/>category and tag catalog ·<br/>merchant rules · review inbox"]
             m03["03 Budgets and Limits<br/>budgets · warnings · safe-to-spend ·<br/>runway · commitments · sharing ·<br/>year-end saving"]
             m04["04 Dashboard and Insights<br/>breakdowns · period comparison ·<br/>drill-through · income vs spending"]
             m05["05 Multi-Currency<br/>and Account Roles<br/>BCCR rates · CRC→USD conversion ·<br/>transfers · roles"]
@@ -54,6 +54,7 @@ flowchart LR
             idn["Identity and sessions"]
             ntf["Notifications"]
             agg["Rollup engine<br/>(precomputed totals)"]
+            ui["App shell and UI kit<br/>(navigation, page states, charts)"]
         end
     end
 
@@ -86,6 +87,9 @@ flowchart LR
     m07 -->|"net worth figures"| m04
     m06 -.->|"revoke, export, delete<br/>reach every module"| modules
     idn -.->|"who is calling"| modules
+    modules -.->|"figures, lists, and forms<br/>to show"| ui
+    holder <-->|"every screen"| ui
+    m02 -->|"categories and tags<br/>to choose from"| m03
 ```
 
 **Legend:** rounded nodes are people; rectangles outside the boundary are external systems;
@@ -96,7 +100,7 @@ solid arrows are data flows; dashed arrows are optional, future, or cross-cuttin
 | Module | Responsibility | Stories |
 |---|---|---|
 | 01 Accounts and Transaction Ingestion | Holds the holder's accounts (bank, currency, IBAN, linked cards). Brings transactions in by manual entry, CSV statement import, and bank alert emails from Gmail, all through one template-based parsing pipeline that reads BAC Credomatic and Banco Nacional formats ([Bank Formats](bank-formats.md)). Recognizes transfers between the holder's own accounts, merges exact duplicates across sources, flags near matches for review, and reports when the Gmail connection has gone quiet. | 01-S02 to 01-S09 |
-| 02 Categorization and Rules | Gives each transaction one category and any number of tags, applies the user's merchant rules, and sends anything no rule settles to the review inbox. Corrections become rules. | 02-S01 to 02-S07 |
+| 02 Categorization and Rules | Gives each transaction one category and any number of tags, applies the user's merchant rules, and sends anything no rule settles to the review inbox. Corrections become rules. Owns the catalog every other module picks from: sixteen built-in categories plus the categories and tags the user adds. | 02-S01 to 02-S07 |
 | 03 Budgets and Limits | Weekly, monthly, quarterly, yearly, and custom budgets per category and/or tags (any of the tags), with progress, burn-down, and history views, plus warnings, safe-to-spend, runway, commitments, shared household budgets, and the year-end saving figure. | 03-S01 to 03-S12 |
 | 04 Dashboard and Insights | The read-only views: where the money went, period comparisons, category and tag breakdowns, drill-through to transactions, per-person household split, and income against spending. | 04-S01 to 04-S06 |
 | 05 Multi-Currency and Account Roles | Uses USD as the base currency. CRC amounts are converted at the BCCR rate of the transaction date; the original amount and the rate are kept on the transaction. Excludes transfers between the holder's own accounts and card payments from spending, and records account roles. | 05-S01 to 05-S06 |
@@ -112,6 +116,11 @@ solid arrows are data flows; dashed arrows are optional, future, or cross-cuttin
 - **Rollup engine** keeps totals per period, category, tag, budget, and account current in
   the same write as each transaction, so dashboards and budgets read stored numbers instead
   of recomputing them.
+- **App shell and UI kit** is the one way any module reaches the screen: the navigation, the
+  shared components and page states (loading, empty, error), the chart components, and the
+  design tokens. A module supplies figures, lists, and forms; the shell decides how they
+  look, so seven modules read as one product. It is specified in
+  [class diagram section 2](class-diagram.md#2-nextjs-layer).
 
 ## External entities
 
@@ -137,5 +146,9 @@ solid arrows are data flows; dashed arrows are optional, future, or cross-cuttin
 - **It makes cross-module dependencies explicit.** Budgets and the dashboard depend on the
   rollup engine; net worth depends on currency conversion; security reaches every module.
   These are the places where a one-shot code generator is most likely to miss a connection.
+- **It names presentation as a shared concern.** Earlier generated versions of this product
+  computed the right numbers and showed each module as its own stack of tables and forms.
+  Drawing the app shell and UI kit as a service every module depends on makes consistency
+  across screens a design decision instead of something left to each page.
 - **It shows what is deliberately not in the MVP.** The bank connection API and Web Push
   are drawn but dashed, so their absence is a recorded decision rather than an oversight.

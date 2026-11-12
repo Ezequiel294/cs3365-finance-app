@@ -39,7 +39,7 @@ sequenceDiagram
     participant Agg as Aggregates
     participant BA as BudgetAnalyticsService
 
-    U->>UI: New budget "University", tag University, monthly, $300
+    U->>UI: Budgets, "New budget" (BudgetDialog): "University",<br/>tag University (ChipSelect), monthly, $300
     UI->>Web: POST /api/budgets
     Web->>API: POST /api/budgets
     API->>BS: create(userId, budget)
@@ -50,13 +50,15 @@ sequenceDiagram
     BS->>BS: Group by period and day
     BS->>Agg: BatchWrite BUDGET#id#P# and BUDGET#id#D# items
     BS-->>UI: 201 budget
+    UI-->>U: Dialog closes, toast "Budget created", the new BudgetCard already shows its history
     U->>UI: Open Budgets
     UI->>Web: GET /api/analytics/budgets
     Web->>API: GET /api/analytics/budgets
     API->>BA: progress(userId, today)
     BA->>Ref: Query BUDGET#
     BA->>Agg: BatchGet the current P# item of each budget
-    BA-->>UI: Each budget with spent, limit, remaining, percent
+    BA-->>UI: Each budget with spent, limit, remaining, percent, expectedCents, daysLeft
+    UI-->>U: One BudgetCard per budget on a two-column grid, budgets over their limit first
     Note over UI,BA: Categories and tags without a budget still have<br/>totals in the MONTH# rollups, just no limit
 ```
 
@@ -84,7 +86,7 @@ sequenceDiagram
     participant Tx as Transactions
     participant Agg as Aggregates
 
-    U->>UI: Change "Groceries" from monthly to weekly
+    U->>UI: BudgetCard "Groceries", Edit (BudgetDialog): monthly to weekly
     UI->>Web: PATCH /api/budgets/id {period WEEKLY, version}
     Web->>API: PATCH /api/budgets/id
     API->>BS: update(userId, id, changes)
@@ -101,6 +103,37 @@ sequenceDiagram
         BS-->>UI: 200 budget
     end
     Note over BS,Agg: A monthly "Rent" and yearly "Clothing" budget<br/>keep running over the same transactions
+```
+
+**The day the week starts.** It is a setting, not part of a budget, so it is changed on the
+Settings page and applies to every weekly budget at once.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as Keisy
+    participant UI as Browser
+    participant Web as Next.js server
+    participant API as ApiFn router
+    participant StS as SettingsService
+    participant Ref as Reference
+    participant BS as BudgetService
+
+    U->>UI: More, Settings, "Week starts on": Sunday, Save
+    UI->>Web: updateSettings({weekStart SUNDAY})
+    Web->>API: PUT /api/settings {weekStart}
+    API->>API: Validate (Zod): weekStart is a day name, timeZone an IANA zone
+    API->>StS: update(userId, changes)
+    StS->>Ref: Get PROFILE (defaults when missing)
+    StS->>Ref: Put PROFILE (weekStart SUNDAY)
+    opt weekStart changed
+        StS->>BS: rebuildWeekly(userId)
+        loop Each weekly budget
+            BS->>BS: backfill(userId, budget), as in the diagram above
+        end
+    end
+    StS-->>UI: 200 settings
+    UI-->>U: Toast "Settings saved", weekly budgets now run Sunday to Saturday
 ```
 
 ---
@@ -128,15 +161,17 @@ sequenceDiagram
     loop Each budget
         BA->>BA: percent = round(spent / limit x 100), no upper bound
         BA->>BA: remaining = limit - spent, overBy = max(0, spent - limit)
+        BA->>BA: expected = round(limit x elapsed days / days in period), days left
     end
-    BA-->>UI: spent, limit, remaining, percent, overBy
-    UI-->>U: "Clothing 151% ($136 of $90, $46 over)"
-    U->>UI: Open "Clothing"
+    BA-->>UI: spent, limit, remaining, percent, overBy, expectedCents, daysLeft
+    UI-->>U: BudgetCard "Clothing": Meter filled and marked over, pace tick at the expected<br/>amount, and the figures "$136 of $90 · 151% · $46 over"
+    U->>UI: "Details" on the Clothing card (/budgets?open=id)
     UI->>Web: GET /api/analytics/budgets/id?view=burndown
     Web->>API: GET /api/analytics/budgets/id?view=burndown
     API->>BA: burndown(userId, id)
     BA->>Agg: Query BUDGET#id#D# from period start to today
-    BA->>BA: cumulative spent per day, even-pace line = limit x day / days in period
-    BA-->>UI: Daily points and pace line
+    BA->>BA: cumulative spent per day up to today,<br/>even-pace line = limit x day / days in period for every day of the period
+    BA-->>UI: BurndownSeries: dates, cumulativeSpentCents, paceCents, limitCents
+    UI-->>U: BurndownSection: LineChart with the spent line ending today,<br/>the even-pace line, and the limit line, each labelled
     Note over UI: Over 100% is shown as a number and the amount over,<br/>never only as a full bar or a colour
 ```

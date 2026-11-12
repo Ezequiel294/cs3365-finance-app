@@ -34,7 +34,7 @@ sequenceDiagram
     participant AS as AccountService
     participant Ref as Reference
 
-    U->>UI: Accounts, New: "BAC colones", BAC, CRC, IBAN CR00010200000123456781, card 1111
+    U->>UI: Accounts, "Add an account" (AccountDialog): "BAC colones", BAC, CRC,<br/>IBAN CR00010200000123456781, card 1111
     UI->>Web: createAccount(input)
     Web->>API: POST /api/accounts
     API->>API: Validate body (Zod): bank BAC or BN, currency CRC or USD,<br/>IBAN CR plus 20 digits, cards of 4 digits
@@ -42,10 +42,11 @@ sequenceDiagram
     AS->>Ref: Query ACCOUNT# (the user's accounts)
     alt A card already belongs to another account
         AS-->>UI: 400 card 1111 is already on "BAC dólares"
+        UI-->>U: Error under the cards field, the dialog stays open
     else Valid
         AS->>Ref: Put ACCOUNT#id (version 1)
         AS-->>UI: 201 account
-        UI-->>U: Account listed, available in the import account picker
+        UI-->>U: Dialog closes, toast "Account added", the account is in the Accounts<br/>table and in the import account picker
     end
 ```
 
@@ -82,7 +83,7 @@ sequenceDiagram
     participant Ref as Reference
     participant TS as TransactionService
 
-    U->>UI: Pick account "BAC dólares" and the downloaded CSV
+    U->>UI: Import a statement (ImportWizard): step 1 account "BAC dólares",<br/>step 2 the downloaded CSV
     UI->>UI: SHA-256 of the file (crypto.subtle), refuse over 1 MiB
     UI->>Web: startImport(accountId, fileName, sha256, size)
     Web->>API: POST /api/imports
@@ -92,6 +93,7 @@ sequenceDiagram
     alt File already imported or being imported
         Ing-->>Imp: ConditionalCheckFailed
         Imp-->>UI: 409 already imported, with that import's id
+        UI-->>U: "This file was already imported", link to that import's result
     else New file, or a retry of a failed one
         Imp->>Ing: Put IMPORT#id (UPLOADING, accountId)
         Imp->>S3: Presigned POST imports/userId/id.csv (1 byte to 1 MiB, 5 min)
@@ -133,7 +135,7 @@ sequenceDiagram
             Imp->>Ing: Get IMPORT#id
             API-->>UI: Status, counts, failure reason
         end
-        UI-->>U: Summary: imported, transfers, merged, skipped,<br/>each unreadable row, and whether the totals match
+        UI-->>U: ImportWizard step 3: four StatTiles (imported, between your accounts,<br/>merged, already imported), a StatusBadge for whether the totals match,<br/>and a table of each unreadable row
     end
 ```
 
@@ -165,7 +167,7 @@ sequenceDiagram
     participant Ref as Reference
     participant DB as Transactions + Aggregates
 
-    U->>UI: Enter amount (date defaults to today, currency to the account's)
+    U->>UI: "Add transaction" in the app shell, from any page (QuickAddTransaction dialog):<br/>amount (date defaults to today, currency to the account's)
     UI->>Web: createTransaction(input)
     Web->>API: POST /api/transactions
     API->>API: Validate body (Zod)
@@ -175,6 +177,7 @@ sequenceDiagram
     alt Rate unavailable
         Fx-->>TS: FxUnavailableError
         TS-->>UI: 503, nothing saved, user can retry
+        UI-->>U: The dialog stays open with its values and says the rate is not available yet
     else Rate available
         Fx-->>TS: amountUsdCents, fxRate, fxDate
         TS->>Cat: categorize(merchantKey)
@@ -187,6 +190,7 @@ sequenceDiagram
         Note right of DB: Put TXN, ADD DAY, MONTH, CAT, TAG,<br/>and budget P#, D# items
         DB-->>TS: OK
         TS-->>UI: 201 transaction
+        UI-->>U: Dialog closes on the page she was on, toast "Transaction saved"
     end
 ```
 
@@ -213,14 +217,15 @@ sequenceDiagram
     participant TS as TransactionService
     participant Tx as Transactions
 
-    U->>UI: Open review inbox
+    U->>UI: Open Review, tab "Possible duplicates"
     UI->>Web: GET /api/review?type=duplicates
     Web->>API: GET /api/review?type=duplicates
     API->>RS: listDuplicates(userId)
     RS->>Tx: Query review GSI (reviewPK = USER#id, reason DUPLICATE)
     RS-->>UI: Pairs with amount, currency, date, account, sources
+    Note over UI: ReviewInbox shows each pair side by side
     alt Merge
-        U->>UI: Keep A, merge B into it
+        U->>UI: "Same purchase, merge them" (keeps A, merges B into it)
         UI->>Web: POST /api/review/duplicates/merge {keepId, dropId}
         Web->>API: POST /api/review/duplicates/merge
         API->>TS: merge(userId, keepId, dropId)
@@ -230,13 +235,14 @@ sequenceDiagram
         Note right of Tx: Update A (version check), delete B,<br/>subtract B from every rollup and budget
         TS-->>UI: 200 merged
     else Not duplicates
-        U->>UI: Keep both
+        U->>UI: "Different purchases, keep both"
         UI->>Web: POST /api/review/duplicates/dismiss {id}
         Web->>API: POST /api/review/duplicates/dismiss
         API->>RS: dismiss(userId, id)
         RS->>Tx: Remove possibleDuplicateOf and reviewPK
         RS-->>UI: 200
     end
+    UI-->>U: The pair leaves the list and the tab's count goes down by one
 ```
 
 ---
@@ -260,7 +266,7 @@ sequenceDiagram
     participant Fx as FxService
     participant DB as Transactions + Aggregates
 
-    U->>UI: Choose "Money in", account, amount, currency, date received
+    U->>UI: "Add transaction" (QuickAddTransaction dialog): "Money in", account, amount,<br/>currency, date received
     UI->>Web: createTransaction(kind income, ...)
     Web->>API: POST /api/transactions
     API->>TS: create(userId, input)
@@ -270,6 +276,7 @@ sequenceDiagram
     Note right of DB: Put TXN (kind income),<br/>ADD incomeCents on DAY, MONTH, CAT.<br/>Budgets are not affected.
     DB-->>TS: OK
     TS-->>UI: 201 transaction (original currency and USD)
+    UI-->>U: Toast "Transaction saved", the amount appears in the Dashboard's "Money in" tile
 ```
 
 ---
@@ -302,6 +309,7 @@ sequenceDiagram
     CS->>Ing: TransactWriteItems
     Note right of Ing: Put CONN#gmail#id (PENDING, tokenPrefix),<br/>Put TOKEN#hash (userId, connId)
     CS-->>UI: Token (shown once) and script
+    UI-->>U: GmailSetupPanel: "This key is shown only once", CopyField with the key,<br/>three numbered steps, CopyField with the script
     U->>GS: Paste script, store token in PropertiesService, run setup()
     GS->>API: GET /ingest/gmail/config (Bearer token)
     API->>CS: authenticate(token)
@@ -415,7 +423,7 @@ sequenceDiagram
     participant Ing as Ingestion
     participant P as IngestPipeline
 
-    U->>UI: Review inbox shows "Card ending 1111 isn't linked to an account"
+    U->>UI: Review, tab "Emails not understood", shows<br/>"Card ending 1111 isn't linked to an account"
     U->>UI: Add card 1111 to "BAC colones" (01-S02a), then Retry
     UI->>Web: retryMessage(messageId)
     Web->>API: POST /api/review/messages/messageId/retry
@@ -453,7 +461,7 @@ sequenceDiagram
     participant CS as ConnectionService
     participant Ing as Ingestion
 
-    U->>UI: Open dashboard
+    U->>UI: Open any page (AppShell)
     UI->>Web: GET /api/connections
     Web->>API: GET /api/connections
     API->>CS: list(userId)
@@ -461,7 +469,7 @@ sequenceDiagram
     CS->>CS: stale = now - lastSeenAt > 24 h
     CS-->>UI: Connections with status and lastSeenAt
     alt Gmail connection is stale
-        UI-->>U: Banner "Your Gmail connection stopped on Oct 29. Reconnect?"
+        UI-->>U: Banner in the AppShell, on every page:<br/>"Bank emails stopped arriving on Oct 29." with a Reconnect link
         U->>UI: Reconnect
         UI->>Web: POST /api/connections/gmail/id/rotate
         Web->>API: POST /api/connections/gmail/id/rotate

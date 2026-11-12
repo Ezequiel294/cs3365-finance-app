@@ -7,7 +7,7 @@
 
 **FOR** individuals and households in Costa Rica who manage money across colones and
 dollars, **WHO** need to see where their money actually goes without hand-keying every
-transaction into a spreadsheet, **THE** {{PRODUCT_NAME}} **is a** cross-platform personal
+transaction into a spreadsheet, **THE** Finance App **is a** cross-platform personal
 finance dashboard **THAT** consolidates spending, budgets and assets into one
 currency-aware view, ingesting transactions automatically wherever a bank permits it and
 gracefully by import or quick-entry wherever it does not. **UNLIKE** Mint-style trackers

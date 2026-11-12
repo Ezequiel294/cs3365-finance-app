@@ -32,8 +32,8 @@ sequenceDiagram
     API->>TQ: list(userId, range)
     TQ->>Tx: Query SK between TXN#2026-10-01 and TXN#2026-10-31~
     TQ-->>Web: Each with currency, amountMinor, amountUsdCents, fxRate, fxDate
-    Web-->>UI: Rows show the original amount first, USD and the rate next to it
-    UI-->>U: "₡14,000 ($27.40 at 510.95 on Oct 14)" and "$12.00" in the same list
+    Web-->>UI: TransactionTable: the original amount first, USD and the rate under it
+    UI-->>U: A row reads "₡14,000" with "$27.40 at 510.95" under it,<br/>next to a "$12.00" row in the same list
 ```
 
 ---

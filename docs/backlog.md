@@ -146,7 +146,7 @@ deletion service level (`06-S05`), for example.
 | Stories removed from the design ([`requirements-changes.md`](requirements-changes.md#removed-from-scope), [sequence index](diagrams/sequences/README.md#not-covered-in-this-iteration-backlog)) | The 25 stories in that list. Split parents `01-S01` and `03-S05` are tracked through the stories that replace them, as in [`sizing.md`](sizing.md#splitting) |
 | In-scope stories whose acceptance criteria the design does not meet | `01-S10` and `07-S07` (no route to delete a transaction or remove an investment transaction; 07-S01 asks that holdings can be removed), `03-S15` (no route to delete a budget), `02-S08` (rules apply only from now on; 02-S05 asks for past transactions too), `02-S09` (renaming and archiving were left out of the Settings page), `05-S07` (the user cannot choose the display currency; 05-S02 asks for it), `01-S12` (no column mapping for other banks; 01-S02 asks for it), `01-S13` (offline entry was removed) |
 | Gaps in the bank formats | `01-S11` (both statement samples are USD exports; no colones statement has been read), `01-S14` (only the purchase alert of each bank is specified), `07-S08` (a transfer to a broker in a bank statement and the deposit at the broker are recorded separately) |
-| What the three iterations showed | `TECH-01` (two Mermaid syntax errors reached `main` before PR #2), `TECH-02` (signed-in flows were only checked by hand; agent B's deployments were only checked for `401`), `TECH-07` (agent B's web stack failed in both iterations on the SSM parameter that `cdk-nextjs` creates, ending in `DELETE_FAILED` and `ROLLBACK_FAILED`) |
+| What the three iterations showed | `TECH-01` (two Mermaid syntax errors reached `main` before PR #2), `TECH-02` (signed-in flows were only checked by hand; agent B's deployments were only checked for `401`), `TECH-07` (agent B's web stack failed in both iterations on the SSM parameter that `cdk-nextjs` creates, ending in `DELETE_FAILED` and `ROLLBACK_FAILED`), `TECH-08` (the Portfolio page, which lists brokers and holdings, shows "This page could not load" with minified React error #441) |
 | Non-functional requirements not yet met or not yet measured | `TECH-03`, `TECH-04`, `TECH-05`, `TECH-06` |
 | Unknowns that block estimates | `SPIKE-01` (push notifications), `SPIKE-02` (bank connection APIs) |
 
@@ -168,49 +168,50 @@ as they are confirmed (the *creation* activity of grooming), ranked with the res
 | 4 | [07-S06](#07-s06--accounts-and-holdings-in-one-total) | Feature | See accounts and holdings in one total | Ezequiel | 3 | Implementation | 01-S06 |
 | 5 | [04-S04](#04-s04--see-the-transactions-behind-a-figure) | Feature | See the transactions behind any figure | Daniela | 5 | Implementation | — |
 | 6 | [TECH-01](#tech-01--checks-on-every-pull-request) | Engineering improvement | Checks on every pull request | Team | 3 | Implementation | — |
-| 7 | [03-S15](#03-s15--delete-a-budget) | Feature change | Delete a budget | Keisy | 2 | Implementation | — |
-| 8 | [05-S03](#05-s03--pair-the-two-sides-of-a-transfer) | Feature | Pair the two sides of a transfer | Ezequiel | 8 | Implementation | — |
-| 9 | [03-S13](#03-s13--in-app-budget-warning) | Feature | In-app budget warning | Daniela | 3 | Implementation | — |
-| 10 | [02-S04](#02-s04--create-and-order-rules) | Feature | Create and order rules | Ezequiel | 5 | Implementation | — |
-| 11 | [02-S08](#02-s08--apply-a-correction-to-past-transactions) | Feature change | Apply a correction to past transactions | Ezequiel | 3 | Implementation | — |
-| 12 | [06-S04](#06-s04--export-all-data) | Feature | Export all my data | Patricia | 5 | Implementation | — |
-| 13 | [TECH-02](#tech-02--signed-in-checks-on-the-deployment) | Engineering improvement | Signed-in checks on the deployment | Team | 5 | Implementation | — |
-| 14 | [TECH-07](#tech-07--the-web-stack-deploys-the-first-time) | Engineering improvement | The web stack deploys the first time | Team | 2 | Implementation | — |
-| 15 | [04-S02](#04-s02--compare-a-period-with-the-ones-before-it) | Feature | Compare a period with the ones before it | Ezequiel | 5 | Implementation | — |
-| 16 | [02-S07](#02-s07--see-and-undo-what-rules-filed) | Feature | See and undo what rules filed | Keisy | 3 | Implementation | 02-S04 |
-| 17 | [02-S09](#02-s09--rename-and-archive-categories-and-tags) | Feature change | Rename and archive categories and tags | Keisy | 3 | Implementation | — |
-| 18 | [07-S08](#07-s08--link-a-bank-payment-to-a-broker-deposit) | Feature | Link a bank payment to a broker deposit | Ezequiel | 3 | Refinement | — |
-| 19 | [01-S11](#01-s11--import-colones-statements) | Feature change | Import colones statements | Patricia | 3 | Refinement | — |
-| 20 | [06-S03](#06-s03--lock-the-app-when-idle) | Feature | Lock the app when idle | Ezequiel | 3 | Implementation | — |
-| 21 | [06-S06](#06-s06--recover-the-account) | Feature | Recover the account after losing the phone | Daniela | 5 | Implementation | 06-S03 |
-| 22 | [06-S05](#06-s05--delete-all-my-data) | Feature | Delete all my data | Patricia | 8 | Refinement | — |
-| 23 | [TECH-03](#tech-03--measure-the-performance-requirements) | Engineering improvement | Measure the performance requirements | Team | 5 | Implementation | — |
-| 24 | [TECH-04](#tech-04--accessibility-and-phone-width) | Engineering improvement | Accessibility and phone width | Team | 3 | Implementation | — |
-| 25 | [TECH-05](#tech-05--operational-alarms) | Engineering improvement | Operational alarms | Team | 3 | Implementation | — |
-| 26 | [03-S06](#03-s06--confirm-commitments) | Feature | Confirm which recurring costs are commitments | Ezequiel | 5 | Implementation | — |
-| 27 | [03-S03](#03-s03--safe-to-spend) | Feature | See how much I can safely spend | Andrés | 8 | Implementation | 01-S06, 03-S06 |
-| 28 | [03-S04](#03-s04--runway) | Feature | See how long my money lasts | Andrés | 5 | Implementation | 01-S06 |
-| 29 | [03-S12](#03-s12--year-end-saving) | Feature | See what keeping my budgets saves by year end | Keisy | 5 | Implementation | — |
-| 30 | [05-S04](#05-s04--account-roles) | Feature | Give each account a role | Ezequiel | 3 | Implementation | 01-S06 |
-| 31 | [05-S05](#05-s05--conversion-cost) | Feature | See what a currency conversion cost me | Ezequiel | 5 | Implementation | 05-S03 |
-| 32 | [05-S07](#05-s07--read-totals-in-colones) | Feature change | Read totals in colones | Ezequiel | 8 | Refinement | — |
-| 33 | [SPIKE-01](#spike-01--push-notifications-on-phone-browsers) | Development activity | Push notifications on phone browsers | Team | 2 | Implementation | — |
-| 34 | [03-S14](#03-s14--budget-warning-by-push) | Feature | Budget warning by push notification | Daniela | 3 | Consideration | SPIKE-01, 03-S13 |
-| 35 | [02-S01](#02-s01--be-asked-at-the-time-of-the-charge) | Feature | Be asked at the time of the charge | Ezequiel | 8 | Consideration | SPIKE-01 |
-| 36 | [06-S01](#06-s01--no-prompts-to-connect) | Feature | Use everything without being asked to connect | Patricia | 2 | Implementation | — |
-| 37 | [01-S12](#01-s12--import-from-any-bank-with-a-column-mapping) | Feature change | Import from any bank with a column mapping | Patricia | 8 | Refinement | — |
-| 38 | [01-S13](#01-s13--add-a-transaction-offline) | Feature change | Add a transaction offline | Daniela | 5 | Refinement | — |
-| 39 | [01-S14](#01-s14--read-more-alert-types) | Feature | Read refund, reversal, and withdrawal alerts | Ezequiel | 3 | Refinement | — |
-| 40 | [03-S07](#03-s07--invite-a-partner-to-a-budget) | Feature | Invite a partner to a budget | Patricia | 5 | Consideration | — |
-| 41 | [03-S08](#03-s08--who-paid-in-a-shared-budget) | Feature | See who paid in a shared budget | Patricia | 3 | Consideration | 03-S07 |
-| 42 | [03-S09](#03-s09--end-sharing) | Feature | End sharing | Patricia | 5 | Consideration | 03-S07 |
-| 43 | [04-S05](#04-s05--household-split-by-person) | Feature | See household spending split by person | Patricia | 3 | Consideration | 03-S08 |
-| 44 | [SPIKE-02](#spike-02--bank-connection-apis) | Development activity | Bank connection APIs | Team | 3 | Implementation | — |
-| 45 | [01-S07](#01-s07--which-institutions-can-be-connected) | Feature | See which institutions can be connected | Ezequiel | 3 | Consideration | SPIKE-02 |
-| 46 | [01-S15](#01-s15--connect-a-bank-that-offers-an-api) | Feature | Connect a bank that offers an API | Ezequiel | 8 | Consideration | SPIKE-02 |
-| 47 | [TECH-06](#tech-06--tls-13-and-a-custom-domain) | Engineering improvement | TLS 1.3 and a custom domain | Team | 3 | Consideration | — |
+| 7 | [TECH-08](#tech-08--the-portfolio-page-loads) | Engineering improvement | The portfolio page loads | Team | 2 | Refinement | — |
+| 8 | [03-S15](#03-s15--delete-a-budget) | Feature change | Delete a budget | Keisy | 2 | Implementation | — |
+| 9 | [05-S03](#05-s03--pair-the-two-sides-of-a-transfer) | Feature | Pair the two sides of a transfer | Ezequiel | 8 | Implementation | — |
+| 10 | [03-S13](#03-s13--in-app-budget-warning) | Feature | In-app budget warning | Daniela | 3 | Implementation | — |
+| 11 | [02-S04](#02-s04--create-and-order-rules) | Feature | Create and order rules | Ezequiel | 5 | Implementation | — |
+| 12 | [02-S08](#02-s08--apply-a-correction-to-past-transactions) | Feature change | Apply a correction to past transactions | Ezequiel | 3 | Implementation | — |
+| 13 | [06-S04](#06-s04--export-all-data) | Feature | Export all my data | Patricia | 5 | Implementation | — |
+| 14 | [TECH-02](#tech-02--signed-in-checks-on-the-deployment) | Engineering improvement | Signed-in checks on the deployment | Team | 5 | Implementation | — |
+| 15 | [TECH-07](#tech-07--the-web-stack-deploys-the-first-time) | Engineering improvement | The web stack deploys the first time | Team | 2 | Implementation | — |
+| 16 | [04-S02](#04-s02--compare-a-period-with-the-ones-before-it) | Feature | Compare a period with the ones before it | Ezequiel | 5 | Implementation | — |
+| 17 | [02-S07](#02-s07--see-and-undo-what-rules-filed) | Feature | See and undo what rules filed | Keisy | 3 | Implementation | 02-S04 |
+| 18 | [02-S09](#02-s09--rename-and-archive-categories-and-tags) | Feature change | Rename and archive categories and tags | Keisy | 3 | Implementation | — |
+| 19 | [07-S08](#07-s08--link-a-bank-payment-to-a-broker-deposit) | Feature | Link a bank payment to a broker deposit | Ezequiel | 3 | Refinement | — |
+| 20 | [01-S11](#01-s11--import-colones-statements) | Feature change | Import colones statements | Patricia | 3 | Refinement | — |
+| 21 | [06-S03](#06-s03--lock-the-app-when-idle) | Feature | Lock the app when idle | Ezequiel | 3 | Implementation | — |
+| 22 | [06-S06](#06-s06--recover-the-account) | Feature | Recover the account after losing the phone | Daniela | 5 | Implementation | 06-S03 |
+| 23 | [06-S05](#06-s05--delete-all-my-data) | Feature | Delete all my data | Patricia | 8 | Refinement | — |
+| 24 | [TECH-03](#tech-03--measure-the-performance-requirements) | Engineering improvement | Measure the performance requirements | Team | 5 | Implementation | — |
+| 25 | [TECH-04](#tech-04--accessibility-and-phone-width) | Engineering improvement | Accessibility and phone width | Team | 3 | Implementation | — |
+| 26 | [TECH-05](#tech-05--operational-alarms) | Engineering improvement | Operational alarms | Team | 3 | Implementation | — |
+| 27 | [03-S06](#03-s06--confirm-commitments) | Feature | Confirm which recurring costs are commitments | Ezequiel | 5 | Implementation | — |
+| 28 | [03-S03](#03-s03--safe-to-spend) | Feature | See how much I can safely spend | Andrés | 8 | Implementation | 01-S06, 03-S06 |
+| 29 | [03-S04](#03-s04--runway) | Feature | See how long my money lasts | Andrés | 5 | Implementation | 01-S06 |
+| 30 | [03-S12](#03-s12--year-end-saving) | Feature | See what keeping my budgets saves by year end | Keisy | 5 | Implementation | — |
+| 31 | [05-S04](#05-s04--account-roles) | Feature | Give each account a role | Ezequiel | 3 | Implementation | 01-S06 |
+| 32 | [05-S05](#05-s05--conversion-cost) | Feature | See what a currency conversion cost me | Ezequiel | 5 | Implementation | 05-S03 |
+| 33 | [05-S07](#05-s07--read-totals-in-colones) | Feature change | Read totals in colones | Ezequiel | 8 | Refinement | — |
+| 34 | [SPIKE-01](#spike-01--push-notifications-on-phone-browsers) | Development activity | Push notifications on phone browsers | Team | 2 | Implementation | — |
+| 35 | [03-S14](#03-s14--budget-warning-by-push) | Feature | Budget warning by push notification | Daniela | 3 | Consideration | SPIKE-01, 03-S13 |
+| 36 | [02-S01](#02-s01--be-asked-at-the-time-of-the-charge) | Feature | Be asked at the time of the charge | Ezequiel | 8 | Consideration | SPIKE-01 |
+| 37 | [06-S01](#06-s01--no-prompts-to-connect) | Feature | Use everything without being asked to connect | Patricia | 2 | Implementation | — |
+| 38 | [01-S12](#01-s12--import-from-any-bank-with-a-column-mapping) | Feature change | Import from any bank with a column mapping | Patricia | 8 | Refinement | — |
+| 39 | [01-S13](#01-s13--add-a-transaction-offline) | Feature change | Add a transaction offline | Daniela | 5 | Refinement | — |
+| 40 | [01-S14](#01-s14--read-more-alert-types) | Feature | Read refund, reversal, and withdrawal alerts | Ezequiel | 3 | Refinement | — |
+| 41 | [03-S07](#03-s07--invite-a-partner-to-a-budget) | Feature | Invite a partner to a budget | Patricia | 5 | Consideration | — |
+| 42 | [03-S08](#03-s08--who-paid-in-a-shared-budget) | Feature | See who paid in a shared budget | Patricia | 3 | Consideration | 03-S07 |
+| 43 | [03-S09](#03-s09--end-sharing) | Feature | End sharing | Patricia | 5 | Consideration | 03-S07 |
+| 44 | [04-S05](#04-s05--household-split-by-person) | Feature | See household spending split by person | Patricia | 3 | Consideration | 03-S08 |
+| 45 | [SPIKE-02](#spike-02--bank-connection-apis) | Development activity | Bank connection APIs | Team | 3 | Implementation | — |
+| 46 | [01-S07](#01-s07--which-institutions-can-be-connected) | Feature | See which institutions can be connected | Ezequiel | 3 | Consideration | SPIKE-02 |
+| 47 | [01-S15](#01-s15--connect-a-bank-that-offers-an-api) | Feature | Connect a bank that offers an API | Ezequiel | 8 | Consideration | SPIKE-02 |
+| 48 | [TECH-06](#tech-06--tls-13-and-a-custom-domain) | Engineering improvement | TLS 1.3 and a custom domain | Team | 3 | Consideration | — |
 
-**47 items, 200 points:** 29 features, 9 feature changes, 7 engineering improvements, and 2
+**48 items, 202 points:** 29 features, 9 feature changes, 8 engineering improvements, and 2
 development activities. "State" is shortened to the last word: *Implementation* means ready
 for implementation, and so on. Rank and state are separate: an item can rank high while it
 is still being refined, as `07-S08` and `01-S11` are.
@@ -235,10 +236,10 @@ the date chosen for it.
 
 | Release | Theme | Ranks | Points |
 |---|---|---|---|
-| 1 | **Correct and traceable figures.** Mistakes can be removed, every figure opens to its transactions, balances and net worth exist, transfers are paired, rules can be managed, data can be exported, and every pull request and deployment is checked | 1–17 | 64 |
-| 2 | **Complete records and control of my data.** Colones statements and broker deposits come in, the app locks and can be recovered, data can be deleted, and the non-functional requirements are measured and monitored | 18–25 | 33 |
-| 3 | **Planning ahead.** Commitments, safe-to-spend, runway, the year-end saving figure, account roles, conversion cost, and totals in colones | 26–32 | 39 |
-| 4 | **Reaching the user, sharing, and more sources.** Push notifications, prompts at the time of a charge, any bank's statements, offline entry, more alert types, shared household budgets, bank APIs, and TLS 1.3 | 33–47 | 64 |
+| 1 | **Correct and traceable figures.** Mistakes can be removed, every figure opens to its transactions, balances and net worth exist, transfers are paired, rules can be managed, data can be exported, and every pull request and deployment is checked | 1–18 | 66 |
+| 2 | **Complete records and control of my data.** Colones statements and broker deposits come in, the app locks and can be recovered, data can be deleted, and the non-functional requirements are measured and monitored | 19–26 | 33 |
+| 3 | **Planning ahead.** Commitments, safe-to-spend, runway, the year-end saving figure, account roles, conversion cost, and totals in colones | 27–33 | 39 |
+| 4 | **Reaching the user, sharing, and more sources.** Push notifications, prompts at the time of a charge, any bank's statements, offline entry, more alert types, shared household budgets, bank APIs, and TLS 1.3 | 34–48 | 64 |
 
 Release 4 holds most of the items still waiting on an investigation (`SPIKE-01`,
 `SPIKE-02`) or on an account that allows what they need. If an investigation says an item
@@ -740,6 +741,27 @@ purchases **so that I can** trust that every alert my bank sends is counted corr
   in against the original purchase.
 
 *Missing:* redacted samples of each alert type.
+
+#### TECH-08 — The portfolio page loads
+
+**As** the team, **we want** the Portfolio page, where brokers and holdings are listed, to
+load **so that** the portfolio views, and the net worth figure that 07-S06 adds to them,
+can be used at all.
+
+- Opening the Portfolio page with at least one broker, and with none, shows the page and
+  not the error screen "This page could not load".
+- The cause is found in a non-minified (development) build, where React gives the full
+  message instead of "Minified React error #441", and is written in the notes of this item.
+- A test or a step of `TECH-02`'s signed-in checks opens the Portfolio page and fails if the
+  error screen appears.
+- The page keeps its loading, empty, and error states; a failure inside it shows the error
+  state of the page rather than replacing the whole screen.
+
+**Found.** In the review of iteration 3's generated application, the Portfolio page showed
+the error screen with "Minified React error #441; visit https://react.dev/errors/441 for
+the full message". The cause is not yet known, so the item is in refinement until it is
+reproduced. **Missing:** the full message from a development build, and whether the failure
+depends on the data (no brokers, or a holding with a missing price) or happens always.
 
 ### Ready for consideration
 

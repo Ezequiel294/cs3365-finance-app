@@ -277,24 +277,24 @@
 <section class="slide">
   <div class="band"><h2>Sequence and Class Diagrams</h2>
     <div class="links">
-      <a href="https://github.com/Ezequiel294/cs3365-finance-app/tree/attempt1/docs/diagrams/sequences" target="_blank" rel="noopener">Sequence diagrams</a>
-      <a href="https://github.com/Ezequiel294/cs3365-finance-app/blob/attempt1/docs/diagrams/class-diagram.md" target="_blank" rel="noopener">Class diagram</a>
+      <a href="https://github.com/Ezequiel294/cs3365-finance-app/tree/main/docs/diagrams/sequences" target="_blank" rel="noopener">Sequence diagrams</a>
+      <a href="https://github.com/Ezequiel294/cs3365-finance-app/blob/main/docs/diagrams/class-diagram.md" target="_blank" rel="noopener">Class diagram</a>
     </div></div>
   <div class="two">
     <div class="panel">
-      <div class="bignum"><strong>26</strong><span>sequence diagrams for 25 user stories</span></div>
+      <div class="bignum"><strong>32</strong><span>sequence diagrams for 26 user stories</span></div>
       <div class="bars">
-        <span>01 Accounts and Ingestion</span><div class="bar" style="width:100%"></div><span class="v">7</span>
-        <span>02 Categorization and Rules</span><div class="bar" style="width:57%"></div><span class="v">4</span>
-        <span>03 Budgets</span><div class="bar" style="width:43%"></div><span class="v">3</span>
-        <span>04 Dashboard</span><div class="bar" style="width:43%"></div><span class="v">3</span>
-        <span>05 Multi-Currency</span><div class="bar" style="width:43%"></div><span class="v">3</span>
-        <span>06 Security</span><div class="bar" style="width:14%"></div><span class="v">1</span>
-        <span>07 Investments</span><div class="bar" style="width:71%"></div><span class="v">5</span>
+        <span>01 Accounts and Ingestion</span><div class="bar" style="width:100%"></div><span class="v">9</span>
+        <span>02 Categorization and Rules</span><div class="bar" style="width:56%"></div><span class="v">5</span>
+        <span>03 Budgets</span><div class="bar" style="width:44%"></div><span class="v">4</span>
+        <span>04 Dashboard</span><div class="bar" style="width:44%"></div><span class="v">4</span>
+        <span>05 Multi-Currency</span><div class="bar" style="width:33%"></div><span class="v">3</span>
+        <span>06 Security</span><div class="bar" style="width:11%"></div><span class="v">1</span>
+        <span>07 Investments</span><div class="bar" style="width:67%"></div><span class="v">6</span>
       </div>
     </div>
     <div class="panel">
-      <div class="bignum"><strong>15</strong><span>class diagrams</span></div>
+      <div class="bignum"><strong>26</strong><span>class diagrams</span></div>
       <div class="chips">
         <span class="chip">Domain model</span><span class="chip">Next.js layer</span><span class="chip">API routers</span>
         <span class="chip">Repositories</span><span class="chip">Transactions core</span><span class="chip teal">One per module</span>
@@ -304,7 +304,7 @@
     </div>
   </div>
   <div class="num-footer">6</div>
-  <aside class="notes">(~40 s) We have too many sequence and class diagrams to show them one by one, so this slide only shows how many there are. There is at least one sequence diagram for each of the 25 user stories in scope, grouped by module, and the Gmail connection story has two. They name the route, the service method, and the DynamoDB items for each step, including the error cases that change what the user sees. The class diagram is split into 15 diagrams, by layer and then by module, and the agents were told to use those class and method names. The links open them on GitHub.</aside>
+  <aside class="notes">(~40 s) We have too many sequence and class diagrams to show them one by one, so this slide only shows how many there are, in the latest version of the design. There is at least one sequence diagram for each of the 26 user stories in scope, grouped by module. Some stories have more than one: the Gmail connection has three, and changing a budget's period has two. Three more diagrams show how several stories share one page: the categories and tags list, the dashboard, and the portfolio. The diagrams name the route, the service method, and the DynamoDB items for each step, including the error cases that change what the user sees, and they end with the component on the page that shows the result. The class diagram is split into 26 diagrams, by layer and then by module, and the agents were told to use those class and method names. In attempt 1 there were 26 sequence diagrams and 15 class diagrams. The links open them on GitHub.</aside>
 </section>
 
 <!-- 7 Implementation -->
@@ -470,34 +470,32 @@
 <!-- 13 Backlog -->
 <section class="slide">
   <div class="band"><h2>Product Backlog</h2>
-    <div class="links"><a href="https://github.com/Ezequiel294/cs3365-finance-app/blob/attempt3/docs/backlog.md" target="_blank" rel="noopener">Full backlog</a></div></div>
+    <div class="links"><a href="https://github.com/Ezequiel294/cs3365-finance-app/blob/main/docs/backlog.md" target="_blank" rel="noopener">Full backlog</a></div></div>
   <div class="two">
     <div class="panel">
-      <div class="bignum"><strong>47</strong><span>items, 200 story points</span></div>
+      <div class="bignum"><strong>15</strong><span>items, 55 story points</span></div>
       <div class="chips">
-        <span class="chip">29 features</span><span class="chip">9 feature changes</span>
-        <span class="chip teal">7 engineering improvements</span><span class="chip teal">2 investigations</span>
+        <span class="chip">7 features</span><span class="chip">4 feature changes</span>
+        <span class="chip teal">4 engineering improvements</span>
       </div>
       <p class="muted" style="margin-top:.9em;font-size:.9em">Ordered by value to the vision, dependencies, risk, and cost. Baseline: 01-S03 = 2 points.</p>
     </div>
     <div class="panel">
       <h3>Release plan</h3>
       <div class="releases">
-        <span class="rel">Release 1</span><div><div class="rbar" style="width:100%"><span>64 pts</span></div><span class="rtitle">Correct and traceable figures</span></div>
-        <span class="rel">Release 2</span><div><div class="rbar" style="width:52%"><span>33 pts</span></div><span class="rtitle">Complete records and control of my data</span></div>
-        <span class="rel">Release 3</span><div><div class="rbar" style="width:61%"><span>39 pts</span></div><span class="rtitle">Planning ahead</span></div>
-        <span class="rel">Release 4</span><div><div class="rbar" style="width:100%"><span>64 pts</span></div><span class="rtitle">Reaching the user, sharing, and more sources</span></div>
+        <span class="rel">Release 1</span><div><div class="rbar" style="width:100%"><span>31 pts</span></div><span class="rtitle">Correct and traceable figures</span></div>
+        <span class="rel">Release 2</span><div><div class="rbar" style="width:77%"><span>24 pts</span></div><span class="rtitle">Complete records and control</span></div>
       </div>
     </div>
   </div>
   <div class="num-footer">13</div>
-  <aside class="notes">(~40 s) The backlog has 47 items and 200 story points. It follows the textbook's four kinds of item: 29 features, which are mostly the stories we removed from scope, 9 feature changes where the design does not fully meet a story, for example there is no way to delete a transaction or a budget, 7 engineering improvements that came from the attempts, such as checks on every pull request and signed-in tests on the deployment, and 2 investigations, for push notifications and bank APIs. Every item is estimated in story points against the same baseline we used in the first deliverable, adding a transaction by hand at 2 points. Items are ordered by value to the vision first, then dependencies, risk, and cost, and grouped into four releases. The first release is about making every figure correct and traceable, and the last one holds the items that still depend on an investigation, like push notifications, shared budgets, and bank APIs.</aside>
+  <aside class="notes">(~40 s) The backlog is kept short on purpose: it lists the 15 main items needed to finish the app, for 55 story points. It uses the textbook's kinds of item: 7 features that we removed from scope in the design, such as account balances, net worth, and seeing the transactions behind a figure, 4 feature changes where the design does not fully meet a story, for example there is no way to delete a transaction or a budget, and 4 engineering improvements that came from the attempts: checks on every pull request, signed-in tests on the deployment, making the web stack deploy the first time, and fixing the portfolio page, which fails to load in agent A's attempt 3 app. The other stories we removed stay listed in the requirements changes and can be added back when they are needed. Every item is estimated in story points against the same baseline we used in the first deliverable, adding a transaction by hand at 2 points, and ordered by value to the vision first, then dependencies, risk, and cost. The items are grouped into two releases: the first makes every figure correct and traceable, and the second completes the records, with transfer pairing, budget warnings, rules, data export, and colones statements.</aside>
 </section>
 
 <!-- 14 First sprint -->
 <section class="slide">
   <div class="band"><h2>First Sprint</h2>
-    <div class="links"><a href="https://github.com/Ezequiel294/cs3365-finance-app/blob/attempt3/docs/backlog.md#6-first-sprint" target="_blank" rel="noopener">Sprint plan</a></div></div>
+    <div class="links"><a href="https://github.com/Ezequiel294/cs3365-finance-app/blob/main/docs/backlog.md#6-first-sprint" target="_blank" rel="noopener">Sprint plan</a></div></div>
   <p class="lead">Goal: show where my money is, and let every figure on the dashboard be checked and corrected.</p>
   <div class="impl" style="grid-template-columns: 1.6fr 1fr">
     <table>

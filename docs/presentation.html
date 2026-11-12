@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Personal Finances App</title>
+<style>
+  :root { --ink: #1f2937; --muted: #64748b; --navy: #1e3a8a; --blue: #2f5597; --blue-mid: #4472c4;
+          --blue-light: #dbe5f6; --teal: #0d9488; --teal-dark: #0f766e; --teal-light: #ccfbf1;
+          --orange: #ea580c; --orange-light: #fff7ed; --green: #15803d; --green-light: #dcfce7;
+          --red: #b91c1c; --red-light: #fee2e2; --panel: #f4f7fc; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: radial-gradient(circle at 20% 10%, #dbeafe, #cbd5e1 70%);
+               font-family: Calibri, "Segoe UI", Arial, sans-serif; color: var(--ink); }
+  a { color: inherit; }
+  .deck { position: fixed; inset: 0; display: grid; place-items: center; }
+  .slide {
+    display: none; width: min(96vw, calc(94vh * 16 / 9)); aspect-ratio: 16 / 9;
+    background: #fff; padding: 0 5% 3.2%; position: relative; overflow: hidden; border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(30,58,138,.25); font-size: min(1.8vw, 3.2vh);
+  }
+  .slide.active { display: flex; flex-direction: column; }
+  .slide:not(.title)::after { content: ""; position: absolute; right: -6%; bottom: -16%; width: 26%; aspect-ratio: 1; border-radius: 50%;
+    background: radial-gradient(circle, rgba(13,148,136,.10), rgba(13,148,136,0) 70%); pointer-events: none; }
+
+  /* Title band */
+  .band { margin: 0 -6% auto; padding: 1.05em 5.5556% .45em; display: flex; align-items: flex-end; gap: 1em;
+          background: linear-gradient(90deg, var(--navy), var(--blue-mid)); border-bottom: 6px solid var(--teal); color: #fff; }
+  .band h2 { font-size: 1.6em; margin: 0; font-weight: 700; flex: 1; }
+  .band.slim { padding-top: .7em; padding-bottom: .35em; }
+  .band + * { margin-top: .9em; }
+  .slide:not(.title) > :has(+ .num-footer) { margin-bottom: auto; }
+  .band.slim + * { margin-top: .5em; margin-bottom: 0 !important; }
+  .band.slim h2 { font-size: 1.35em; }
+  .links { display: flex; gap: .5em; margin-bottom: .15em; }
+  .links a { font-size: .62em; text-decoration: none; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.55);
+             padding: .25em .8em; border-radius: 999px; white-space: nowrap; }
+  .links a:hover { background: rgba(255,255,255,.3); }
+  .links a::before { content: "↗ "; }
+
+  /* Attempt tracker */
+  .steps { display: flex; align-items: center; margin-bottom: .2em; }
+  .steps span { width: 1.6em; height: 1.6em; border-radius: 50%; display: grid; place-items: center; font-size: .7em; font-weight: 700;
+                border: 2px solid rgba(255,255,255,.75); color: #fff; }
+  .steps span.done { background: #fff; color: var(--navy); }
+  .steps span.now { background: var(--teal); border-color: #fff; box-shadow: 0 0 0 3px rgba(13,148,136,.45); }
+  .steps i { width: 1.4em; height: 2px; background: rgba(255,255,255,.6); }
+
+  h3 { font-size: 1.02em; margin: 0 0 .45em; color: var(--blue); }
+  ul { margin: 0; padding-left: 1.1em; list-style: square; }
+  li { margin: .35em 0; line-height: 1.28; }
+  li::marker { color: var(--teal); }
+  p { margin: 0; }
+  .lead { font-size: 1.05em; line-height: 1.35; background: var(--panel); border-left: 6px solid var(--blue-mid);
+          border-radius: 8px; padding: .65em 1.1em; margin-bottom: 1em; }
+  .panel { background: var(--panel); border-top: 5px solid var(--teal); border-radius: 8px; padding: .8em 1.1em; }
+  .muted { color: var(--muted); }
+  .tbd { color: var(--orange); font-style: italic; font-weight: 600; }
+  .tbd-box { background: var(--orange-light); border: 2px dashed #fdba74; border-radius: 8px; padding: .55em 1em; color: var(--orange);
+             font-style: italic; font-weight: 600; }
+
+  /* Title slide */
+  .title { justify-content: center; align-items: center; text-align: center; color: #fff; padding: 0;
+           background: linear-gradient(135deg, var(--navy) 0%, var(--blue-mid) 62%, var(--teal) 125%); }
+  .title h1 { font-size: 3.5em; margin: 0; position: relative; }
+  .title p { font-size: 1.3em; margin-top: .9em; color: #dbeafe; padding-top: .7em; border-top: 3px solid rgba(255,255,255,.6); display: inline-block; position: relative; }
+  .title .art { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  /* Feature tiles */
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1em; }
+  .tile { display: flex; gap: .75em; align-items: flex-start; background: #fff; border: 1px solid var(--blue-light); border-radius: 10px;
+          padding: 1em 1em; box-shadow: 0 2px 8px rgba(30,58,138,.07); }
+  .tile b { display: block; color: var(--navy); margin-bottom: .15em; }
+  .tile span.d { font-size: .88em; color: #475569; line-height: 1.25; }
+  .ico { flex: 0 0 auto; width: 2.7em; height: 2.7em; border-radius: 50%; display: grid; place-items: center;
+         background: linear-gradient(135deg, var(--teal), var(--blue-mid)); color: #fff; }
+  .ico svg { width: 1.35em; height: 1.35em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .ico.txt { font-weight: 700; font-size: .95em; }
+
+  /* Flow strip */
+  .flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr; align-items: stretch; gap: .5em; margin-bottom: 1.1em; }
+  .flow .step { background: #fff; border: 1px solid var(--blue-light); border-top: 5px solid var(--teal); border-radius: 10px; padding: .7em .85em;
+                box-shadow: 0 2px 8px rgba(30,58,138,.07); }
+  .flow .step .n { display: inline-grid; place-items: center; width: 1.5em; height: 1.5em; border-radius: 50%; background: var(--navy); color: #fff;
+                   font-weight: 700; font-size: .8em; margin-bottom: .35em; }
+  .flow .step b { display: block; color: var(--navy); margin-bottom: .2em; }
+  .flow .step span.d { font-size: .86em; color: #475569; line-height: 1.25; display: block; }
+  .flow .arrow { align-self: center; color: var(--teal); font-size: 1.6em; font-weight: 700; }
+  .areas { display: grid; grid-template-columns: repeat(5, 1fr); gap: .8em; margin-bottom: 1.1em; }
+  .area { background: #fff; border: 1px solid var(--blue-light); border-radius: 12px; padding: .9em .8em; text-align: center;
+          box-shadow: 0 2px 8px rgba(30,58,138,.07); display: flex; flex-direction: column; align-items: center; gap: .35em; }
+  .area .ico { margin-bottom: .2em; }
+  .area b { color: var(--navy); line-height: 1.15; }
+  .area span.d { font-size: .82em; color: #475569; line-height: 1.25; }
+  .chips { display: flex; flex-wrap: wrap; gap: .45em; }
+  .chip { background: var(--blue-light); color: var(--navy); border-radius: 999px; padding: .22em .85em; font-size: .86em; font-weight: 600; }
+  .chip.teal { background: var(--teal-light); color: var(--teal-dark); }
+  .chip.orange { background: var(--orange-light); color: var(--orange); border: 1px dashed #fdba74; }
+  .chip.big { font-size: .95em; padding: .35em 1em; }
+
+  /* Diagrams */
+  .diagram { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; border: 1px solid #dbe5f6;
+             border-radius: 8px; background: #fbfdff; padding: .4%; overflow: hidden; }
+  .diagram pre.mermaid { margin: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+  .diagram svg { width: 100% !important; height: 100% !important; max-width: 100% !important; }
+  .loading { color: var(--muted); font-style: italic; }
+
+  /* Counts slide */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 4%; align-items: start; }
+  .bignum { display: flex; align-items: baseline; gap: .4em; margin-bottom: .5em; }
+  .bignum strong { font-size: 3em; line-height: 1; color: var(--navy); }
+  .bignum span { font-size: 1.05em; color: var(--blue); font-weight: 700; }
+  .bars { display: grid; grid-template-columns: auto 1fr auto; gap: .32em .6em; align-items: center; font-size: .88em; }
+  .bars .bar { height: .8em; border-radius: 4px; background: linear-gradient(90deg, var(--teal), var(--blue-mid)); }
+  .bars .v { font-weight: 700; color: var(--navy); }
+
+  /* Implementation */
+  .impl { display: grid; grid-template-columns: 1fr 1.25fr; gap: 4%; align-items: start; }
+  .vsteps { display: flex; flex-direction: column; gap: .5em; }
+  .vsteps div { display: flex; gap: .7em; align-items: center; background: #fff; border: 1px solid var(--blue-light); border-radius: 10px; padding: .5em .8em; }
+  .vsteps .n { flex: 0 0 auto; width: 1.7em; height: 1.7em; border-radius: 50%; display: grid; place-items: center; background: var(--teal); color: #fff; font-weight: 700; font-size: .85em; }
+  .agents { display: grid; grid-template-columns: 1fr 1fr; gap: .5em; margin-top: .55em; }
+  .agent-pill { display: flex; align-items: center; gap: .5em; background: var(--navy); color: #fff; border-radius: 999px; padding: .3em .9em .3em .3em; font-size: .9em; }
+  .agent-pill .av { width: 1.7em; height: 1.7em; border-radius: 50%; display: grid; place-items: center; background: var(--teal); font-weight: 700; }
+
+  /* Results */
+  .results { display: grid; grid-template-columns: 1fr 1fr; gap: 3%; }
+  .card { border: 1px solid var(--blue-light); border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 3px 12px rgba(30,58,138,.09); }
+  .card .head { display: flex; align-items: center; gap: .6em; padding: .55em .9em; background: var(--panel); border-bottom: 1px solid var(--blue-light); }
+  .card .av { width: 2em; height: 2em; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 700;
+              background: linear-gradient(135deg, var(--navy), var(--blue-mid)); }
+  .card .av.b { background: linear-gradient(135deg, var(--teal-dark), var(--teal)); }
+  .card .head b { flex: 1; color: var(--navy); }
+  .pill { font-size: .78em; font-weight: 700; padding: .2em .75em; border-radius: 999px; }
+  .pill.ok { background: var(--green-light); color: var(--green); }
+  .pill.bad { background: var(--red-light); color: var(--red); }
+  .pill.tbd { background: var(--orange-light); color: var(--orange); font-style: normal; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); padding: .7em .6em .3em; text-align: center; }
+  .stats div strong { display: block; font-size: 2.3em; line-height: 1.05; color: var(--navy); }
+  .stats div span { font-size: .78em; color: var(--muted); }
+  .card ul { padding: .2em 1em .8em 2.1em; font-size: .9em; }
+  .gaps { margin-top: 1em; display: flex; align-items: center; gap: .8em; background: var(--orange-light); border-left: 6px solid var(--orange);
+          border-radius: 8px; padding: .55em 1em; }
+  .gaps b { color: var(--orange); white-space: nowrap; }
+
+  /* Change list */
+  .changes { display: grid; grid-template-columns: 1fr 1fr; gap: .7em 3%; }
+  .change { display: flex; gap: .7em; align-items: flex-start; background: #fff; border: 1px solid var(--blue-light); border-left: 5px solid var(--teal);
+            border-radius: 8px; padding: .55em .8em; }
+  .change b { display: block; color: var(--navy); }
+  .change span.d { font-size: .82em; color: var(--muted); }
+  .foot { margin-top: auto; padding-top: .8em; display: flex; gap: .5em; flex-wrap: wrap; align-items: center; }
+
+  .num-footer { position: absolute; bottom: 2.3%; right: 2.2%; width: 2em; height: 2em; border-radius: 50%; display: grid; place-items: center;
+                background: var(--blue-mid); color: #fff; font-size: .6em; font-weight: 700; }
+  .notes { display: none; }
+  body.show-notes .notes {
+    display: block; position: fixed; left: 0; right: 0; bottom: 0; max-height: 28vh; overflow: auto;
+    background: #fffbe6; color: #3f3200; padding: 10px 18px; font-size: 15px; line-height: 1.4; border-top: 2px solid #e0b000; z-index: 10;
+  }
+  .help { position: fixed; top: 8px; right: 12px; color: #475569; font-size: 12px; }
+  @media print {
+    html, body { background: #fff; height: auto; }
+    .deck { position: static; display: block; }
+    .slide { display: flex !important; flex-direction: column; width: 100%; box-shadow: none; border-radius: 0; page-break-after: always; font-size: 16px; }
+    .help, .notes { display: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="help">← → to move · N for notes · F for full screen</div>
+<div class="deck">
+
+<!-- 1 Title -->
+<section class="slide title">
+  <svg class="art" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
+    <polyline points="0,760 180,700 330,725 500,610 660,640 820,520 980,560 1150,420 1320,450 1600,300" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="6"/>
+    <polyline points="0,820 200,790 380,800 560,730 760,750 940,680 1120,700 1300,610 1600,560" fill="none" stroke="rgba(204,251,241,.22)" stroke-width="4"/>
+    <g fill="rgba(255,255,255,.08)">
+      <rect x="1180" y="560" width="60" height="340" rx="8"/><rect x="1270" y="500" width="60" height="400" rx="8"/>
+      <rect x="1360" y="420" width="60" height="480" rx="8"/><rect x="1450" y="340" width="60" height="560" rx="8"/>
+    </g>
+    <circle cx="190" cy="170" r="110" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="4"/>
+    <circle cx="190" cy="170" r="78" fill="rgba(255,255,255,.06)"/>
+    <text x="190" y="196" text-anchor="middle" font-size="80" font-family="Calibri, Arial" fill="rgba(255,255,255,.22)">₡</text>
+    <circle cx="340" cy="290" r="62" fill="none" stroke="rgba(204,251,241,.22)" stroke-width="4"/>
+    <text x="340" y="312" text-anchor="middle" font-size="60" font-family="Calibri, Arial" fill="rgba(204,251,241,.3)">$</text>
+  </svg>
+  <h1>Personal Finances App</h1>
+  <p>Keisy Núñez · Ezequiel Buck</p>
+  <aside class="notes">(~15 s) Hi, we are Keisy and Ezequiel, and our project is the Personal Finances App. We will spend about 10 minutes on the design and the one-shot attempts, and then 10 minutes on a demo.</aside>
+</section>
+
+<!-- 2 Problem -->
+<section class="slide">
+  <div class="band"><h2>Problem</h2></div>
+  <p class="lead">Ezequiel kept his finances in a spreadsheet, because none of the apps he tried supported the way he manages his money.</p>
+  <div class="tiles">
+    <div class="tile"><div class="ico"><svg viewBox="0 0 24 24"><path d="M3 10h18L12 4z"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg></div>
+      <div><b>More than one bank</b><span class="d">Accounts at BAC Credomatic and Banco Nacional</span></div></div>
+    <div class="tile"><div class="ico txt">₡/$</div>
+      <div><b>Colones and dollars</b><span class="d">Salary in dollars, most spending in colones</span></div></div>
+    <div class="tile"><div class="ico"><svg viewBox="0 0 24 24"><path d="M4 8h15l-4-4"/><path d="M20 16H5l4 4"/></svg></div>
+      <div><b>Transfers between his own accounts</b><span class="d">Should not be counted as spending</span></div></div>
+    <div class="tile"><div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div>
+      <div><b>Transactions from the bank</b><span class="d">Read from bank alert emails and statements instead of typed by hand</span></div></div>
+    <div class="tile"><div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg></div>
+      <div><b>Budgets</b><span class="d">Per category or tag, for a week, month, quarter, or year</span></div></div>
+    <div class="tile"><div class="ico"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div>
+      <div><b>Investments after fees</b><span class="d">What he would receive if he sold everything today</span></div></div>
+  </div>
+  <div class="num-footer">2</div>
+  <aside class="notes">(~1 min) The starting point for this project was Ezequiel. His salary is paid in dollars at one bank, he keeps savings at a second bank, and his debit card is tied to a third account that he tops up as he needs it. Most of what he buys is priced in colones. He tracked all of this in a spreadsheet, which was only accurate for about a week after he updated it. He tried a consumer expense tracker, but it counted the money he moved between his own accounts as spending, it could not keep two currencies apart, and its automatic capture was unreliable. He also invests in an index fund and a small amount of bitcoin, and the number he cares about is what he would actually get back after the broker's deposit, trade, and withdrawal fees. These six needs are the main features of the app.</aside>
+</section>
+
+<!-- 3 Solution overview -->
+<section class="slide">
+  <div class="band"><h2>Solution Overview</h2></div>
+  <p class="lead">The Personal Finances App is a web app that brings in transactions from BAC and Banco Nacional, converts colones to dollars, and shows spending, budgets, and investments in one place.</p>
+  <div class="areas">
+    <div class="area"><div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div>
+      <b>Transactions</b><span class="d">Gmail bank alerts, CSV statements, and manual entry</span></div>
+    <div class="area"><div class="ico"><svg viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.3"/></svg></div>
+      <b>Categories and tags</b><span class="d">Rules learned from the user's corrections</span></div>
+    <div class="area"><div class="ico txt">₡/$</div>
+      <b>Two currencies</b><span class="d">Colones converted to USD at the BCCR rate, original amount kept</span></div>
+    <div class="area"><div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg></div>
+      <b>Budgets and dashboard</b><span class="d">Where the money went, budget progress, money in vs. out</span></div>
+    <div class="area"><div class="ico"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div>
+      <b>Investments</b><span class="d">Holdings, broker fees, and value if sold today</span></div>
+  </div>
+  <div class="chips">
+    <span class="chip big teal">Works in a phone's browser</span>
+    <span class="chip big">Hosted on AWS</span>
+  </div>
+  <div class="num-footer">3</div>
+  <aside class="notes">(~45 s) This is what we built. These are the main parts of the app, and they are not steps in a fixed order. Transactions come in from three places: a Google Apps Script that forwards the bank alert emails from Gmail, the CSV statements that the user downloads from the bank, and manual entry. Each transaction gets one category and any number of tags, and when the user corrects a category, the app can remember it as a rule for that merchant. Amounts in colones are converted to dollars with the official BCCR rate of that day, and the original amount is kept. The app shows where the money went, the progress of each budget, income against spending, and the value of the investments after fees. The design changed a few things from the 1-pagers, for example using USD as the base currency and reading bank emails and statements instead of bank APIs, since no Costa Rican bank offered one for personal accounts.</aside>
+</section>
+
+<!-- 4 Context model -->
+<section class="slide">
+  <div class="band slim"><h2>Context Model</h2>
+    <div class="links"><a href="https://github.com/Ezequiel294/cs3365-finance-app/blob/attempt1/docs/diagrams/context.md" target="_blank" rel="noopener">Full diagram</a></div></div>
+  <div class="diagram"><pre class="mermaid" data-src="ctx-src"></pre></div>
+  <div class="num-footer">4</div>
+  <aside class="notes">(~1 min) This is a simplified version of the attempt 1 context model, and the link opens the full one. The context model shows the boundary of the app. Inside it there is one module per 1-pager, so every user story belongs to exactly one module, and the rollup engine keeps totals precomputed so that budgets and the dashboard read stored numbers. Outside the boundary are the account holder, Gmail with the Apps Script, the bank statement files, the BCCR exchange-rate API, and the market price feed. The full diagram also shows the identity and notification services, and some parts drawn dashed, like a bank connection API and push notifications, to show that they are not part of this version.</aside>
+</section>
+
+<!-- 5 Architecture -->
+<section class="slide">
+  <div class="band slim"><h2>Architecture Diagram</h2>
+    <div class="links">
+      <a href="https://app.diagrams.net/#Uhttps%3A%2F%2Fraw.githubusercontent.com%2FEzequiel294%2Fcs3365-finance-app%2Fattempt1%2Fdocs%2Fdiagrams%2Farchitecture.drawio" target="_blank" rel="noopener">Full diagram (draw.io)</a>
+      <a href="https://github.com/Ezequiel294/cs3365-finance-app/blob/attempt1/docs/diagrams/architecture.md" target="_blank" rel="noopener">Full diagram (Mermaid)</a>
+    </div></div>
+  <div class="diagram"><pre class="mermaid" data-src="arch-src"></pre></div>
+  <div class="num-footer">5</div>
+  <aside class="notes">(~1 min 15 s) This is a simplified version of the attempt 1 architecture diagram, and the link opens the full draw.io version. Everything runs in a personal AWS account in us-east-2, split into three CDK stacks. The web stack serves the Next.js app through CloudFront, with the server running in a Lambda. The API stack has API Gateway with a Cognito JWT authorizer in front of one Lambda, ApiFn, which has all the routes and services. CSV statements are uploaded straight from the browser to a private S3 bucket, and the S3 event starts a second Lambda, ImportWorkerFn, built from the same code. The Gmail script posts each bank email to the ingest route with its own token. The data stack has five DynamoDB tables, and the totals and budgets are updated in the same transaction as each write, so the dashboard reads stored numbers instead of adding everything up. The BCCR token is kept in SSM Parameter Store. We used AWS instead of Vercel or Railway because the backend needs S3 events, a JWT authorizer, and DynamoDB transactions, and the agents could deploy it with one CDK command.</aside>
+</section>
+
+<!-- 6 Sequence and class diagrams -->
+<section class="slide">
+  <div class="band"><h2>Sequence and Class Diagrams</h2>
+    <div class="links">
+      <a href="https://github.com/Ezequiel294/cs3365-finance-app/tree/attempt1/docs/diagrams/sequences" target="_blank" rel="noopener">Sequence diagrams</a>
+      <a href="https://github.com/Ezequiel294/cs3365-finance-app/blob/attempt1/docs/diagrams/class-diagram.md" target="_blank" rel="noopener">Class diagram</a>
+    </div></div>
+  <div class="two">
+    <div class="panel">
+      <div class="bignum"><strong>26</strong><span>sequence diagrams for 25 user stories</span></div>
+      <div class="bars">
+        <span>01 Accounts and Ingestion</span><div class="bar" style="width:100%"></div><span class="v">7</span>
+        <span>02 Categorization and Rules</span><div class="bar" style="width:57%"></div><span class="v">4</span>
+        <span>03 Budgets</span><div class="bar" style="width:43%"></div><span class="v">3</span>
+        <span>04 Dashboard</span><div class="bar" style="width:43%"></div><span class="v">3</span>
+        <span>05 Multi-Currency</span><div class="bar" style="width:43%"></div><span class="v">3</span>
+        <span>06 Security</span><div class="bar" style="width:14%"></div><span class="v">1</span>
+        <span>07 Investments</span><div class="bar" style="width:71%"></div><span class="v">5</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="bignum"><strong>15</strong><span>class diagrams</span></div>
+      <div class="chips">
+        <span class="chip">Domain model</span><span class="chip">Next.js layer</span><span class="chip">API routers</span>
+        <span class="chip">Repositories</span><span class="chip">Transactions core</span><span class="chip teal">One per module</span>
+        <span class="chip">Gmail Apps Script</span>
+      </div>
+      <p class="muted" style="margin-top:.9em;font-size:.9em">Every participant in a sequence diagram is a class, and every message is a method.</p>
+    </div>
+  </div>
+  <div class="num-footer">6</div>
+  <aside class="notes">(~40 s) We have too many sequence and class diagrams to show them one by one, so this slide only shows how many there are. There is at least one sequence diagram for each of the 25 user stories in scope, grouped by module, and the Gmail connection story has two. They name the route, the service method, and the DynamoDB items for each step, including the error cases that change what the user sees. The class diagram is split into 15 diagrams, by layer and then by module, and the agents were told to use those class and method names. The links open them on GitHub.</aside>
+</section>
+
+<!-- 7 Implementation -->
+<section class="slide">
+  <div class="band"><h2>Implementation</h2></div>
+  <div class="impl">
+    <div>
+      <div class="panel" style="margin-bottom:.9em">
+        <h3>Stack</h3>
+        <div class="chips">
+          <span class="chip">TypeScript</span><span class="chip">Next.js</span><span class="chip">AWS CDK</span><span class="chip">Zod</span><span class="chip">Vitest</span>
+          <span class="chip teal">Lambda</span><span class="chip teal">API Gateway</span><span class="chip teal">DynamoDB</span><span class="chip teal">Cognito</span>
+          <span class="chip teal">S3</span><span class="chip teal">CloudFront</span><span class="chip teal">SSM</span>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>AWS account</h3>
+        <ul>
+          <li>Personal account, us-east-2 only</li>
+          <li>Agents deploy with a limited role</li>
+          <li>BCCR token stored in SSM</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <h3>One-shot attempts</h3>
+      <div class="vsteps">
+        <div><span class="n">1</span>Diagram changes merged into main through a pull request</div>
+        <div><span class="n">2</span>Diagrams and 1-pagers copied to an attempt branch</div>
+        <div><span class="n">3</span>Same prompt for both agents, no questions allowed</div>
+        <div><span class="n">4</span>Each agent builds, tests, and deploys its own stacks</div>
+      </div>
+      <div class="agents">
+        <div class="agent-pill"><span class="av">A</span>Claude Opus 5.5</div>
+        <div class="agent-pill"><span class="av">B</span>GPT Terra 5.6</div>
+      </div>
+    </div>
+  </div>
+  <div class="num-footer">7</div>
+  <aside class="notes">(~1 min) Everything is written in TypeScript: the Next.js app, the API Lambdas, the shared Zod schemas, and the CDK infrastructure. The app is deployed to a personal AWS account. The account only allows us-east-2, and the agents deploy with a role that can only create the services in our architecture, with resource names that start with FinanceApp. The BCCR token is stored in SSM Parameter Store, so it never appears in the code or in the public repo. For each attempt, we change the diagrams on a branch and merge them into main with a pull request. Then we copy the diagrams and the 1-pagers into an agent-a and an agent-b folder on that attempt's branch. Each agent starts in a new session, only reads its own folder, gets the same prompt, and cannot ask questions, so any assumption has to go into its implementation notes. Agent A is Claude Opus 5.5 and agent B is GPT Terra 5.6. Each one deploys its own copy of the app.</aside>
+</section>
+
+<!-- 8 Attempt 1 results -->
+<section class="slide">
+  <div class="band"><h2>Attempt 1 Results</h2><div class="steps"><span class="now">1</span><i></i><span>2</span><i></i><span>3</span></div></div>
+  <div class="results">
+    <div class="card">
+      <div class="head"><span class="av">A</span><b>Claude Opus 5.5</b><span class="pill ok">Deployed</span></div>
+      <div class="stats">
+        <div><strong>112</strong><span>unit tests</span></div>
+        <div><strong>21/21</strong><span>checks on AWS</span></div>
+        <div><strong>25/25</strong><span>stories built</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="head"><span class="av b">B</span><b>GPT Terra 5.6</b><span class="pill bad">Web stack failed</span></div>
+      <div class="stats">
+        <div><strong>7</strong><span>unit tests</span></div>
+        <div><strong>2/3</strong><span>stacks deployed</span></div>
+        <div><strong>Partial</strong><span>stories built</span></div>
+      </div>
+      <ul><li>CSV import, email parsing, and totals left unfinished</li></ul>
+    </div>
+  </div>
+  <div class="gaps"><b>Gaps found in the diagrams</b>
+    <div class="chips"><span class="chip orange">No real bank formats</span><span class="chip orange">No price provider</span><span class="chip orange">No way to register accounts</span></div></div>
+  <div class="num-footer">8</div>
+  <aside class="notes">(~1 min) In attempt 1, agent A built all 25 stories, wrote 112 unit tests, and deployed the three stacks. Its smoke test passed 21 of 21 checks against the deployed app, including a CSV import, a colones entry converted with the live BCCR rate, and the Gmail connection. Agent B deployed the data and API stacks, but its web stack failed on a resource that our account does not allow, and it left the CSV import, the email parsing, and the totals unfinished. Both agents ran into the same gaps in our diagrams: we had not described the real bank formats, we had left the price provider open, and there was no way to register an account. These are what we changed for attempt 2.</aside>
+</section>
+
+<!-- 9 Attempt 2 changes -->
+<section class="slide">
+  <div class="band"><h2>Attempt 2 Changes</h2><div class="steps"><span class="done">1</span><i></i><span class="now">2</span><i></i><span>3</span></div>
+    <div class="links"><a href="https://github.com/Ezequiel294/cs3365-finance-app/pull/2" target="_blank" rel="noopener">Pull request #2</a></div></div>
+  <div class="changes">
+    <div class="change"><div><b>Bank formats with redacted samples</b><span class="d">BAC and Banco Nacional statements and alert emails, with expected results</span></div></div>
+    <div class="change"><div><b>Account registration</b><span class="d">New story 01-S02a, with IBAN and card numbers</span></div></div>
+    <div class="change"><div><b>Transfers to own accounts</b><span class="d">Statement rows to a registered IBAN are kept out of spending</span></div></div>
+    <div class="change"><div><b>Retry for unread emails</b><span class="d">From the review inbox</span></div></div>
+    <div class="change"><div><b>Yahoo Finance for prices</b><span class="d">Twelve Data as an optional fallback</span></div></div>
+    <div class="change"><div><b>Broker fee schedules</b><span class="d">Deposit, withdrawal, buy, and sell fees per asset class</span></div></div>
+  </div>
+  <div class="foot"><span class="chip">16 files changed</span><span class="chip">+2,041 / −272 lines</span><span class="chip teal">Same prompt, plus the AWS limits that blocked agent B</span></div>
+  <div class="num-footer">9</div>
+  <aside class="notes">(~50 s) For attempt 2 we added a bank formats document with redacted samples of the BAC and Banco Nacional statements and alert emails, and the expected result for each sample, so the agents could write tests against real files. We added a story for registering accounts, since the agents had no way to create them. Statement rows that send money to one of the user's registered accounts are now imported as transfers, which keeps them out of spending. We also added a retry for bank emails that could not be read, chose Yahoo Finance as the price provider, and replaced the single broker fee with a fee schedule, since one rule could not express the fees that Ezequiel's broker actually charges. The prompt stayed the same except for the new inputs and a warning about the resource that made agent B's web stack fail.</aside>
+</section>
+
+<!-- 10 Attempt 2 results -->
+<section class="slide">
+  <div class="band"><h2>Attempt 2 Results</h2><div class="steps"><span class="done">1</span><i></i><span class="now">2</span><i></i><span>3</span></div></div>
+  <div class="results">
+    <div class="card">
+      <div class="head"><span class="av">A</span><b>Claude Opus 5.5</b><span class="pill ok">Deployed</span></div>
+      <div class="stats">
+        <div><strong>153</strong><span>unit tests</span></div>
+        <div><strong>4/4</strong><span>bank sample tests</span></div>
+        <div><strong>65</strong><span>BAC rows imported on AWS</span></div>
+      </div>
+      <ul><li>Totals match the bank's statement</li></ul>
+    </div>
+    <div class="card">
+      <div class="head"><span class="av b">B</span><b>GPT Terra 5.6</b><span class="pill bad">Web stack failed</span></div>
+      <div class="stats">
+        <div><strong>11</strong><span>unit tests</span></div>
+        <div><strong>4/4</strong><span>bank sample tests</span></div>
+        <div><strong>2/3</strong><span>stacks deployed</span></div>
+      </div>
+      <ul><li>Most of the main flows still unfinished</li></ul>
+    </div>
+  </div>
+  <div class="gaps"><b>Found in the diagrams</b>
+    <div class="chips"><span class="chip orange">Holding value formula gave dollars instead of cents</span></div></div>
+  <div class="num-footer">10</div>
+  <aside class="notes">(~50 s) With the samples, both agents passed all four bank sample tests. Agent A wrote 153 unit tests and deployed all three stacks. In the deployed app, it imported the BAC sample statement with 65 rows, 58 of them transfers, and the totals matched the ones printed by the bank. Agent B's web stack failed again, this time on a different SSM parameter created by the same construct, and most of its main flows were still not connected to the database. Agent A also found an error in our class diagram: the formula for the value of a holding divided by 10 to the 12, which gives dollars instead of cents. This is the deployment we will use for the demo.</aside>
+</section>
+
+<!-- 11 Attempt 3 changes -->
+<section class="slide">
+  <div class="band"><h2>Attempt 3 Changes</h2><div class="steps"><span class="done">1</span><i></i><span class="done">2</span><i></i><span class="now">3</span></div></div>
+  <div class="changes">
+    <div class="change"><div><b>Holding value formula</b><span class="d">Value in cents divides by 10¹⁰</span></div></div>
+    <div class="change"><div><b class="tbd">TBD</b><span class="d">To fill in after the diagram pull request</span></div></div>
+  </div>
+  <div class="num-footer">11</div>
+  <aside class="notes">(~30 s) TBD. Fill in after the attempt 3 diagram pull request is merged.</aside>
+</section>
+
+<!-- 12 Attempt 3 results -->
+<section class="slide">
+  <div class="band"><h2>Attempt 3 Results</h2><div class="steps"><span class="done">1</span><i></i><span class="done">2</span><i></i><span class="now">3</span></div></div>
+  <div class="results">
+    <div class="card">
+      <div class="head"><span class="av">A</span><b>Claude Opus 5.5</b><span class="pill tbd">TBD</span></div>
+      <div class="stats">
+        <div><strong class="tbd">–</strong><span>unit tests</span></div>
+        <div><strong class="tbd">–</strong><span>bank sample tests</span></div>
+        <div><strong class="tbd">–</strong><span>stacks deployed</span></div>
+      </div>
+      <ul><li class="tbd">TBD</li></ul>
+    </div>
+    <div class="card">
+      <div class="head"><span class="av b">B</span><b>GPT Terra 5.6</b><span class="pill tbd">TBD</span></div>
+      <div class="stats">
+        <div><strong class="tbd">–</strong><span>unit tests</span></div>
+        <div><strong class="tbd">–</strong><span>bank sample tests</span></div>
+        <div><strong class="tbd">–</strong><span>stacks deployed</span></div>
+      </div>
+      <ul><li class="tbd">TBD</li></ul>
+    </div>
+  </div>
+  <div class="num-footer">12</div>
+  <aside class="notes">(~30 s) TBD. Fill in after attempt 3 runs.</aside>
+</section>
+
+<!-- 13 Backlog -->
+<section class="slide">
+  <div class="band"><h2>Product Backlog</h2></div>
+  <p class="tbd-box" style="margin-bottom:1em">TBD after attempt 3: backlog stories and the first sprint</p>
+  <div class="panel">
+    <h3>Candidates</h3>
+    <div class="chips">
+      <span class="chip">Account balances and net worth</span><span class="chip">Shared household budgets</span><span class="chip">Budget warnings</span>
+      <span class="chip">Rule editor</span><span class="chip">Period comparison</span><span class="chip">Transfer pairing</span>
+      <span class="chip">Data export and deletion</span><span class="chip">More banks</span>
+    </div>
+  </div>
+  <div class="num-footer">13</div>
+  <aside class="notes">(~30 s) TBD. These candidates come from the stories that we removed from scope in the design. The final backlog and the first sprint will be written after attempt 3.</aside>
+</section>
+
+<!-- 14 Demo -->
+<section class="slide title">
+  <svg class="art" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
+    <polyline points="0,760 180,700 330,725 500,610 660,640 820,520 980,560 1150,420 1320,450 1600,300" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="6"/>
+  </svg>
+  <h1>Demo</h1>
+  <aside class="notes">Use agent A's attempt 2 deployment. Sign up and sign in, register the BAC and BN accounts, import the BAC statement, add an expense in colones, change a category and save it as a rule, create a budget, show the dashboard and money in vs. out, add a broker with fees, make a deposit, buy VT, and open "if I sold everything today". Then show the pull requests and attempt branches in the repo.</aside>
+</section>
+
+</div>
+
+<script type="text/plain" id="ctx-src">
+%%{init: {"themeVariables": {"fontSize": "21px"}, "flowchart": {"nodeSpacing": 24, "rankSpacing": 60}}}%%
+flowchart LR
+    gmail@{ icon: "logos:google-gmail", label: "Gmail + Apps Script", pos: "b", h: 44 }
+    csv@{ icon: "app:file", label: "Bank statement CSV", pos: "b", h: 60 }
+    holder@{ icon: "app:person", label: "Account holder", pos: "b", h: 64 }
+    bccr@{ icon: "app:bank", label: "BCCR exchange rate", pos: "b", h: 60 }
+    prices@{ icon: "app:chart", label: "Market prices", pos: "b", h: 60 }
+
+    subgraph app["Personal Finances App"]
+        m01["01 Accounts and Ingestion"]
+        m02["02 Categorization and Rules"]
+        m05["05 Multi-Currency"]
+        agg["Rollup engine<br/>precomputed totals"]
+        m03["03 Budgets"]
+        m04["04 Dashboard"]
+        m07["07 Investments"]
+        m06["06 Security and Data Control"]
+    end
+
+    gmail -->|"alert emails"| m01
+    csv -->|"rows"| m01
+    holder -->|"entries, uploads"| m01
+    holder -->|"revoke Gmail access"| m06
+    bccr -->|"daily rate"| m05
+    prices -->|"prices"| m07
+    m01 -->|"new transactions"| m02
+    m02 --> agg
+    m05 -->|"USD amounts"| agg
+    agg --> m03
+    agg --> m04
+    m07 -->|"holdings value"| m04
+</script>
+
+<script type="text/plain" id="arch-src">
+flowchart LR
+    browser@{ icon: "app:browser", label: "Browser", pos: "b", h: 60 }
+    gmail@{ icon: "logos:google-gmail", label: "Gmail Apps Script", pos: "b", h: 44 }
+    bccr@{ icon: "app:bank", label: "BCCR API", pos: "b", h: 56 }
+
+    subgraph aws["AWS account, us-east-2"]
+        subgraph web["Web stack"]
+            cf@{ icon: "logos:aws-cloudfront", label: "CloudFront", pos: "b", h: 56 }
+            nx@{ icon: "logos:aws-lambda", label: "Next.js server", pos: "b", h: 56 }
+        end
+        subgraph api["API stack"]
+            apigw@{ icon: "logos:aws-api-gateway", label: "API Gateway", pos: "b", h: 56 }
+            cog@{ icon: "logos:aws-cognito", label: "Cognito", pos: "b", h: 56 }
+            apifn@{ icon: "logos:aws-lambda", label: "ApiFn", pos: "b", h: 56 }
+            raw@{ icon: "logos:aws-s3", label: "Emails and CSVs", pos: "b", h: 56 }
+            worker@{ icon: "logos:aws-lambda", label: "ImportWorkerFn", pos: "b", h: 56 }
+            ssm@{ icon: "logos:aws-systems-manager", label: "BCCR token", pos: "b", h: 56 }
+        end
+        subgraph data["Data stack"]
+            ddb@{ icon: "logos:aws-dynamodb", label: "DynamoDB, 5 tables", pos: "b", h: 56 }
+        end
+    end
+
+    browser --> cf --> nx
+    nx -->|"API + JWT"| apigw
+    nx -.->|"sign-in"| cog
+    apigw -.->|"checks JWT"| cog
+    gmail -->|"bank emails"| apigw
+    apigw --> apifn
+    browser -.->|"CSV upload"| raw
+    raw -->|"S3 event"| worker
+    apifn --> ddb
+    worker --> ddb
+    apifn -.-> ssm
+    apifn -->|"rates"| bccr
+    worker -->|"rates"| bccr
+</script>
+<script type="application/json" id="icons-logos">{"prefix":"logos","icons":{"aws-lambda":{"body":"<defs><linearGradient id=\"SVGeyciVcvH\" x1=\"0%\" x2=\"100%\" y1=\"100%\" y2=\"0%\"><stop offset=\"0%\" stop-color=\"#c8511b\"/><stop offset=\"100%\" stop-color=\"#f90\"/></linearGradient></defs><path fill=\"url(#SVGeyciVcvH)\" d=\"M0 0h256v256H0z\"/><path fill=\"#fff\" d=\"M89.624 211.2H49.89l43.945-91.853l19.912 40.992zm7.079-100.63a3.22 3.22 0 0 0-2.887-1.805h-.01a3.2 3.2 0 0 0-2.886 1.82L41.913 213.022a3.203 3.203 0 0 0 2.893 4.58l46.848-.001a3.21 3.21 0 0 0 2.9-1.83l25.65-54.08a3.18 3.18 0 0 0-.016-2.762zM207.985 211.2h-39.477L105.174 78.624a3.21 3.21 0 0 0-2.897-1.824h-25.83l.03-32h50.626l63.042 132.573a3.21 3.21 0 0 0 2.897 1.827h14.943zm3.208-38.4h-16.121L132.03 40.227a3.21 3.21 0 0 0-2.9-1.827H73.273a3.206 3.206 0 0 0-3.208 3.197l-.035 38.4c0 .851.333 1.664.94 2.265c.6.602 1.414.938 2.267.938h27.017l63.337 132.576a3.2 3.2 0 0 0 2.893 1.824h44.709a3.203 3.203 0 0 0 3.207-3.2V176c0-1.766-1.434-3.2-3.207-3.2\"/>","width":256,"height":256},"aws-cloudfront":{"body":"<defs><linearGradient id=\"SVGusebDeuy\" x1=\"0%\" x2=\"100%\" y1=\"100%\" y2=\"0%\"><stop offset=\"0%\" stop-color=\"#4d27a8\"/><stop offset=\"100%\" stop-color=\"#a166ff\"/></linearGradient></defs><path fill=\"url(#SVGusebDeuy)\" d=\"M0 0h256v256H0z\"/><path fill=\"#fff\" d=\"M176.39 166.794c0-5.293-4.307-9.6-9.6-9.6s-9.6 4.307-9.6 9.6s4.308 9.6 9.6 9.6c5.293 0 9.6-4.308 9.6-9.6m6.4 0c0 8.822-7.177 16-16 16c-8.822 0-16-7.178-16-16c0-8.823 7.178-16 16-16c8.823 0 16 7.177 16 16m-85.536-46.18c0-5.292-4.307-9.6-9.6-9.6c-5.296 0-9.6 4.308-9.6 9.6c0 5.293 4.304 9.6 9.6 9.6c5.293 0 9.6-4.307 9.6-9.6m6.4 0c0 8.823-7.18 16-16 16c-8.822 0-16-7.177-16-16c0-8.822 7.178-16 16-16c8.82 0 16 7.178 16 16m23.482-50.192c0 5.293 4.307 9.6 9.6 9.6c5.296 0 9.6-4.307 9.6-9.6c0-5.296-4.304-9.6-9.6-9.6c-5.293 0-9.6 4.304-9.6 9.6m-6.4 0c0-8.822 7.18-16 16-16c8.822 0 16 7.178 16 16c0 8.823-7.178 16-16 16c-8.82 0-16-7.177-16-16M211.2 128c0-29.674-15.91-57.126-41.562-71.971c-4.598.928-9.046 2.198-14.595 4.205l-2.176-6.02a131 131 0 0 1 7.984-2.61A83 83 0 0 0 128 44.8c-5.405 0-10.723.56-15.92 1.574c3.763 2.202 7.1 4.397 10.342 6.855l-3.868 5.097c-4.57-3.462-9.306-6.396-15.524-9.654c-31.42 9.882-54.05 37.594-57.644 70.138c6.588-1.335 12.915-2.061 19.939-2.234l.157 6.397c-7.36.182-13.684.963-20.596 2.483c-.028.848-.086 1.706-.086 2.544c0 27.706 13.706 53.235 36.246 68.63c-4.01-11.939-6.006-23.222-6.006-34.243c0-6.285 1.082-11.446 2.224-16.909c.266-1.264.534-2.55.797-3.884l6.281 1.238c-.268 1.357-.544 2.672-.812 3.962c-1.12 5.35-2.09 9.97-2.09 15.593c0 12.506 2.746 25.437 8.333 39.479c11.9 6.179 24.752 9.334 38.227 9.334c8.82 0 17.427-1.408 25.638-4.115c3.223-6.359 5.613-12.359 7.61-19.248l6.147 1.782a114 114 0 0 1-5.126 14.147c5.165-2.323 10.051-5.196 14.637-8.55c-1.104-2.707-2.288-5.398-3.597-8.02l5.725-2.863c1.113 2.227 2.134 4.505 3.11 6.797C200.656 175.28 211.2 152.512 211.2 128m6.4 0c0 27.926-12.691 53.757-34.813 70.877c-5.478 4.256-11.42 7.789-17.702 10.633c-2.666 1.21-5.38 2.33-8.17 3.27c-9.216 3.198-18.953 4.82-28.915 4.82c-14.72 0-29.338-3.667-42.278-10.605C56.534 191.38 38.4 161.11 38.4 128c0-2.195.058-3.866.189-5.411c2.179-37.389 27.83-69.75 63.814-80.458C110.598 39.658 119.216 38.4 128 38.4c15.386 0 30.525 3.962 43.789 11.453C200.042 65.68 217.6 95.629 217.6 128m-98.195-46.518l-4.205-4.823c-7.174 6.26-12.755 12.906-19.274 22.944l5.37 3.485c6.17-9.507 11.418-15.766 18.109-21.606m-9.725 41.484l-2.08 6.052c14.698 5.046 27.52 13.097 40.349 25.337l4.419-4.63c-13.523-12.9-27.088-21.402-42.688-26.759m42.787-37.628c12.007 18.31 18.768 38.41 20.093 59.744l-6.387.396c-1.258-20.21-7.667-39.264-19.053-56.63z\"/>","width":256,"height":256},"aws-api-gateway":{"body":"<defs><linearGradient id=\"SVGyDrnJbhE\" x1=\"0%\" x2=\"100%\" y1=\"100%\" y2=\"0%\"><stop offset=\"0%\" stop-color=\"#b0084d\"/><stop offset=\"100%\" stop-color=\"#ff4f8b\"/></linearGradient></defs><path fill=\"url(#SVGyDrnJbhE)\" d=\"M0 0h256v256H0z\"/><path fill=\"#fff\" d=\"M109.008 178.024h9.392v-6.455h-9.392zm15.792 0h9.6v-6.455h-9.6zM86.4 46.814L44.8 67.463v128.356l41.6 14.068zm6.4 40.845v83.91h9.6v6.455h-9.6v36.349a3.24 3.24 0 0 1-1.331 2.62a3.18 3.18 0 0 1-2.887.44l-48-16.23a3.23 3.23 0 0 1-2.182-3.06V65.452c0-1.226.694-2.353 1.789-2.895l48-23.824a3.16 3.16 0 0 1 3.1.155a3.23 3.23 0 0 1 1.511 2.74v39.576h9.6v6.455zm48 90.365h9.6v-6.455h-9.6zm.208-90.365h9.392v-6.455h-9.392zm-16 0h9.392v-6.455h-9.392zm-16 0h9.392v-6.455h-9.392zM211.2 67.463l-41.6-20.649v163.073l41.6-14.068zm6.4 130.68a3.23 3.23 0 0 1-2.182 3.06l-48 16.23a3.17 3.17 0 0 1-2.887-.44a3.24 3.24 0 0 1-1.331-2.62v-36.35h-6.192v-6.454h6.192v-83.91h-6.192v-6.455h6.192V41.628c0-1.117.573-2.153 1.51-2.74a3.16 3.16 0 0 1 3.101-.155l48 23.824a3.23 3.23 0 0 1 1.789 2.895zm-80.211-89.962l-5.978-2.317l-16 41.955l5.978 2.317zm21.673 20.487a3.243 3.243 0 0 0 0-4.563l-12.8-12.91l-4.524 4.564l10.537 10.628l-10.537 10.627l4.524 4.564zm-49.324 12.91l-12.8-12.91a3.243 3.243 0 0 1 0-4.563l12.8-12.91l4.524 4.564l-10.537 10.628l10.537 10.627z\"/>","width":256,"height":256},"aws-dynamodb":{"body":"<defs><linearGradient id=\"SVGte2wIbLN\" x1=\"0%\" x2=\"100%\" y1=\"100%\" y2=\"0%\"><stop offset=\"0%\" stop-color=\"#2e27ad\"/><stop offset=\"100%\" stop-color=\"#527fff\"/></linearGradient></defs><path fill=\"url(#SVGte2wIbLN)\" d=\"M0 0h256v256H0z\"/><path fill=\"#fff\" d=\"M166.675 175.52c-10.682 8.637-33.091 13.2-54.534 13.2c-21.447 0-43.863-4.566-54.541-13.202v17.392h.003c0 8.675 22.397 18.342 54.538 18.342c32.115 0 54.499-9.655 54.534-18.323zm.003-33.049l6.4-.035v.035c0 3.866-1.936 7.475-5.705 10.779c4.57 4.021 5.705 7.966 5.705 10.775c0 .02-.003.035-.003.054v28.831h.003c0 16.035-31.398 24.69-60.937 24.69c-29.469 0-60.781-8.617-60.931-24.578c0-.016-.01-.032-.01-.048v-28.958c0-.007.006-.016.006-.026c.01-2.809 1.15-6.738 5.712-10.75c-4.534-4.005-5.686-7.912-5.715-10.699h.003c0-.013-.006-.022-.006-.035v-28.958c0-.01.006-.02.006-.029c.01-2.809 1.152-6.738 5.716-10.743c-4.538-4.009-5.69-7.92-5.719-10.703h.003c0-.012-.006-.025-.006-.038V63.08c0-.01.006-.019.006-.029C51.261 47.04 82.624 38.4 112.141 38.4c16.675 0 32.694 2.65 43.948 7.271l-2.448 5.866c-10.505-4.314-25.632-6.79-41.5-6.79c-32.141 0-54.538 9.668-54.538 18.349c0 8.677 22.397 18.345 54.538 18.345c.867.01 1.715 0 2.573-.032l.268 6.342c-.947.038-1.894.038-2.841.038c-21.447 0-43.863-4.568-54.541-13.204V91.97h.003v.073c.032 3.329 3.447 6.236 6.307 8.083c8.608 5.488 24.032 9.236 41.232 10.014l-.29 6.341c-17.425-.79-32.682-4.405-42.503-9.946c-2.42 1.809-4.746 4.256-4.746 7.03c0 8.677 22.397 18.345 54.538 18.345c3.152 0 6.281-.105 9.305-.315l.445 6.332c-3.168.22-6.451.33-9.75.33c-21.447 0-43.863-4.567-54.541-13.203v17.383h.003c.032 3.403 3.447 6.307 6.307 8.157c9.844 6.281 28.327 10.192 48.23 10.192h1.409v6.347h-1.408c-20.221 0-38.599-3.754-49.837-10.099c-2.406 1.806-4.7 4.24-4.7 6.992c0 8.677 22.396 18.348 54.537 18.348c32.115 0 54.499-9.655 54.534-18.326v-.035c-.006-2.758-2.31-5.192-4.723-6.998a45 45 0 0 1-5.14 2.523l-2.45-5.865c2.323-.955 4.339-1.987 5.993-3.072c2.886-1.883 6.323-4.825 6.323-8.129m27.411-46.418h-17.932c-1.06 0-2.055-.52-2.647-1.39a3.14 3.14 0 0 1-.33-2.951l10.91-27.27h-41.31l-19.2 38.086h20.423c1.02 0 1.98.486 2.586 1.301c.598.82.774 1.87.464 2.838l-18.228 56.818zm9.821-.974l-79.996 82.648a3.22 3.22 0 0 1-2.31.974a3.2 3.2 0 0 1-1.636-.444a3.16 3.16 0 0 1-1.414-3.692l21.075-65.69h-21.226a3.21 3.21 0 0 1-2.723-1.504a3.15 3.15 0 0 1-.138-3.088l22.4-44.434a3.2 3.2 0 0 1 2.861-1.755h48a3.21 3.21 0 0 1 2.646 1.39a3.15 3.15 0 0 1 .33 2.955L180.87 89.706h20.73c1.28 0 2.441.761 2.944 1.93a3.16 3.16 0 0 1-.634 3.443M62.256 194.158c4.534 2.555 10.243 4.703 16.966 6.38l1.562-6.158c-6.077-1.514-11.389-3.5-15.366-5.742zm16.966-44.403l1.562-6.154c-6.077-1.517-11.389-3.504-15.366-5.745l-3.162 5.52c4.534 2.555 10.24 4.704 16.966 6.38M62.256 92.594l3.162-5.52c3.97 2.241 9.286 4.225 15.366 5.745l-1.562 6.154c-6.732-1.679-12.438-3.827-16.966-6.38\"/>","width":256,"height":256},"aws-s3":{"body":"<defs><linearGradient id=\"SVG7R6tZwZW\" x1=\"0%\" x2=\"100%\" y1=\"100%\" y2=\"0%\"><stop offset=\"0%\" stop-color=\"#1b660f\"/><stop offset=\"100%\" stop-color=\"#6cae3e\"/></linearGradient></defs><path fill=\"url(#SVG7R6tZwZW)\" d=\"M0 0h256v256H0z\"/><path fill=\"#fff\" d=\"m194.675 137.256l1.229-8.652c11.33 6.787 11.478 9.59 11.475 9.667c-.02.016-1.952 1.629-12.704-1.015m-6.218-1.728c-19.584-5.926-46.857-18.438-57.894-23.654c0-.045.013-.086.013-.131c0-4.24-3.45-7.69-7.693-7.69c-4.237 0-7.687 3.45-7.687 7.69s3.45 7.69 7.687 7.69c1.862 0 3.552-.695 4.886-1.8c12.986 6.148 40.048 18.478 59.776 24.302l-7.801 55.059q-.033.225-.032.451c0 4.848-21.463 13.754-56.532 13.754c-35.44 0-57.13-8.906-57.13-13.754q0-.22-.028-.435l-16.3-119.062c14.108 9.712 44.454 14.85 73.478 14.85c28.979 0 59.273-5.12 73.41-14.802zM48 65.528c.23-4.21 24.428-20.73 75.2-20.73c50.764 0 74.966 16.516 75.2 20.73v1.437c-2.784 9.443-34.144 19.434-75.2 19.434c-41.127 0-72.503-10.023-75.2-19.479zm156.8.07c0-11.087-31.79-27.2-81.6-27.2c-49.812 0-81.6 16.113-81.6 27.2l.3 2.414l17.754 129.676c.426 14.503 39.1 19.91 63.526 19.91c30.31 0 62.512-6.969 62.928-19.9l7.668-54.07c4.265 1.02 7.776 1.542 10.595 1.542c3.785 0 6.345-.925 7.897-2.774c1.274-1.517 1.76-3.354 1.396-5.31c-.83-4.428-6.087-9.202-16.794-15.311l7.603-53.639z\"/>","width":256,"height":256},"aws-cognito":{"body":"<defs><linearGradient id=\"SVGYPnorcPn\" x1=\"0%\" x2=\"100%\" y1=\"100%\" y2=\"0%\"><stop offset=\"0%\" stop-color=\"#bd0816\"/><stop offset=\"100%\" stop-color=\"#ff5252\"/></linearGradient></defs><path fill=\"url(#SVGYPnorcPn)\" d=\"M0 0h256v256H0z\"/><path fill=\"#fff\" d=\"M54.283 114.585H95.58v-6.344H54.283zm142.119 46.154l4.491 4.485l-23.59 23.556a3.18 3.18 0 0 1-4.491 0l-11.868-11.848l4.491-4.485l9.623 9.605zm14.619 17.481c-.725 5.964-3.152 11.511-7.03 16.048a30.6 30.6 0 0 1-10.058 7.701a30 30 0 0 1-16.506 2.665a30.05 30.05 0 0 1-15.06-6.29c-8.33-6.614-12.535-16.87-11.255-27.436a30.3 30.3 0 0 1 16.185-23.301a29.9 29.9 0 0 1 13.726-3.337c1.223 0 2.456.076 3.685.225c9.962 1.215 18.65 7.302 23.231 16.282a30.24 30.24 0 0 1 3.082 17.443m2.58-20.32c-5.544-10.868-16.059-18.233-28.124-19.702a36.25 36.25 0 0 0-21.096 3.772a36.64 36.64 0 0 0-19.578 28.177c-1.544 12.768 3.542 25.167 13.612 33.164a36.4 36.4 0 0 0 18.24 7.62q2.221.27 4.438.269a36.3 36.3 0 0 0 15.566-3.502a36.9 36.9 0 0 0 12.163-9.313c4.692-5.488 7.634-12.197 8.508-19.404a36.54 36.54 0 0 0-3.73-21.081M86.05 133.618h12.706v-6.344H86.05zm-31.768 0h25.414v-6.344H54.283zM51.54 51.144h142.086c3.742 0 6.786 3.702 6.786 8.25v23.47h-9.53v-15.86a3.173 3.173 0 0 0-3.177-3.172H114.64a3.173 3.173 0 0 0-3.176 3.172v15.86h-66.71v-23.47c0-4.472 3.11-8.25 6.785-8.25m99.68 30.8c7.377 0 13.378 5.933 13.378 13.222c0 4.806-2.653 9.228-6.922 11.543a13.6 13.6 0 0 1-12.939.003c-4.253-2.322-6.893-6.744-6.893-11.546c0-7.29 5.997-13.221 13.377-13.221M44.754 150.748V89.209h66.71v53.925a3.17 3.17 0 0 0 3.177 3.172h33.21v-6.344h-26.532c.276-12.695 8.716-23.66 20.87-27.163c5.617 2.624 12.323 2.65 18.025-.003c6.919 1.999 12.973 6.62 16.725 12.815l5.435-3.286c-3.85-6.347-9.692-11.302-16.467-14.182c3.176-3.521 5.044-8.102 5.044-12.977c0-10.788-8.853-19.565-19.73-19.565c-10.88 0-19.73 8.777-19.73 19.565c0 4.856 1.848 9.421 5.003 12.942a35.17 35.17 0 0 0-18.676 18.525V70.176h66.71v50.753h6.354V89.21h9.53l.003 47.58h6.353l-.003-77.394c0-8.048-5.893-14.595-13.139-14.595H51.54c-7.246 0-13.139 6.547-13.139 14.595v91.352c0 8.047 5.893 14.591 13.139 14.591h85.338v-6.344H51.539c-3.676 0-6.786-3.775-6.786-8.247\"/>","width":256,"height":256},"aws-systems-manager":{"body":"<defs><linearGradient id=\"SVGyDrnJbhE\" x1=\"0%\" x2=\"100%\" y1=\"100%\" y2=\"0%\"><stop offset=\"0%\" stop-color=\"#b0084d\"/><stop offset=\"100%\" stop-color=\"#ff4f8b\"/></linearGradient></defs><path fill=\"url(#SVGyDrnJbhE)\" d=\"M0 0h256v256H0z\"/><path fill=\"#fff\" d=\"M150.4 175.994H192v6.4h-41.6v6.402H144v-6.401h-12.8v-6.401H144v-3.2h6.4zm12.8-19.203H192v6.4h-28.8v6.402h-6.4v-6.401h-25.6v-6.401h25.6v-3.2h6.4zm16-19.203H192v6.401h-12.8v6.401h-6.4v-6.401h-41.6v-6.4h41.6v-3.201h6.4zm-112 12.802H96v6.4H67.2c-4.016 0-8.307-1.206-11.478-3.225c-6.464-4.094-17.322-13.676-17.322-31.832c0-22.02 14.928-30.1 23.616-32.933l-.173-2.932c-.006-18.137 11.994-36.735 27.904-43.446c18.634-7.921 38.368-3.998 52.797 10.497c4.477 4.484 8.163 9.954 10.986 16.3c5.667-4.72 13.382-6.336 20.55-3.984c9.11 2.99 14.78 11.41 15.446 22.746c9.082 2.173 28.074 9.646 28.074 34.04c0 .912-.035 1.792-.07 2.634l-6.397-.17c.032-.854.067-1.642.067-2.464c0-21.549-17.782-26.96-25.427-28.286a3.2 3.2 0 0 1-2.112-1.37a3.2 3.2 0 0 1-.474-2.451c-.093-9.54-4.128-16.31-11.104-18.598c-6.25-2.058-13.117.211-17.094 5.626a3.18 3.18 0 0 1-3.047 1.268a3.19 3.19 0 0 1-2.547-2.094c-2.665-7.498-6.496-13.78-11.382-18.674c-12.522-12.581-29.639-15.987-45.77-9.125c-13.465 5.678-24.006 22.09-24.006 37.363l.317 5.293a3.2 3.2 0 0 1-2.407 3.287c-7.971 2.03-21.347 8.296-21.347 27.473c0 14.335 7.802 22.282 14.352 26.426c2.16 1.38 5.242 2.231 8.048 2.231m144 17.027l-5.645-.324c-1.513-.08-2.957.964-3.302 2.493a43 43 0 0 1-5.594 13.506a3.2 3.2 0 0 0 .58 4.1l4.214 3.758l-10.5 10.504l-3.747-4.203a3.19 3.19 0 0 0-4.096-.576a43 43 0 0 1-13.52 5.601a3.2 3.2 0 0 0-2.486 3.306l.32 5.617h-14.848l.32-5.623a3.2 3.2 0 0 0-2.486-3.306a43 43 0 0 1-13.514-5.604a3.19 3.19 0 0 0-4.096.576l-3.757 4.208l-10.496-10.5l4.208-3.751a3.2 3.2 0 0 0 .576-4.097a43 43 0 0 1-5.59-13.516c-.343-1.53-1.872-2.573-3.303-2.493l-5.638.324v-14.85l5.658.323c1.488.083 2.953-.964 3.302-2.49a43 43 0 0 1 5.6-13.487a3.21 3.21 0 0 0-.576-4.1l-4.237-3.78l10.5-10.5l3.779 4.234a3.2 3.2 0 0 0 4.092.573a43 43 0 0 1 13.492-5.582a3.2 3.2 0 0 0 2.486-3.306l-.32-5.668h14.848l-.32 5.674a3.196 3.196 0 0 0 2.486 3.303a43.1 43.1 0 0 1 13.485 5.588a3.2 3.2 0 0 0 4.093-.573l3.786-4.244l10.499 10.501l-4.227 3.77a3.21 3.21 0 0 0-.576 4.1a42.9 42.9 0 0 1 5.596 13.497c.346 1.523 1.796 2.573 3.303 2.49l5.651-.324zm3.018-21.434l-6.404.365a49.2 49.2 0 0 0-4.361-10.523l4.79-4.273a3.2 3.2 0 0 0 1.069-2.298a3.2 3.2 0 0 0-.938-2.352l-15.29-15.292c-.62-.624-1.506-.983-2.351-.935a3.2 3.2 0 0 0-2.298 1.066l-4.288 4.807a49.4 49.4 0 0 0-10.505-4.356l.364-6.426a3.2 3.2 0 0 0-.87-2.381a3.2 3.2 0 0 0-2.323-1.002h-21.626c-.88 0-1.721.361-2.323 1.002a3.2 3.2 0 0 0-.87 2.38l.364 6.42a49.2 49.2 0 0 0-10.512 4.354l-4.281-4.798a3.2 3.2 0 0 0-2.298-1.066c-.905-.041-1.731.31-2.352.935l-15.29 15.292a3.2 3.2 0 0 0-.937 2.352a3.2 3.2 0 0 0 1.069 2.298l4.8 4.282a49.3 49.3 0 0 0-4.365 10.514l-6.41-.365a3.2 3.2 0 0 0-2.38.867a3.2 3.2 0 0 0-1.002 2.327v21.629a3.2 3.2 0 0 0 1.002 2.327a3.26 3.26 0 0 0 2.38.867l6.388-.365a49 49 0 0 0 4.358 10.54l-4.771 4.253a3.2 3.2 0 0 0-1.069 2.298c-.026.88.314 1.734.938 2.355l15.29 15.292a3.26 3.26 0 0 0 2.351.938a3.2 3.2 0 0 0 2.298-1.07l4.256-4.774a49 49 0 0 0 10.534 4.375l-.361 6.375a3.2 3.2 0 0 0 .87 2.381a3.2 3.2 0 0 0 2.323 1.002h21.626a3.2 3.2 0 0 0 3.193-3.383l-.361-6.369a49.4 49.4 0 0 0 10.54-4.372l4.25 4.766a3.2 3.2 0 0 0 2.298 1.069c.854.038 1.731-.314 2.352-.938l15.29-15.292a3.195 3.195 0 0 0-.135-4.653l-4.778-4.26a49.4 49.4 0 0 0 4.362-10.533l6.394.365a3.24 3.24 0 0 0 2.38-.867a3.2 3.2 0 0 0 1.002-2.327v-21.629a3.2 3.2 0 0 0-1.002-2.327a3.2 3.2 0 0 0-2.38-.867\"/>","width":256,"height":256},"google-gmail":{"body":"<defs><linearGradient id=\"SVGHzDbHcwG\" x1=\"165\" x2=\"165\" y1=\"44\" y2=\"166\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#60d673\"/><stop offset=\".17\" stop-color=\"#42c868\"/><stop offset=\".39\" stop-color=\"#0ebc5f\"/><stop offset=\".62\" stop-color=\"#00a9bb\"/><stop offset=\".86\" stop-color=\"#3c90ff\"/><stop offset=\"1\" stop-color=\"#3186ff\"/></linearGradient><linearGradient id=\"SVG41ATXboZ\" x1=\"8\" x2=\"184\" y1=\"46.13\" y2=\"46.13\" gradientUnits=\"userSpaceOnUse\"><stop offset=\".08\" stop-color=\"#ff63a0\"/><stop offset=\".3\" stop-color=\"#fc413d\"/><stop offset=\".5\" stop-color=\"#fc413d\"/><stop offset=\".65\" stop-color=\"#fc413d\"/><stop offset=\".72\" stop-color=\"#fc5c30\"/><stop offset=\".86\" stop-color=\"#feb10c\"/><stop offset=\".91\" stop-color=\"#fec700\"/><stop offset=\".96\" stop-color=\"#ffdb0f\"/></linearGradient></defs><path fill=\"url(#SVGHzDbHcwG)\" d=\"M146 44h38v110c0 6.627-5.373 12-12 12h-20a6 6 0 0 1-6-6z\" transform=\"translate(-11.636 -37.818)scale(1.45454)\"/><path fill=\"#fc413d\" d=\"M55.273 26.182H0v160c0 9.638 7.816 17.454 17.455 17.454h29.09a8.727 8.727 0 0 0 8.728-8.728z\"/><path fill=\"url(#SVG41ATXboZ)\" d=\"M39.226 30.456c-8.033-6.752-20.018-5.714-26.77 2.319c-6.752 8.032-5.714 20.017 2.319 26.77l76.078 63.949a8 8 0 0 0 10.295 0l76.078-63.95c8.032-6.752 9.07-18.737 2.318-26.77c-6.752-8.032-18.737-9.07-26.769-2.318L96 78.18z\" transform=\"translate(-11.636 -37.818)scale(1.45454)\"/>","width":256,"height":204},"nextjs-icon":{"body":"<defs><linearGradient id=\"SVGrDou6dwg\" x1=\"55.633%\" x2=\"83.228%\" y1=\"56.385%\" y2=\"96.08%\"><stop offset=\"0%\" stop-color=\"#fff\"/><stop offset=\"100%\" stop-color=\"#fff\" stop-opacity=\"0\"/></linearGradient><linearGradient id=\"SVG9onTObtB\" x1=\"50%\" x2=\"49.953%\" y1=\"0%\" y2=\"73.438%\"><stop offset=\"0%\" stop-color=\"#fff\"/><stop offset=\"100%\" stop-color=\"#fff\" stop-opacity=\"0\"/></linearGradient><circle id=\"SVGN5eQqeMK\" cx=\"128\" cy=\"128\" r=\"128\"/></defs><mask id=\"SVGMX2wGdvm\" fill=\"#fff\"><use href=\"#SVGN5eQqeMK\"/></mask><g mask=\"url(#SVGMX2wGdvm)\"><circle cx=\"128\" cy=\"128\" r=\"128\"/><path fill=\"url(#SVGrDou6dwg)\" d=\"M212.634 224.028L98.335 76.8H76.8v102.357h17.228V98.68L199.11 234.446a128 128 0 0 0 13.524-10.418\"/><path fill=\"url(#SVG9onTObtB)\" d=\"M163.556 76.8h17.067v102.4h-17.067z\"/></g>","width":256,"height":256}}}</script>
+<script type="application/json" id="icons-app">{"prefix":"app","width":24,"height":24,"icons":{"person":{"body":"<g fill=\"none\" stroke=\"#1e3a8a\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4 21c0-4 4-6 8-6s8 2 8 6\"/></g>"},"browser":{"body":"<g fill=\"none\" stroke=\"#1e3a8a\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2.5\" y=\"4\" width=\"19\" height=\"16\" rx=\"2\"/><path d=\"M2.5 8.5h19\"/></g><circle cx=\"5.5\" cy=\"6.3\" r=\".7\" fill=\"#1e3a8a\"/><circle cx=\"7.8\" cy=\"6.3\" r=\".7\" fill=\"#1e3a8a\"/>"},"file":{"body":"<g fill=\"none\" stroke=\"#1e3a8a\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 2.5h8l4 4v15H6z\"/><path d=\"M14 2.5v4h4\"/><path d=\"M8.5 12h7M8.5 15h7M8.5 18h5\"/></g>"},"bank":{"body":"<g fill=\"none\" stroke=\"#1e3a8a\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 9.5h18L12 3.5z\"/><path d=\"M5.5 9.5v8M10 9.5v8M14 9.5v8M18.5 9.5v8M3 20.5h18\"/></g>"},"chart":{"body":"<g fill=\"none\" stroke=\"#1e3a8a\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 17l6-6 4 4 8-8\"/><path d=\"M15 7h6v6\"/></g>"}}}</script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.registerIconPacks([
+    { name: "logos", icons: JSON.parse(document.getElementById("icons-logos").textContent) },
+    { name: "app", icons: JSON.parse(document.getElementById("icons-app").textContent) },
+  ]);
+  mermaid.initialize({ startOnLoad: false, theme: "base", securityLevel: "strict",
+    themeVariables: { fontSize: "17px", fontFamily: "Calibri, Segoe UI, Arial, sans-serif",
+      primaryColor: "#dbe5f6", primaryBorderColor: "#2f5597", primaryTextColor: "#1f2937",
+      lineColor: "#2f5597", secondaryColor: "#ccfbf1", tertiaryColor: "#f4f7fc",
+      clusterBkg: "#f0fdfa", clusterBorder: "#0d9488", edgeLabelBackground: "#ffffff" },
+    flowchart: { htmlLabels: true, curve: "basis", nodeSpacing: 30, rankSpacing: 55, padding: 10 } });
+
+  document.querySelectorAll("pre.mermaid[data-src]").forEach((pre) => {
+    pre.textContent = document.getElementById(pre.dataset.src).textContent.trim();
+  });
+
+  const slides = [...document.querySelectorAll(".slide")];
+  const rendered = new Set();
+  let current = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+
+  async function renderSlide(i) {
+    if (rendered.has(i)) return;
+    rendered.add(i);
+    const nodes = slides[i].querySelectorAll(".mermaid");
+    if (nodes.length) { try { await mermaid.run({ nodes }); } catch (e) { console.error(e); } }
+  }
+
+  async function show(i) {
+    current = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((s, k) => s.classList.toggle("active", k === current));
+    history.replaceState(null, "", "#" + (current + 1));
+    await renderSlide(current);
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (["ArrowRight", "PageDown", " "].includes(e.key)) { e.preventDefault(); show(current + 1); }
+    else if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); show(current - 1); }
+    else if (e.key === "Home") show(0);
+    else if (e.key === "End") show(slides.length - 1);
+    else if (e.key.toLowerCase() === "n") document.body.classList.toggle("show-notes");
+    else if (e.key.toLowerCase() === "f") {
+      if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen();
+    }
+  });
+  document.addEventListener("click", (e) => {
+    if (e.target.closest("a, .notes, .diagram")) return;
+    show(current + (e.clientX > innerWidth / 2 ? 1 : -1));
+  });
+  show(current);
+</script>
+</body>
+</html>
